@@ -6,9 +6,9 @@
 use "hw.sml";
 
 val test1 = is_older ((1,2,3), (2,3,4)) = true
-val test14 = is_older ((2011,3,31),(2011,4,28)) = true
-val test13 = is_older ((1,1,1), (1,1,1)) = true
-val test12 = is_older ((1,2,3), (2,3,4)) = true
+val test14 = is_older ((2011,3,31),(2015,5,12)) = true
+val test13 = is_older ((1,1,1), (1,1,1)) = false 
+val test12 = is_older ((1992,1,3), (1992,3,4)) = true
 
 val test2 = number_in_month ([(2012,2,28),(2013,12,1)],2) = 1
 
@@ -34,3 +34,4 @@ val test101 = month_range (31, 34)
 val test11 = oldest([(2012,2,28),(2011,3,31),(2011,4,28)]) = SOME (2011,3,31)
 val test112 = oldest [(2012,2,28),(2011,3,31),(2015,5,12)]
 val test111 = oldest [(2012,2,28),(2011,3,31),(2011,4,28)]
+val test113 = oldest [(2012,3,4)]

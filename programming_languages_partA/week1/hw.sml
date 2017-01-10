@@ -7,13 +7,9 @@ fun append (xs : (int * int * int) list, ys : (int * int * int) list) =
 
 (* Homework part *)
 fun is_older(first : (int * int * int), second : (int * int * int)) =
-  if #1 first < #1 second
-  then true
-  else if #2 first < #2 second
-       then true
-       else if #3 first < #3 second
-            then true
-            else false
+  (#1 first < #1 second)
+  orelse (#1 first = #1 second andalso #2 first < #2 second)
+  orelse (#1 first = #1 second andalso #2 first = #2 second andalso #3 first < #3 second)
   
 fun number_in_month(dates : (int * int * int) list, month : int) =
   if null dates
@@ -90,11 +86,10 @@ fun oldest(dates : (int * int * int) list) =
   then NONE
   else let fun oldest_finder(dates : (int * int * int) list) =
                 if null (tl dates) 
-                then hd dates
+                then hd dates 
                 else let val tmp_oldest = oldest_finder(tl dates) 
-                         val cd = hd dates
                      in
-                       if is_older(tmp_oldest, cd) then tmp_oldest else cd 
+                       if is_older(tmp_oldest, hd dates) then tmp_oldest else hd dates 
                      end
        in
          SOME (oldest_finder dates)
