@@ -5,7 +5,10 @@
 
 use "hw.sml";
 
-val test1 = is_older ((1,2,3),(2,3,4)) = true
+val test1 = is_older ((1,2,3), (2,3,4)) = true
+val test14 = is_older ((2011,3,31),(2011,4,28)) = true
+val test13 = is_older ((1,1,1), (1,1,1)) = true
+val test12 = is_older ((1,2,3), (2,3,4)) = true
 
 val test2 = number_in_month ([(2012,2,28),(2013,12,1)],2) = 1
 
@@ -19,10 +22,15 @@ val test6 = get_nth (["hi", "there", "how", "are", "you"], 2) = "there"
 
 val test7 = date_to_string (2013, 6, 1) = "June 1, 2013"
 
-(*val test8 = number_before_reaching_sum (10, [1,2,3,4,5]) = 3
+val test8 = number_before_reaching_sum (10, [1,2,3,4,5]) = 3
+val test81 = number_before_reaching_sum (10, [1,2,45,65]) 
 
 val test9 = what_month 70 = 3
+val test91 = what_month 31
 
 val test10 = month_range (31, 34) = [1,2,2,2]
+val test101 = month_range (31, 34)
 
-val test11 = oldest([(2012,2,28),(2011,3,31),(2011,4,28)]) = SOME (2011,3,31) *)
+val test11 = oldest([(2012,2,28),(2011,3,31),(2011,4,28)]) = SOME (2011,3,31)
+val test112 = oldest [(2012,2,28),(2011,3,31),(2015,5,12)]
+val test111 = oldest [(2012,2,28),(2011,3,31),(2011,4,28)]

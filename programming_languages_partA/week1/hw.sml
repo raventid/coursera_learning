@@ -6,7 +6,7 @@ fun append (xs : (int * int * int) list, ys : (int * int * int) list) =
 
 
 (* Homework part *)
-fun is_older(first : int * int * int, second : int * int * int) =
+fun is_older(first : (int * int * int), second : (int * int * int)) =
   if #1 first < #1 second
   then true
   else if #2 first < #2 second
@@ -69,10 +69,33 @@ fun date_to_string(date : (int * int * int)) =
 fun number_before_reaching_sum(sum : int, xs : int list) =
   if null xs
   then 0
-  else let val current_sum = (hd xs) + number_before_reaching_sum(hd xs) 
-       in 
-         if current_sum >= sum
-         then current_sum - (hd xs) 
-         else number_before_reaching_sum(sum, tl xs)
+  else let fun calculate_sum (xs : int list, threshold : int, sum : int, position : int) =
+                if (sum + (hd xs)) >= threshold 
+                then position 
+                else calculate_sum(tl xs, threshold, (sum + hd xs), (position + 1))  
+       in
+        calculate_sum(xs, sum, 0, 0) 
        end
-  
+
+fun what_month(d : int) =
+  number_before_reaching_sum(d, [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]) + 1 
+
+fun month_range(day1 : int, day2 : int) =
+  if day1=day2
+  then what_month(day1) :: []
+  else what_month(day1) :: month_range(day1+1, day2)
+
+fun oldest(dates : (int * int * int) list) =
+  if null dates
+  then NONE
+  else let fun oldest_finder(dates : (int * int * int) list) =
+                if null (tl dates) 
+                then hd dates
+                else let val tmp_oldest = oldest_finder(tl dates) 
+                         val cd = hd dates
+                     in
+                       if is_older(tmp_oldest, cd) then tmp_oldest else cd 
+                     end
+       in
+         SOME (oldest_finder dates)
+       end
