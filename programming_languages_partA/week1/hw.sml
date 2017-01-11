@@ -77,8 +77,8 @@ fun what_month(d : int) =
   number_before_reaching_sum(d, [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]) + 1 
 
 fun month_range(day1 : int, day2 : int) =
-  if day1=day2
-  then what_month(day1) :: []
+  if day1 > day2
+  then []
   else what_month(day1) :: month_range(day1+1, day2)
 
 fun oldest(dates : (int * int * int) list) =
