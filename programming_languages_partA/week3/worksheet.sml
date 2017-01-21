@@ -24,13 +24,13 @@ type card = suit * rank
 (*                * string *)
 
 
-(*
-  datatype exp = Constant of int
-               | Negate of exp
-               | Add of exp * exp
-               | Multiply of exp * exp
-               
-*)
+
+datatype exp = Constant of int
+             | Negate of exp
+             | Add of exp * exp
+             | Multiply of exp * exp
+             
+
 
 fun eval e =
   case e of
@@ -49,3 +49,11 @@ fun my_append(xs, ys) =
   case xs of
     Empty => ys
     | Cons(x, xs') => Cons(x, my_append(xs', ys))
+
+
+
+(* 'a is the most abstract type in SML *)
+(* ''a polymophic type wich support equality *)
+
+(* fun same_thing(x,y) = *)
+(*   if x=y then "yes" else "no" *)
