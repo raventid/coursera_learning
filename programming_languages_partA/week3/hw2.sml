@@ -8,7 +8,7 @@ fun same_string(s1 : string, s2 : string) =
 
 (* put your solutions for problem 1 here *)
 
-(* (a) *)
+(* a *)
 fun all_except_option(s : string, ls : string list) =
   let
     fun filter(xs : string list) = 
@@ -23,7 +23,7 @@ fun all_except_option(s : string, ls : string list) =
     if filtered_list=ls then NONE else SOME filtered_list
   end
 
-(* (b) *)
+(* b *)
 fun get_substitutions1(ls : string list list, s : string) =
   case ls of
     [] => []
@@ -31,12 +31,11 @@ fun get_substitutions1(ls : string list list, s : string) =
                 SOME xs' => xs' @ get_substitutions1(ls', s) 
               | NONE   => get_substitutions1(ls', s) 
 
-(* (c) Write a function get_substitutions2, which is like get_substitutions1 except it uses a tail-recursive
-local helper function. *)
+(* c *)
 fun get_substitutions2(ls : string list list, s : string) =
       let fun accumulate(acc : string list, xs : string list list) =
         case xs of
-          [] => []
+          [] => acc 
         | x::xs' => case all_except_option(s, x) of
                     SOME ys' => accumulate(acc @ ys', xs')
                     | NONE => accumulate(acc, xs') 
@@ -44,6 +43,17 @@ fun get_substitutions2(ls : string list list, s : string) =
         accumulate([], ls)
       end
            
+(* d *)
+(* If I use an accumulator here I get a wrong order. How to deal with it??? I wanna have TCO here!*)
+fun similar_names(xs : string list list, {first, middle, last}) =
+  let
+    fun combinate(xs : string list) =
+      case xs of 
+      [] => [] 
+      | x::xs' => {first=x, middle=middle, last=last}::combinate(xs') 
+  in
+    combinate(first :: get_substitutions2(xs, first))
+  end 
 
               
 
