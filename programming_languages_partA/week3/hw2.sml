@@ -112,7 +112,7 @@ fun sum_cards(cs) =
   end
 
 (* f *)
-fun score (cs, goal) =
+fun score(cs, goal) =
   let val sum = sum_cards cs
     val pre_score = if sum > goal
                     then 3 * (sum - goal)
@@ -122,7 +122,7 @@ fun score (cs, goal) =
   end
 
 (* g *)
-fun officiate (cards, moves, goal) =
+fun officiate(cards, moves, goal) =
   let fun run_game (cards, held, moves_left) = 
     case moves_left of
       [] => score(held, goal)
