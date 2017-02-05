@@ -35,7 +35,7 @@ fun filter(f, xs) =
     [] => []
   | x::xs' => if f x then x::filter(f, xs') else filter(f, xs')
 
-fun is_even(number::int) = 
+fun is_even(number : int) = 
   (number mod 2)=0
 
 fun all_even_snd xs =
