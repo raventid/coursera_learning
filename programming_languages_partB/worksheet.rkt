@@ -39,3 +39,11 @@
               (if (> tlans (car xs))
                   tlans
                   (car xs)))]))
+
+; Be carefull with top level bindings
+(define b 3)
+
+; We can make local copy of 'b' to avoid someones set!
+(define f
+  (let ([b b])
+    (lambda (x) (* 1 (+ x b)))))
