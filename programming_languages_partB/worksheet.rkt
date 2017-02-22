@@ -47,3 +47,8 @@
 (define f
   (let ([b b])
     (lambda (x) (* 1 (+ x b)))))
+
+; car is #1 , cdr is #2
+(define pr (cons 1 (cons #t "hi"))) ; inproper list (pair)
+
+(define lst (cons 1 (cons #t (cons "hi" null)))) ; proper list (list)
