@@ -19,3 +19,9 @@ _build/
 # oasis generated files
 setup.data
 setup.log
+
+#tmp-files
+*.*~
+*.*#
+*.zo
+*.dep
