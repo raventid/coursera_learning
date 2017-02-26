@@ -141,22 +141,36 @@
 
 ;; ’((s1 . e1) ...(si . ei) ...(sn . en))
 ;; si is a racket string
-;; 
 (define (mlet* lstlst e2)
   (if (null? lstlst)
       e2
       (let([pair (car lstlst)])
         (mlet (car pair) (cdr pair) (mlet* (cdr lstlst) e2)))))
 
-(define (ifeq e1 e2 e3 e4) "CHANGE")
+(define (ifeq e1 e2 e3 e4)
+  (mlet* (list (cons "_x" e1) (cons "_y" e2))
+         (ifgreater (var "_x")
+                    (var "_y")
+                    e4
+                    (ifgreater (var "_y")
+                               (var "_x")
+                               e4
+                               e3))))
 
 ;; Problem 4
 
-(define mupl-map "CHANGE")
+(define mupl-map
+  (fun #f "callback"
+       (fun "map" "list"
+            (ifaunit (var "list")
+                     (var "list")
+                     (apair (call (var "callback") (fst (var "list")))
+                            (call (var "map") (snd (var "list"))))))))
 
 (define mupl-mapAddN 
   (mlet "map" mupl-map
-        "CHANGE (notice map is now in MUPL scope)"))
+        (fun #f "i"
+             (call (var "map") (fun #f "x" (add (var "x") (var "i")))))))
 
 ;; Challenge Problem
 
