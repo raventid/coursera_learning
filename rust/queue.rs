@@ -4,6 +4,10 @@ struct Queue {
 }
 
 impl Queue {
+  fn is_empty(self: &Queue) -> bool {
+    self.older.is_empty() && self.younger.is_empty()
+  }
+
   fn push(self: &mut Queue, c: char) {
     self.younger.push(c);
   }
@@ -32,5 +36,6 @@ assert_eq!(q.pop(), Some('1'));
 assert_eq!(q.pop(), Some('w'));
 assert_eq!(q.pop(), None);
 
-
-
+assert!(q.is_empty());
+q.push('*');
+assert!(!q.is_empty());
