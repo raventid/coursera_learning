@@ -24,6 +24,11 @@ impl Queue {
 
     self.older.pop()
   }
+
+  // Here will take ownership for queue 
+  fn split(self: Queue) -> (Vec<char>, Vec<char>) {
+    (self.older, self.younger) 
+  }
 }
 
 let mut q = Queue { older: Vec::new(), younger: Vec::new() };
@@ -39,3 +44,13 @@ assert_eq!(q.pop(), None);
 assert!(q.is_empty());
 q.push('*');
 assert!(!q.is_empty());
+q.pop();
+
+q.push('P');
+q.push('X');
+assert_eq!(q.pop(), Some('P'));
+q.push('Z');
+
+let(older, younger) = q.split();
+assert_eq!(older, vec!['X']);
+assert_eq!(younger, vec!['Z']);
