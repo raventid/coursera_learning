@@ -4,6 +4,10 @@ struct Queue {
 }
 
 impl Queue {
+  fn new() -> Queue {
+    Queue { older: Vec::new() , younger: Vec::new() }
+  }
+
   fn is_empty(self: &Queue) -> bool {
     self.older.is_empty() && self.younger.is_empty()
   }
