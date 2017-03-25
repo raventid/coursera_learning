@@ -12,3 +12,21 @@ enum BinaryTree<T> {
   Empty,
   NonEmpty(Box<(T, BinaryTree<T>, BinaryTree<T>)>)
 }
+
+// We have to importe internal structures, cause Rust carefully hide internal structure from us.
+use self::BinaryTree::*;
+
+impl<T: Ord> BinaryTree<T> {
+  fn add(&mut self, value: T) {
+    match *self {
+      Empty => 
+        *self = NonEmpty(Box::new((value, Empty, Empty))),
+      NonEmpty(ref mut node) =>
+        if value <= node.0 {
+          node.1.add(value);
+        } else {
+          node.2.add(value);
+        }
+    }
+  }
+}
