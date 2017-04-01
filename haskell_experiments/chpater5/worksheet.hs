@@ -2,7 +2,7 @@ module Worksheet where
 
 -- Type constructor for function is right associative
 -- f :: a -> a -> a
--- associates to 
+-- associates to
 -- f :: a -> (a -> a)
 
 -- map :: (a -> b) -> [a] -> [b]
