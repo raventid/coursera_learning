@@ -8,10 +8,10 @@ instance Eq Trivial where
   Trivial' == Trivial' = True
 
 
-data DayOfWeek = 
+data DayOfWeek =
   Mon | Tue | Weds | Thu | Fri | Sat | Sun
 
-data Date = 
+data Date =
   Date DayOfWeek Int
 
 instance Eq DayOfWeek where
@@ -24,7 +24,7 @@ instance Eq DayOfWeek where
   (==) Sun Sun = True
   (==) _   _   = False
 
-instance Eq Date where 
+instance Eq Date where
   (==) (Date weekday dayOfMonth)
        (Date weekday' dayOfMonth') =
     weekday == weekday' && dayOfMonth == dayOfMonth'
@@ -41,20 +41,20 @@ instance Eq a => Eq (Identity a) where
 i :: Num a => a
 i = 1
 
-f :: RealFrac a => a 
+f :: RealFrac a => a
 f = 1.0
 
 freud :: Ord a => a -> a
 freud x = x
 
-freud' :: Int -> Int 
+freud' :: Int -> Int
 freud' x = x
 
 
-jung :: [Int] -> Int 
+jung :: [Int] -> Int
 jung xs = head (sort xs)
 
-young :: Ord a => [a] -> a 
+young :: Ord a => [a] -> a
 young xs = head (sort xs)
 
 mySort :: [Char] -> [Char]
