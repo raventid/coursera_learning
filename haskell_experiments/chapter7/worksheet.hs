@@ -6,7 +6,7 @@ bindExp x = let y = 5 in
               ++ " and y was: " ++ show y
 
 --bindExp1 :: Integer -> String
--- bindExp1 x = let y = 5 in  
+-- bindExp1 x = let y = 5 in
 --              let z = y + x in -- ++ "the integer was: "
 --              ++ show x ++ " and y was: "
 --              ++ show y ++ " and z was: " ++ show z
@@ -39,7 +39,7 @@ functionC x y = case pred of
 
 -- ifEvenAdd2 n = if even n then (n+2) else n
 
-ifEvenAdd2 n = 
+ifEvenAdd2 n =
   case pred of
     True -> n + 2
     False -> n
@@ -49,7 +49,7 @@ nums x =
   case compare x 0 of
     LT -> -1
     GT -> 1
-    _  -> 0    
+    _  -> 0
 
 -- guard closes
 myAbs :: Integer -> Integer
@@ -63,7 +63,7 @@ dogYrs x
   | x <= 0    = 0
   | x <= 1    = x * 15
   | x <= 2    = x * 12
-  | x <= 4    = x * 8 
+  | x <= 4    = x * 8
   | otherwise = x * 6
 
 
@@ -76,7 +76,7 @@ dogYrs x
 folda :: Int -> [Int] -> Int
 folda z xs = foldr (+) z xs
 
--- Pointfree function 
+-- Pointfree function
 folda' :: Int -> [Int] -> Int
 folda' = foldr (+)
 
@@ -92,25 +92,18 @@ tensDigit' x = fst (x `divMod` 10)
 foldBool :: a -> a -> Bool -> a
 foldBool x y b
   | b == True  = x
-  | b == False = y 
+  | b == False = y
 
 foldBool' :: a -> a -> Bool -> a
 foldBool' x y b =
   case b of
-    True  -> x 
+    True  -> x
     False -> y
 
 -- g :: (a -> b) -> (a, c) -> (b, c)
 -- g f t
---   | fst t == True  = (f $ fst t, snd t) 
+--   | fst t == True  = (f $ fst t, snd t)
 --   | fst t == False = (f $ snd t, snd t)
 
 g' :: (a -> b) -> (a, c) -> (b, c)
 g' f t = (f $ fst t, snd t)
-
-
-
-
-
-
-
