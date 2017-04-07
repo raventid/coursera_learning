@@ -10,7 +10,7 @@ roundTrip' :: (Show a, Read a) => a -> a
 roundTrip' = read . show
 
 roundTrip'' :: (Show a, Read b) => a -> b
-roundTrip'' = read . show 
+roundTrip'' = read . show
 
 main = do
   print (roundTrip' 4)
