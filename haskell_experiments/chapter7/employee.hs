@@ -1,3 +1,5 @@
+module Employee where
+
 data Employee = Coder
                 | Manager
                 | Veep
