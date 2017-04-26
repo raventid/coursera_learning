@@ -31,7 +31,7 @@ summator n = go n 0
          | otherwise = go (n - 1) (acc + n)
 
 multiplicator :: Integral a => a -> a -> a
-multiplicator x y = go x y 0 
+multiplicator x y = go x y 0
   where go x y res
          | y == 0 = res
          | otherwise = go x (y - 1) (res + x)
