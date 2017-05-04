@@ -53,7 +53,7 @@ myFilter' :: String -> [String]
 myFilter' = filter (\w -> not $ elem w ["the","a","an"]) . myLines
 
 zip' :: [a] -> [b] -> [(a,b)]
-zip' (x:[])(y:_) = (x,y) : [] 
+zip' (x:[])(y:_) = (x,y) : []
 zip' (x:_)(y:[]) = (x,y) : []
 zip' (x:xs)(y:ys) = (x,y) : zip' xs ys
 
