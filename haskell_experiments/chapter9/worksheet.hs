@@ -14,6 +14,11 @@ safeTail [] = Nothing
 safeTail (x:[]) = Nothing
 safeTail (_:xs) = Just xs
 
+safeHead :: [a] -> Maybe a
+safeHead [] = Nothing
+safeHead (x:[]) = Just x
+safeHead (x:xs) = Just x
+
 enumFromTo' :: Enum a => a -> a -> [a]
 enumFromTo' begin end = go begin end
   where go b e
