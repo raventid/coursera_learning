@@ -10,14 +10,14 @@ sentences = firstSen ++ secondSen
 myLines :: String -> [String]
 myLines "" = []
 myLines s = (takeWhile f s) : (myLines $ drop 1 $ dropWhile f s)
-  where f = (/='\n') 
+  where f = (/='\n')
 
 split' :: String -> (Char -> Bool) -> [String]
 split' "" f = []
 split' s f = takeWhile f s : split' (drop 1 $ dropWhile f s ) f
 
 myLines' :: String -> [String]
-myLines' s = split' s (/='\n') 
+myLines' s = split' s (/='\n')
 
 shouldEqual =
  [ "Tyger Tyger, burning bright"
