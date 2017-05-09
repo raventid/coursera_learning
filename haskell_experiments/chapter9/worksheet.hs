@@ -73,3 +73,16 @@ zipWith' _ _ _ = []
 zip''' :: [a] -> [b] -> [(a,b)]
 zip''' = zipWith' f
   where f x y = (x,y)
+
+
+-- WHNF(weak head normal form)
+-- (1,1+1)
+--
+-- Normal form(we cannot reduce expression any further)
+-- \x->x*10
+--
+-- Not WHNF and not Normal. arguments are calculated, but function is not applied yet.
+-- "Papu" ++ "chon"
+--
+-- WHNF because function is not applied and thus second argument of tuple is not ready
+-- (1, "Papu" ++ "chon")
