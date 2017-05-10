@@ -64,7 +64,7 @@ squishAgain = squishMap (\x -> x)
 
 myMaximumBy :: (a -> a -> Ordering) -> [a] -> a
 myMaximumBy _ (x:[]) = x
-myMaximumBy f (x:xs)
+myMaximumBy f (x:xs) =
   let max = myMaximumBy f xs
   in case f max x of
        GT -> max
