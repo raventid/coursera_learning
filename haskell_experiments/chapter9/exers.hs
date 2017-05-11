@@ -3,7 +3,7 @@ module Homework where
 import Data.Char
 
 filterUpper :: String -> String
-filterUpper = filter (isUpper) -- pointfree function ;))
+filterUpper = filter isUpper -- pointfree function ;))
 
 upperFirst :: String -> String
 upperFirst (x:xs) = toUpper x : xs
