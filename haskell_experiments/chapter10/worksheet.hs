@@ -20,12 +20,12 @@ foldl' f acc (x:xs) = foldl' f (f acc x) xs
 
 foldr'' :: (a -> b -> b) -> b -> [a] -> b
 foldr'' f z xs =
-  case xs of 
+  case xs of
     [] -> z
     (x:xs) -> f x (foldr f z xs)
 
 myAny :: (a -> Bool) -> [a] -> Bool
-myAny f xs = 
+myAny f xs =
  foldr (\x b -> f x || b) False xs
 
 -- it's tailrecursive, but we could do it staight - first is traverse, after apply
@@ -48,13 +48,13 @@ myAny f xs =
 -- foldr' f z [] = z
 -- foldr' f z (x:xs) = f x (foldr f z xs)
 --
--- foldr' :: (a -> b -> b) -> b -> [a] -> b 
+-- foldr' :: (a -> b -> b) -> b -> [a] -> b
 -- const  ::  a -> b -> a -- you see, here we have type mismatch and that's all
 --
 
 -- foldl (const) 'a' [1..2]
--- const (const 'a' 1) 2 
--- const 'a' 2 
+-- const (const 'a' 1) 2
+-- const 'a' 2
 -- foldl const 'a' [1..2]
 
 -- Prelude> foldl (\_ _ -> 5) 0 ([1..5] ++ undefined)
@@ -75,4 +75,4 @@ fibsLess x = go x 0 []
               | n > fibs !! ix = fibs !! ix : go x (ix + 1) xs
               | n <= fibs !! ix = xs
 
-factorial = scanl (*) 1 [2..] 
+factorial = scanl (*) 1 [2..]
