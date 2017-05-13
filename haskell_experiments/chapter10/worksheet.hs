@@ -28,6 +28,13 @@ myAny :: (a -> Bool) -> [a] -> Bool
 myAny f xs =
  foldr (\x b -> f x || b) False xs
 
+-- Wow, how to print both lines on screen? :)
+foldDiscovery =
+  let xs = map show [1..5]
+  in
+     foldr (\x y -> concat ["(",x,"+",y,")"]) "0" xs
+     -- foldl (\x y -> concat ["(",x,"+",y,")"]) "0" xs
+
 -- it's tailrecursive, but we could do it staight - first is traverse, after apply
 -- f = flip (*)
 -- foldl f (f 1 1) [2..3]
