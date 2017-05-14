@@ -8,7 +8,7 @@ ex2 = [(x,y,x1) | x <- stops, y <- vowels, x1 <- stops, x == 'p']
 -- the same with list of words and other stuff
 
 -- Easy. Divide sum of length of words in phrase by amount.
--- seekritFunc x = 
+-- seekritFunc x =
 --   div(sum(map length (words x))
 --       length(words x))
 -- How to rewrite this using fractional division??? Forget what fractional division is :(
@@ -42,7 +42,7 @@ myOr :: [Bool] -> Bool
 myOr = foldr (||) False
 
 myAny :: (a -> Bool) -> [a] -> Bool
-myAny f = foldr ((||) . f) False 
+myAny f = foldr ((||) . f) False
 
 myElem :: Eq a => a -> [a] -> Bool
 myElem e = foldr ((||) . (\xs -> (==) e xs)) False
@@ -51,16 +51,16 @@ myElem' :: Eq a => a -> [a] -> Bool
 myElem' e = myAny (\xs -> e == xs)
 
 myReverse :: [a] -> [a]
-myReverse = foldl (\acc x -> x : acc) [] 
+myReverse = foldl (\acc x -> x : acc) []
 
 myMap :: (a -> b) -> [a] -> [b]
 myMap f = foldr (\x acc -> f x : acc) []
 
 myFilter :: (a -> Bool) -> [a] -> [a]
-myFilter f = foldr (\x acc -> if f x then x : acc else acc) [] 
+myFilter f = foldr (\x acc -> if f x then x : acc else acc) []
 
 squish :: [[a]] -> [a]
-squish = foldr (\x acc -> x ++ acc) [] 
+squish = foldr (\x acc -> x ++ acc) []
 
 squishMap :: (a -> [b]) -> [a] -> [b]
 squishMap f = foldr (\x acc -> f x ++ acc) []
