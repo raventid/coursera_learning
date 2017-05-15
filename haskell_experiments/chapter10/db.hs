@@ -8,16 +8,16 @@ data DatabaseItem = DbString String
                   deriving (Eq, Ord, Show)
 
 theDatabase :: [DatabaseItem]
-theDatabase = 
+theDatabase =
   [ DbDate (UTCTime
              (fromGregorian 1911 5 1)
-             (secondsToDiffTime 34123) 
+             (secondsToDiffTime 34123)
            )
   , DbNumber 9001
   , DbString "Hello, world!"
   , DbDate (UTCTime
              (fromGregorian 1921 5 1)
-             (secondsToDiffTime 34123) 
+             (secondsToDiffTime 34123)
            )
   ]
 
@@ -32,7 +32,7 @@ num2 = DbNumber 15
 filterDbDate :: [DatabaseItem] -> [UTCTime]
 filterDbDate xs = map mapper $ filter go xs
   where go val = case val of
-                   (DbDate date) -> True 
+                   (DbDate date) -> True
                    _             -> False
         mapper (DbDate time) = time
 
@@ -49,30 +49,30 @@ filterDbDate' =
 -- of the Integer values inside them.
 
 filterDbNumber :: [DatabaseItem] -> [Integer]
-filterDbNumber = 
+filterDbNumber =
   foldr collectNumbers []
-    where collectNumbers a b = 
+    where collectNumbers a b =
             case a of
              (DbNumber int) -> int : b
              _ -> b
 
 -- Write a function that gets the most recent date.
 myMaximumBy :: (a -> a -> Ordering) -> [a] -> a
-myMaximumBy _ (x:[]) = x 
+myMaximumBy _ (x:[]) = x
 myMaximumBy f (x:xs) =
-  let max = myMaximumBy f xs  
+  let max = myMaximumBy f xs
   in case f max x of
-       GT -> max 
-       LT -> x 
-       EQ -> x 
+       GT -> max
+       LT -> x
+       EQ -> x
 
 mostRecent :: [DatabaseItem] -> UTCTime
-mostRecent = myMaximumBy (compare) .  filterDbDate 
+mostRecent = myMaximumBy (compare) .  filterDbDate
 
 -- Write a function that sums all of the DbNumber values.
 
 sumDb :: [DatabaseItem] -> Integer
-sumDb = sum . filterDbNumber 
+sumDb = sum . filterDbNumber
 
 -- Write a function that gets the average of the DbNumber values.
 -- You'll probably need to use fromIntegral
