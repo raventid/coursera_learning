@@ -1,4 +1,4 @@
--- Basics of Haskell functions 
+-- Basics of Haskell functions
 
 module Chapter2exersices where
 
