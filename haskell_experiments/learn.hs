@@ -1,6 +1,6 @@
 --learn.hs
 
-module Learn where 
+module Learn where
 
 x = 10 * 5 + y
 
