@@ -1,7 +1,7 @@
 module Print3Broken where
 
 printSecond :: IO ()
-printSecond = do 
+printSecond = do
   putStrLn greeting
   where greeting = "Yarrrrf"
 
