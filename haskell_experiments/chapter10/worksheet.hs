@@ -74,6 +74,18 @@ foldDiscovery =
 --   5
 --   this is OK because here bottom is a value
 
+-- Let's look at right fold, it has to evaluate first element:
+-- Prelude> foldr const 0 ([1..5] ++ undefined)
+-- => 1
+-- This is why we have bottom here:
+-- Prelude> foldr (flip const) 0 ([1..5] ++ undefined)
+-- => *** Exception: Prelude.undefined
+-- With left fold we see other problem, we have to evaluate everything, so we hit the bottom two times.
+-- Prelude> foldl const 0 ([1..5] ++ undefined)
+-- => *** Exception: Prelude.undefined
+-- Prelude> foldl (flip const) 0 ([1..5] ++ undefined)
+-- => *** Exception: Prelude.undefinedi
+
 fibs = 1 : scanl (+) 1 fibs
 
 fibsLess :: Int -> [Int]
