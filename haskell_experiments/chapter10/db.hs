@@ -39,10 +39,8 @@ filterDbDate xs = map mapper $ filter go xs
 filterDbDate' :: [DatabaseItem] -> [UTCTime]
 filterDbDate' =
   foldr maybeCons []
-    where maybeCons a b =
-            case a of
-              (DbDate date) -> date : b -- it's better to call it accumulator
-              _ -> b -- if it's not a date, let's just return an accumulator
+    where maybeCons (DbDate date) b = date : b -- it's better to call it accumulator
+          maybeCons _             b = b
 
 
 -- Write a function that filters for DbNumber values and returns a list
