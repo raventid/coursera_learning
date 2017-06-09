@@ -39,7 +39,7 @@ filterDbDate xs = map mapper $ filter go xs
 filterDbDate' :: [DatabaseItem] -> [UTCTime]
 filterDbDate' =
   foldr maybeCons []
-    where maybeCons (DbDate date) b = date : b -- it's better to call it accumulator
+    where maybeCons (DbDate date) b = date : b
           maybeCons _             b = b
 
 
