@@ -53,6 +53,10 @@ myElem' e = myAny (\xs -> e == xs)
 myReverse :: [a] -> [a]
 myReverse = foldl (\acc x -> x : acc) []
 
+-- This is I guess is not the best way to write code. I mean effective ;)
+myReverse' :: [a] -> [a]
+myReverse' = foldr (\x acc -> acc ++ [x]) []
+
 myMap :: (a -> b) -> [a] -> [b]
 myMap f = foldr (\x acc -> f x : acc) []
 
