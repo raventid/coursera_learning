@@ -20,7 +20,7 @@ data Doggies a =
 data Price =  -- Price is type contructor
       Price Integer deriving(Eq, Show) -- Price is data constructor; Integer is price argument
 
-data Size = 
+data Size =
      Size Integer deriving(Eq, Show)
 
 data Manufacturer =
@@ -29,7 +29,7 @@ data Manufacturer =
      | Tata
      deriving(Eq, Show)
 
-data Airline = 
+data Airline =
        PapuAir
      | CatapultsR'Us
      | TakeYourChances
@@ -45,7 +45,7 @@ clownCar = Car Tata (Price 7000)
 doge = Plane (Size 10) PapuAir
 
 isCar :: Vehicle -> Bool
-isCar x = 
+isCar x =
   case x of
    Car _ _  -> True
    _        -> False
@@ -57,13 +57,13 @@ isPlane x =
    _         -> False
 
 areCars :: [Vehicle] -> [Bool]
-areCars = foldr (\x acc -> isCar(x) : acc) [] 
+areCars = foldr (\x acc -> isCar(x) : acc) []
 
 getManu :: Vehicle -> Manufacturer
 getManu x =
   case x of
-    Car m _ -> m 
-   
+    Car m _ -> m
+
 -- cardinality of datatype is the number of possible values it defines
 
 
