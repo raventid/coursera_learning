@@ -79,8 +79,9 @@ instance TooMany (Int, String) where -- I've used FlexibleInstances pragma to wr
 instance TooMany (Int, Int) where
   tooMany (n, m) = (n+m) > 42
 
-instance (Num a, TooMany a) => TooMany(a, a) where
-  tooMany (n, m) = (n + m) > 42
+-- This requires Ord, so comment this for now
+-- instance (Num a, TooMany a) => TooMany(a, a) where
+--   tooMany (n, m) = (n + m) > 42
 
 --with generalized pragma I can use this
 newtype Goats =
