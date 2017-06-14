@@ -64,9 +64,6 @@ getManu x =
   case x of
     Car m _ -> m
 
--- cardinality of datatype is the number of possible values it defines
-
-
 class TooMany a where
   tooMany :: a -> Bool
 
