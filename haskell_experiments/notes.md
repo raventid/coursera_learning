@@ -8,3 +8,6 @@ Here I'm making some notes about Haskell quirks I find difficult to remember or 
   newtype - like type synonym, but can have typeclasses overrided for it.
   type - just a synonym for some type, cannot override typeclasses.
   data - new data declaration, can have all of the features, but requires addtional memory.
+
+To construct mixed combos in typeclasses I used this:
+{-# LANGUAGE FlexibleInstances #-}
