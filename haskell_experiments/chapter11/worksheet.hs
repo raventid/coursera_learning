@@ -76,13 +76,20 @@ instance TooMany (Int, String) where -- I've used FlexibleInstances pragma to wr
 instance TooMany (Int, Int) where
   tooMany (n, m) = (n+m) > 42
 
+-- Here I'm trying to impelent TooMany for type synonim.
+type MyInt = Int
+
+
+-- If I try to compile this code, then I get `Duplicate instance declarations`
+-- instance TooMany MyInt where
+--  tooMany n = n > 38
+
 -- This requires Ord, so comment this for now
 -- instance (Num a, TooMany a) => TooMany(a, a) where
 --   tooMany (n, m) = (n + m) > 42
 
 --with generalized pragma I can use this
-newtype Goats =
-  Goats Int deriving (Eq, Show, TooMany)
+newtype Goats = Goats Int deriving (Eq, Show, TooMany)
 
 -- instance TooMany Goats where
 --   tooMany (Goats n) = n > 43 -- with generalized pragma I don't need this
