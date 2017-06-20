@@ -85,11 +85,13 @@ type MyInt = Int
 --  tooMany n = n > 38
 
 -- This requires Ord, so comment this for now
--- instance (Num a, TooMany a) => TooMany(a, a) where
---   tooMany (n, m) = (n + m) > 42
+-- TODO: in this exercise I lied and added Ord to a
+instance (Num a, TooMany a, Ord a) => TooMany (a, a) where
+   tooMany (n, m) = (n + m) > 10
 
 --with generalized pragma I can use this
 newtype Goats = Goats Int deriving (Eq, Show, TooMany)
 
+-- Already derived TooMany with pragma. This is duplicated definition.
 -- instance TooMany Goats where
 --   tooMany (Goats n) = n > 43 -- with generalized pragma I don't need this
