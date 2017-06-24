@@ -95,3 +95,36 @@ newtype Goats = Goats Int deriving (Eq, Show, TooMany)
 -- Already derived TooMany with pragma. This is duplicated definition.
 -- instance TooMany Goats where
 --   tooMany (Goats n) = n > 43 -- with generalized pragma I don't need this
+
+data Fiction = Fiction deriving Show
+data Nonfiction = Nonfiction deriving Show
+
+-- Sum type
+data BookType = FictionBook Fiction
+              | NonfictionBook Nonfiction
+              deriving Show
+
+type AuthorName = String
+
+-- Tuple is a classical represantation of a product type
+data Author = Author (AuthorName, BookType)
+
+-- Classical example of recursive structure
+type Number = Int
+type Add = (Expr, Expr)
+type Minus = Expr
+type Mult = (Expr, Expr)
+type Divide = (Expr, Expr)
+
+-- type Expr =
+--   Either Number
+--    (Either Add
+--      (Either Minus
+--       (Either Mult Divide)))
+
+data Expr =
+  Number Int
+  | Add Expr Expr
+  | Minus Expr
+  | Mult Expr Expr
+  | Divide Expr Expr
