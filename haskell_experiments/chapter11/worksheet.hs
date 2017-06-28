@@ -128,3 +128,34 @@ data Expr =
   | Minus Expr
   | Mult Expr Expr
   | Divide Expr Expr
+
+-- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+-- Sum and product types. Subtopic: Constructing values.
+-- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+-- trivialValue :: GuessWhat
+-- trivialValue = Chickenbutt
+
+data Id a =
+  MkId a deriving (Eq, Show)
+
+idInt :: Id Integer
+idInt = MkId 10
+
+idIdentity :: Id (a -> a)
+idIdentity = MkId $ \x -> x
+
+data Sum a b =
+  First a
+  | Second b
+  deriving (Eq, Show)
+
+data Twitter =
+  Twitter deriving (Eq, Show)
+
+data AskFm =
+  AskFm deriving (Eq, Show)
+
+-- AAAAAAAA, Haskell is awesome, this is unreal!!!
+socialNetwork :: Sum Twitter AskFm
+socialNetwork = First Twitter
