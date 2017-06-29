@@ -159,3 +159,8 @@ data AskFm =
 -- AAAAAAAA, Haskell is awesome, this is unreal!!!
 socialNetwork :: Sum Twitter AskFm
 socialNetwork = First Twitter
+
+-- It does not work because Haskell is awesome, I'm crying it load right now!!!!
+-- You might not believe me, but I'm really crying right now, this is so awesome!!!!
+socialTest :: Sum Twitter AskFm
+socialTest = Second Twitter
