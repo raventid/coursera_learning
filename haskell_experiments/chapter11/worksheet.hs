@@ -162,5 +162,53 @@ socialNetwork = First Twitter
 
 -- It does not work because Haskell is awesome, I'm crying it load right now!!!!
 -- You might not believe me, but I'm really crying right now, this is so awesome!!!!
-socialTest :: Sum Twitter AskFm
-socialTest = Second Twitter
+-- socialTest :: Sum Twitter AskFm
+-- socialTest = Second Twitter
+-- This code works like this
+
+--  -Dear Haskell I have a type Sum which has `a` as Twitter and `b` as AskFm!
+--  -Sure, my friend, then I let you construct First Twitter and Second AskFm.
+--  -Thank you, mister Haskell!
+
+-- Wow, but Haskell could not save my ass in this case:
+type Gogo = String
+type RustRust = String
+
+askFm :: Sum Gogo RustRust
+askFm = Second "Gogo"
+
+data OperatingSystem =
+       GnuPlusLinux
+       | OpenBSDPlusNevermindJustBSDStill
+       | Mac
+       | Windows
+       deriving (Eq, Show)
+
+data ProgrammingLanguage =
+       Haskell
+       | Agda
+       | Idris
+       | PureScript deriving (Eq, Show)
+
+data Programmer =
+       Programmer { os :: OperatingSystem
+                    , lang :: ProgrammingLanguage } deriving (Eq, Show)
+
+allOperatingSystems :: [OperatingSystem]
+allOperatingSystems = [ GnuPlusLinux
+                        , OpenBSDPlusNevermindJustBSDStill
+                        , Mac
+                        , Windows
+                      ]
+
+allLanguages :: [ProgrammingLanguage]
+allLanguages = [ Haskell
+                 , Agda
+                 , Idris
+                 , PureScript
+               ]
+
+-- Wow, once again Haskell is wow!!! I can use types as first class things!!!
+-- I wanna work with Haskell full time!!!
+allProgrammers :: [Programmer]
+allProgrammers = [Programmer a b | a <- allOperatingSystems, b <- allLanguages]
