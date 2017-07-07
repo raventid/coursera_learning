@@ -13,7 +13,7 @@ normalizeLetterPosition :: Char -> Int
 normalizeLetterPosition c
   | c `elem` ['A'..'Z'] = ord c - ord 'A'
   | c `elem` ['a'..'z'] = ord c - ord 'a'
-  | otherwise = ord c 
+  | otherwise = ord c
 
 denormalizeLetterPosition :: Char -> Int
 denormalizeLetterPosition c
