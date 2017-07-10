@@ -3,6 +3,8 @@
 
 module Worsheet where
 
+import Data.Char
+
 -- 'sum type' is a type where we might use more than one constructor
 -- 'product types' definition is left for later
 --
@@ -309,3 +311,25 @@ mapTree f (Node left a right) = Node (mapTree f left) (f a) (mapTree f right)
 tree = Node (Node Leaf 10 Leaf) 1 (Node Leaf 11 Leaf)
 
 result' = mapTree (\x -> x + 100) tree
+
+-- **********************************************************************
+-- As-patterns.
+-- **********************************************************************
+isSubsequenceOf :: (Eq a) => [a] -> [a] -> Bool
+isSubsequenceOf [] [] = True
+isSubsequenceOf [] _ = True
+isSubsequenceOf _ [] = False
+isSubsequenceOf (x:xs) ys = x `elem` ys && isSubsequenceOf xs ys
+
+-- We split string twice it's not the best way to code this once again.
+capitalizeWords :: String -> [(String, String)]
+capitalizeWords str = zip (splitBy ' ' str) $ map upperCase $ splitBy ' ' str
+
+upperCase :: String -> String
+upperCase [] = []
+upperCase (x:xs) = toUpper x:xs
+
+splitBy :: (Foldable b, Eq a) => a -> b a -> [[a]]
+splitBy delimiter = foldr f [[]]
+            where f c l@(x:xs) | c == delimiter = []:l
+                               | otherwise = (c:x):xs

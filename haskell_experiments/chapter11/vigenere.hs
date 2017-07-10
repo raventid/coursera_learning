@@ -30,4 +30,4 @@ vigenere xs cipher =  zipWith transform xs key
   where key = prepareKey cipher $ length xs
 
 testVigenere :: IO ()
-testVigenere = putStrLn $ vigenere "MEETATDAWN" "ALLY" 
+testVigenere = putStrLn $ vigenere "MEETATDAWN" "ALLY"
