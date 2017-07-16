@@ -103,4 +103,4 @@ countVowels str = go 0 str
         go count (x:xs)
           | isVowel(x) = go (count + 1) xs
           | otherwise = go count xs
-        go count _ = count
+        go count _ = count 
