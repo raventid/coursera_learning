@@ -64,13 +64,19 @@ renderPuzzleChar Nothing = '_'
 
 fillInCharacter :: Puzzle -> Char -> Puzzle
 fillInCharacter (Puzzle word filledInSoFar s) c =
-  Puzzle word newFilledInSoFar (c : s)
+  Puzzle word newFilledInSoFar newGuessed
   where zipper guessed wordChar guessChar =
           if wordChar == guessed
           then Just wordChar
           else guessChar
         newFilledInSoFar =
           zipWith (zipper c) word filledInSoFar
+        newGuessed = if amountOfFilled newFilledInSoFar > amountOfFilled filledInSoFar
+          then s
+          else c:s
+        amountOfFilled = foldr count 0
+        count (Just a) acc = acc + 1
+        count Nothing acc = acc
 
 handleGuess :: Puzzle -> Char -> IO Puzzle
 handleGuess puzzle guess = do
@@ -116,7 +122,7 @@ runGame puzzle = forever $ do
   guess <- getLine
   case guess of
     [c] -> handleGuess puzzle c >>= runGame
-    _ ->putStrLn "Yourguessmust\
+    _ ->putStrLn "Your guess must\
                  \ be a single character"
 
 main :: IO ()
