@@ -20,4 +20,12 @@ mkPerson name age
 
 gimmePerson :: IO ()
 gimmePerson = do
-  
+  putStr "Please, enter your name:  "
+  name <- getLine
+  putStr "And your age too, please: "
+  age <- getLine
+  case mkPerson name (read age :: Integer) of
+    Right p -> putStrLn $ "Yay! Successfully got a person: " ++ show p
+    Left NameEmpty -> putStrLn "Empty name. It's impossible ;)"
+    Left AgeTooLow -> putStrLn "This guy is too young. Toooooo young to be truth."
+    Left (PersonInvalidUnknown err) -> putStrLn $ "Unknown invalid: " ++ err
