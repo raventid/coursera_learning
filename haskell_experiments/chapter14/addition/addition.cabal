@@ -1,0 +1,22 @@
+name:                addition
+version:             0.1.0.0
+-- synopsis:
+-- description:
+homepage:            https://github.com/githubuser/addition#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Julian Kulesh
+maintainer:          example@example.com
+copyright:           2017 Julian Kulesh
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  exposed-modules:     Addition
+  ghc-options:         -Wall -fwarn-tabs
+  build-depends:       base >=4.7 && <5
+                     , hspec
+  hs-source-dirs:      .
+  default-language:    Haskell2010
