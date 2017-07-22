@@ -27,6 +27,8 @@ genTuple = do
   b <- arbitrary
   return (a, b)
 
+-- You can use this as:
+-- sample (genThreeple :: Gen (Bool, Int, Float))
 genThreeple :: (Arbitrary a, Arbitrary b, Arbitrary c) => Gen(a, b, c)
 genThreeple = do
   a <- arbitrary
@@ -39,6 +41,17 @@ genEither = do
   a <- arbitrary
   b <- arbitrary
   elements [Left a, Left b]
+
+genMaybe :: Arbitrary a => Gen (Maybe a)
+genMaybe = do
+  a <- arbitrary
+  elements [Nothing, Just a]
+
+genMaybe' :: Arbitrary a => Gen (Maybe a)
+genMaybe' = do
+  a <- arbitrary
+  frequency [ (1, return Nothing)
+            , (3, return (Just a))]
 
 sayHello :: IO ()
 sayHello = putStrLn "Hello!!!"
