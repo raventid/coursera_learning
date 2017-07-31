@@ -60,6 +60,15 @@ summator :: (Eq a, Num a) => a -> a -> a
 summator _ 0 = 0
 summator a b = a + summator a (b - 1)
 
+-- Using QuickCheck without an Hspec
+-- *********************************
+
+prop_additionGreater :: Int -> Bool
+prop_additionGreater x = x + 1 > x
+
+runQc :: IO ()
+runQc = quickCheck prop_additionGreater
+
 main :: IO ()
 main = hspec $ do
   describe "Addition" $ do
