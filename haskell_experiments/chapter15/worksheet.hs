@@ -1,5 +1,8 @@
 module Worksheet where
 
+-- In this import will get Sum and Product for numbers.
+import Data.Monoid
+
 -- Monoids and semigroups research
 
 -- Monoid is a thing which looks like that:
@@ -17,3 +20,14 @@ module Worksheet where
 
 -- NOTE: Numberic do not have Monoid instance.(it's not comprehensible what operation should it be - summation or multiplication)
 -- i.e. should mappend 1 1 be 1 + 1 or 1 * 1 ? :)
+
+data Server = Server String
+
+-- newtype create constraint that we have only 1 unary constructor
+-- that means that we won't have any runtime overhead
+-- It's smth like single member C union
+-- TODO: Find the way to watch memory layout and disasm code.
+-- 1) intention 2) type-safetry 3) add instance of typeclass for your type
+newtype Server' = Server' String
+
+
