@@ -30,4 +30,13 @@ data Server = Server String
 -- 1) intention 2) type-safetry 3) add instance of typeclass for your type
 newtype Server' = Server' String
 
+-- left identity
+-- mappend memty x = x
+
+-- right identity
+-- mappend x memty = x
+
+-- Associativity
+-- mappend x (mappend y z) = mappend (mappend x y) z
+
 
