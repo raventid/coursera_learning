@@ -1,0 +1,1 @@
+data MyBool = MyTrue | MyFalse
