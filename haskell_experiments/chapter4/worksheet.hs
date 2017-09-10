@@ -20,6 +20,7 @@ f :: (a, b) -> (c, d) -> ((b, d), (a, c))
 f (a,b)(c,d) = ((b,d), (a,c))
 
 x = (+)
+
 myF xs = w `x` 1
          where w = length xs
 
