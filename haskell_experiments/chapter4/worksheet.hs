@@ -5,6 +5,11 @@ data My = False | True
 
 -- Here we are using deriving which allows us to take something from Show
 data Mood = Blah | Woot deriving Show
+--   [1]    [2]    [3]
+-- 1 - Type constructor
+-- 2 - Data constructor
+-- 3 - Data constructor
+
 
 changeMood :: Mood -> Mood
 changeMood Blah = Woot
