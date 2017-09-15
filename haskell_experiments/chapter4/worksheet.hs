@@ -10,6 +10,10 @@ data Mood = Blah | Woot deriving Show
 -- 2 - Data constructor
 -- 3 - Data constructor
 
+-- Free remark
+-- Int - fixed precision integer range
+-- Integer - `unlimited` interger
+
 
 changeMood :: Mood -> Mood
 changeMood Blah = Woot
