@@ -13,3 +13,8 @@ module Worksheet where
 -- Num a => a -> a -> a to Num a => (a, a) -> a
 --
 
+
+-- Funny, how to make it nice to uncurry function with my custom currying
+
+myCurry f a b = f (a, b)
+myUncurry f (a, b) = f a b
