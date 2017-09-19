@@ -1,4 +1,10 @@
 # Notes on Haskell for personal use.
+
+
+Parametric polymorphism - parameters wich are fully polymorphic (a -> a)
+
+Constrained(ad-hoc) polymorphism - parameters constrained by typeclasses ((Num a) => a -> a)
+
 Here I'm making some notes about Haskell quirks I find difficult to remember or just complex stuff I hardly ever use.
 
 - Cardinality of datatype is the number of possible values it defines
