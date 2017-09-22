@@ -18,3 +18,13 @@ module Worksheet where
 
 myCurry f a b = f (a, b)
 myUncurry f (a, b) = f a b
+
+
+-- Two possible implementation for parametriclly polymorphical function
+f a -> a -> a
+f a b = a
+-- f a b = b
+
+-- Only one possible implementation for this one
+f1 a -> b -> b
+f a b = b
