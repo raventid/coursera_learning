@@ -21,10 +21,15 @@ myUncurry f (a, b) = f a b
 
 
 -- Two possible implementation for parametriclly polymorphical function
-f a -> a -> a
+f :: a -> a -> a
 f a b = a
 -- f a b = b
 
 -- Only one possible implementation for this one
-f1 a -> b -> b
-f a b = b
+f1 :: a -> b -> b
+f1 a b = b
+
+
+myList = [1, 2, 3]
+--magical function wich allow transform concrete Int from `length` into polymorphic Num
+myIntegralValue = fromIntegral (length myList)
