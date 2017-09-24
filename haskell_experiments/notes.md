@@ -1,11 +1,21 @@
 # Notes on Haskell for personal use.
 
 
+Here I'm making some notes about Haskell quirks I find difficult to remember or just complex stuff I hardly ever use.
+
+
+
 Parametric polymorphism - parameters wich are fully polymorphic (a -> a)
 
 Constrained(ad-hoc) polymorphism - parameters constrained by typeclasses ((Num a) => a -> a)
 
-Here I'm making some notes about Haskell quirks I find difficult to remember or just complex stuff I hardly ever use.
+
+To avoid monomorphising types we can include this extension:
+{-# LANGUAGE NoMonomorphismRestriction #-}
+
+It works like that. If you print `example = 1` then without this extension you'll get
+Int instead of Num a, wich I would personally prefer (I enjoy polymorphism :D )
+
 
 - Cardinality of datatype is the number of possible values it defines
 
