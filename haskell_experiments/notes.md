@@ -17,6 +17,15 @@ It works like that. If you print `example = 1` then without this extension you'l
 Int instead of Num a, wich I would personally prefer (I enjoy polymorphism :D )
 
 
+`Partial` function: 
+
+Prelude> read "1234567" :: Integer
+1234567
+Prelude> read "BLAH" :: Integer
+*** Exception: Prelude.read: no parse
+
+`read` is a `partial` function because it does return a proper value for each possible input (and compiler cannot catch this, so it's a runtime error)
+
 - Cardinality of datatype is the number of possible values it defines
 
 - Different data declarations:
