@@ -48,7 +48,7 @@ instance Eq a => Eq (Pair a) where
 data Tuple a b =
   Tuple a b
 
-instance (Eq a, Eq b) => Eq(Tuple a b) where
+instance (Eq a, Eq b) => Eq (Tuple a b) where
  (==) (Tuple a b) (Tuple a' b') =
    a == a' && b == b'
 
@@ -71,7 +71,7 @@ data EitherOr a b =
   Hello a
  | Goodbye b
 
-instance (Eq a, Eq b) => Eq(EitherOr a b) where
+instance (Eq a, Eq b) => Eq (EitherOr a b) where
   (==)(Hello a)(Hello a') =
     a == a'
   (==)(Goodbye b)(Goodbye b') =
