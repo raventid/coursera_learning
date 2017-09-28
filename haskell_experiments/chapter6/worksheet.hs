@@ -69,3 +69,10 @@ chk f a b = f a == b
 arith :: Num b => (a -> b) -> Integer -> a -> b
 arith f i a = f a -- + (fromInteger i) -- in fact it's not necessary
 
+type Subject = String
+type Verb = String
+type Object = String
+
+data Sentence = Sentence Subject Verb Object deriving (Eq, Show)
+
+s = Sentence "dog" "cat"
