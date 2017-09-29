@@ -5,7 +5,7 @@ bindExp x = let y = 5 in
               "the integer was: " ++ show x
               ++ " and y was: " ++ show y
 
---bindExp1 :: Integer -> String
+-- bindExp1 :: Integer -> String
 -- bindExp1 x = let y = 5 in
 --              let z = y + x in -- ++ "the integer was: "
 --              ++ show x ++ " and y was: "
@@ -25,6 +25,7 @@ addOneIfOdd = \n -> case odd n of
 -- addFive x y = (if x > y then y else x) + 5
 
 addFive = \x -> \y -> (if x > y then y else x) + 5 -- Haskell tells that this is Integer -> Integer -> Integer, why not Num a => a -> a -> a
+-- ^^^ Perhaps we need LANG noMonomorphism extension enabled?
 
 -- mflip f = \x -> \y -> f y x
 
