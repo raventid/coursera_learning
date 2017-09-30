@@ -12,7 +12,8 @@ tensDigit1 x = f2 $ f1 $ x
         f = (`divMod` 10)
 
 foldBool :: a -> a -> Bool -> a
-foldBool a b c = a
+foldBool x _ True = x
+foldBool _ y False = y
 
 foldBool2 :: a -> a -> Bool -> a
 foldBool2 x y c
