@@ -69,6 +69,9 @@ dogYrs x
 
 
 -- (.) negate sum [1,2,3,4] -> f [1,2,3,4] ??? why is this so?????
+-- ^^^ I personnaly guess that it might be due to parenthesis. So evaler works the other
+-- way, should look in Haskell compiler.
+
 -- negate . sum [1,2,3,4] -> negate . 15
 -- negate . sum $ [1,2,3,4] -> f [1,2,3,4]
 
