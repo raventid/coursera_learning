@@ -74,6 +74,7 @@ zip''' :: [a] -> [b] -> [(a,b)]
 zip''' = zipWith' f
   where f x y = (x,y)
 
+-- From previous chapter I got this as WHNF is not applied form, but not applied because of laziness, no?
 
 -- WHNF(weak head normal form)
 -- (1,1+1)
