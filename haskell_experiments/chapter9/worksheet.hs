@@ -74,13 +74,12 @@ zip''' :: [a] -> [b] -> [(a,b)]
 zip''' = zipWith' f
   where f x y = (x,y)
 
--- From previous chapter I got this as WHNF is not applied form, but not applied because of laziness, no?
 
--- WHNF(weak head normal form)
+-- WHNF only (weak head normal form), we now everything but do not evaluate cause of laziness or smth like this
 -- (1,1+1)
 --
--- Normal form(we cannot reduce expression any further)
--- \x->x*10
+-- WHNF and NF(we cannot reduce expression any further we need x, but it reduced for now)
+-- \x->x * 10
 --
 -- Not WHNF and not Normal. arguments are calculated, but function is not applied yet.
 -- "Papu" ++ "chon"
