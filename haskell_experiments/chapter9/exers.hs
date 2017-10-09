@@ -60,7 +60,7 @@ squishMap _ [] = []
 squishMap f (x:xs) = f x ++ squishMap f xs
 
 squishAgain :: [[a]] -> [a]
-squishAgain = squishMap (\x -> x)
+squishAgain = squishMap id
 
 myMaximumBy :: (a -> a -> Ordering) -> [a] -> a
 myMaximumBy _ (x:[]) = x
