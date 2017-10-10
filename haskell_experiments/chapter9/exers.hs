@@ -85,3 +85,5 @@ myMaximum = myMaximumBy compare
 
 myMinimum :: (Ord a) => [a] -> a
 myMinimum = myMinimumBy compare
+
+-- Cipher exercise is left here. Not now, it's a bit boring.
