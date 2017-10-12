@@ -59,3 +59,7 @@ $ stack build
 
 Look for exe file path:
 $ stack exec which file-name
+
+
+# Questions I have
+Not sure I completely understand the way spine works in terms of strictness and nonstrictness. To note it's pages 358-359 of Programming Haskell. So I'm waiting for chapter on strictness and nonstrictness to make it clear.
