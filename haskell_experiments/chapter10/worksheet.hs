@@ -84,7 +84,9 @@ foldDiscovery =
 -- Prelude> foldl const 0 ([1..5] ++ undefined)
 -- => *** Exception: Prelude.undefined
 -- Prelude> foldl (flip const) 0 ([1..5] ++ undefined)
--- => *** Exception: Prelude.undefinedi
+-- => *** Exception: Prelude.undefined
+
+
 
 fibs = 1 : scanl (+) 1 fibs
 
