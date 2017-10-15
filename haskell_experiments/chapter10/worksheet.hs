@@ -87,6 +87,9 @@ foldDiscovery =
 -- => *** Exception: Prelude.undefined
 
 
+-- Note about scans and their relation to folds:
+-- last $ scanl (+) acc list == foldl (+) acc list
+-- head $ scnar (+) acc list == foldr (+) acc list
 
 fibs = 1 : scanl (+) 1 fibs
 
