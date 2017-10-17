@@ -91,6 +91,8 @@ foldDiscovery =
 -- last $ scanl (+) acc list == foldl (+) acc list
 -- head $ scnar (+) acc list == foldr (+) acc list
 
+-- There is a small illustration about this code performance here:
+-- https://stackoverflow.com/questions/32576983/big-0-of-fibonacci-number-using-scanl-haskell
 fibs = 1 : scanl (+) 1 fibs
 
 fibsLess :: Int -> [Int]
