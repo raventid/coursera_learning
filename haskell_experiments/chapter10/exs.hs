@@ -57,6 +57,12 @@ myReverse = foldl (\acc x -> x : acc) []
 myReverse' :: [a] -> [a]
 myReverse' = foldr (\x acc -> acc ++ [x]) []
 
+
+-- https://stackoverflow.com/questions/7862881/how-can-i-write-reverse-by-foldr-efficiently-in-haskell
+-- Attempt to make right fold work in efficient manner. Hell, it's not very readable.
+myReverse'' :: [a] -> [a]
+myReverse'' xs = foldr (\b g x -> g (b : x)) id xs []
+
 myMap :: (a -> b) -> [a] -> [b]
 myMap f = foldr (\x acc -> f x : acc) []
 
