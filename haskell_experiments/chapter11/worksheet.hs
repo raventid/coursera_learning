@@ -333,3 +333,10 @@ splitBy :: (Foldable b, Eq a) => a -> b a -> [[a]]
 splitBy delimiter = foldr f [[]]
             where f c l@(x:xs) | c == delimiter = []:l
                                | otherwise = (c:x):xs
+
+
+-- Just my function to present number as 1_123_123 and not 1123123
+-- Does not work yet. And should be pretty!
+prettifyNumber :: String -> String
+prettifyNumber xs = reverse $ foldl f "" $ reverse xs
+              where f s a = if ((length s) `mod` 3) == 0 then ('_' : a : s) else (a : s)
