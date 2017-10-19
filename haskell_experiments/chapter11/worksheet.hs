@@ -340,3 +340,7 @@ splitBy delimiter = foldr f [[]]
 prettifyNumber :: String -> String
 prettifyNumber xs = reverse $ foldl f "" $ reverse xs
               where f s a = if ((length s) `mod` 3) == 0 then ('_' : a : s) else (a : s)
+
+-- It's an internal function for prettifyNumber - make chunks of appropriate size from list
+chunkOf :: Int -> String -> [String]
+chunkOf xs = undefined
