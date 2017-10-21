@@ -37,7 +37,7 @@ Prelude> read "BLAH" :: Integer
 To construct mixed combos in typeclasses I used this:
 {-# LANGUAGE FlexibleInstances #-}
 
-If you would like to derive typeclass from parent you have to use this pragma, it tells GHC to reuse pragma for wrapped type. It works only for newtype declaration, because only newtype always have just one wrapped type.
+If you would like to derive typeclass from parent you have to use this pragma, it tells GHC to reuse pragma for wrapped type. It works only for newtype declaration, because only newtype always have just one wrapped type. (Like you can write derive (YourClass), instead of implementing it by hand for every newtype you create) 
 {-# GeneralizedNewtypeDeriving #-} 
 
 imports:
