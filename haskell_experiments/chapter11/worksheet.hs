@@ -344,3 +344,14 @@ prettifyNumber xs = reverse $ foldl f "" $ reverse xs
 -- It's an internal function for prettifyNumber - make chunks of appropriate size from list
 chunkOf :: Int -> String -> [String]
 chunkOf xs = undefined
+
+
+type MyStringWichIsType = String
+newtype MyStringWichIsNewType = MyStringWichIsNewType String
+
+stringAccepter :: String -> String
+stringAccepter xs = xs
+
+-- type is quite usable, this function cannot work with string.
+myStringAccepter :: MyStringWichIsNewType -> MyStringWichIsNewType
+myStringAccepter xs = xs
