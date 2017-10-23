@@ -4,8 +4,7 @@ data Example = MakeExample deriving Show
 
 data SpecialExample = MakeSpecialExample Int deriving Show
 
--- What is the normal form of garden?
-ata FlowerType = Gardenia
+data FlowerType = Gardenia
   | Daisy
   | Rose
   | Lilac
