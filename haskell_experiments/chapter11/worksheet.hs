@@ -179,6 +179,13 @@ type RustRust = String
 askFm :: Sum Gogo RustRust
 askFm = Second "Gogo"
 
+-- A little bit of records
+data RecordProduct a b =
+  RecordProduct { pfirst :: a
+                , psecond :: b }
+                deriving (Eq, Show)
+
+
 data OperatingSystem =
        GnuPlusLinux
        | OpenBSDPlusNevermindJustBSDStill
