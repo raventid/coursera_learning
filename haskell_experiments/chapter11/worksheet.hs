@@ -201,7 +201,7 @@ data ProgrammingLanguage =
 
 data Programmer =
        Programmer { os :: OperatingSystem
-                    , lang :: ProgrammingLanguage } deriving (Eq, Show)
+                  , lang :: ProgrammingLanguage } deriving (Eq, Show)
 
 allOperatingSystems :: [OperatingSystem]
 allOperatingSystems = [ GnuPlusLinux
