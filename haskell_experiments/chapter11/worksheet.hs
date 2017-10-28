@@ -333,9 +333,9 @@ isSubsequenceOf [] _ = True
 isSubsequenceOf _ [] = False
 isSubsequenceOf (x:xs) ys = x `elem` ys && isSubsequenceOf xs ys
 
--- We split string twice it's not the best way to code this once again.
 capitalizeWords :: String -> [(String, String)]
-capitalizeWords str = zip (splitBy ' ' str) $ map upperCase $ splitBy ' ' str
+capitalizeWords str = zip splittedString $ map upperCase splittedString
+                  where splittedString = splitBy ' ' str
 
 upperCase :: String -> String
 upperCase [] = []
