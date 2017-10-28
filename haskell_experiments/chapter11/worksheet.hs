@@ -292,7 +292,12 @@ convert8 Both = False
 -- Polymorphic product type.
 data Silly a b c d = MkSilly a b c d deriving Show
 
+-- -- in GHCi
+-- Prelude> :kind Silly
+-- Silly :: * -> * -> * -> * -> *
 
+-- List is a HKT in Haskell (not sure i can say `smth is HKT, I'm smart`, should I say HKT type?)
+-- HKT consist of `*` and `->` (so kind is a partially applied type, smth like that)
 
 -- **********************************************************************
 -- Binary tree.
