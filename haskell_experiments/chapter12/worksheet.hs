@@ -13,7 +13,7 @@ type Age = Integer
 data Person = Person Name Age deriving Show
 
 -- We solved our problem with constructor function.
--- We call this smart constructor.
+-- We call this `Smart constructor` - very popular term in Haskell.
 mkPerson :: Name -> Age -> Maybe Person
 mkPerson name age
   | name /= "" && age >= 0 = Just $ Person name age
