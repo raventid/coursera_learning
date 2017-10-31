@@ -64,6 +64,8 @@ mkPerson''' _ (Left badAge) = Left badAge
 
 -- One more time about HKT and type constants:
 -- Int is a type constant, it does not accept any type
+-- Some general idea is that type constant is fully applied type. Type constructor is not
+-- fully applied type, who have (->) in their kind (not sure I'm using terms correctly)
 
 -- Let's take a look at this type:
 data ThisIsTypeConstructor a = Blah | Blah' | Blah'' a
