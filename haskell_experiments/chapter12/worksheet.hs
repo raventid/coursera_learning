@@ -76,8 +76,7 @@ data ThisIsTypeConstructor a = Blah | Blah' | Blah'' a
 -- * are mainstream types
 -- # are raw pointers and native types
 
--- Newtypes are very special in this case, they are unlifted, but in the same time, they are *
--- It means, that newtype cannot be inhabited by bottom.
+-- Newtypes are very special in this case, they are unlifted, but in the same time, they are *.
 
 notThe :: String -> Maybe String
 notThe str = case str /= "the" of
@@ -85,7 +84,7 @@ notThe str = case str /= "the" of
   False -> Nothing
 
 -- Well it's not really fare cause it's not recursive and uses intercalate
--- This realization even makes use of Maybe quqestionable :)
+-- This realization even makes use of Maybe questionable :)
 replaceThe :: String -> String
 replaceThe str = intercalate " " $ map (f . notThe) $ words str
   where f (Just str) = str
