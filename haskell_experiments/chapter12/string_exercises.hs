@@ -17,6 +17,7 @@ replaceThe str = intercalate " " $ map (f . notThe) $ words str
 countTheBeforeVowel :: String -> Int
 countTheBeforeVowel str = go starterValue (words str)
   where starterValue = 0
+        go count (x:[]) = count
         go count (x:xs)
           | x == "the" && isVowelFirstLetter (head xs) = go (count + 1) xs
           | otherwise = go count xs
@@ -27,6 +28,7 @@ countTheBeforeVowel str = go starterValue (words str)
 countVowels :: String -> Integer
 countVowels str = go starterValue str
   where starterValue = 0
+        go count (x:[]) = count
         go count (x:xs)
           | isVowel(x) = go (count + 1) xs
           | otherwise = go count xs
