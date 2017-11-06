@@ -15,17 +15,20 @@ replaceThe str = intercalate " " $ map (f . notThe) $ words str
         f (Nothing) = "a"
 
 countTheBeforeVowel :: String -> Int
-countTheBeforeVowel str = go 0 $ words str
-  where isVowelFirstLetter = (`elem` "aeiou") . head
+countTheBeforeVowel str = go starterValue (words str)
+  where starterValue = 0
         go count (x:xs)
           | x == "the" && isVowelFirstLetter (head xs) = go (count + 1) xs
           | otherwise = go count xs
         go count _ = count
+        isVowelFirstLetter = (`elem` "aeiou") . head
+
 
 countVowels :: String -> Integer
-countVowels str = go 0 str
-  where isVowel = (`elem` "aeiou")
+countVowels str = go starterValue str
+  where starterValue = 0
         go count (x:xs)
           | isVowel(x) = go (count + 1) xs
           | otherwise = go count xs
         go count _ = count
+        isVowel = (`elem` "aeiou")
