@@ -10,7 +10,7 @@ vowels = "aeiou"
 -- vowels < consonants == Just Word'
 mkWord :: String -> Maybe Word'
 mkWord str = if numberOfVowels > otherSymbols then Nothing else Just $ Word' str
-  where numberOfVowels = length $ filter ((flip elem) vowels) str
+  where numberOfVowels = length $ filter (`elem` vowels) str
         otherSymbols = (length str) - numberOfVowels
 
 data Nat =
