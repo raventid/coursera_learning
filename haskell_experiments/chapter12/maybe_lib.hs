@@ -19,7 +19,7 @@ listToMaybe :: [a] -> Maybe a
 listToMaybe (x:xs) = Just x
 listToMaybe _ = Nothing
 
--- Here we cannot write Nothing, we have to write (Nothing)
+-- Here we cannot write Nothing, we have to write (Nothing) to pattern match on data constant(constructor).
 maybeToList :: Maybe a -> [a]
 maybeToList (Nothing) = []
 maybeToList (Just a) = [a]
