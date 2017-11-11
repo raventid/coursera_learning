@@ -7,11 +7,14 @@ lefts' = foldr (\x acc -> if isLeft x then (left x):acc else acc) []
         left (Left a) = a
 
 -- Too much repetition here. Should I move it to foldr somehow?
+-- Now I think we can use Maybe to write Right and Left extractors, but it looks like
+-- overhead for current context.
 rights' :: [Either a b] -> [b]
 rights' = foldr (\x acc -> if isRight x then (right x):acc else acc) []
   where isRight (Right a) = True
         isRight _ = False
         right (Right a) = a
+
 
 partitionEithers' :: [Either a b] -> ([a], [b])
 partitionEithers' xs = (lefts' xs, rights' xs)
