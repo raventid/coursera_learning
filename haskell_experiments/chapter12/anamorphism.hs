@@ -14,6 +14,7 @@ myUnfoldr f b = case f b of
   Just (a,b) -> a : myUnfoldr f b
   Nothing -> []
 
--- Well, how laziness works here? # TODO: do not understand completely
+-- Well, how laziness works here?
+-- The same way as in myIterate, and the question is more about `myUnfoldr`, then about `betterIterate` I guess
 betterIterate :: (a -> a) -> a -> [a]
 betterIterate f x = myUnfoldr (\x -> Just (x, f x)) x
