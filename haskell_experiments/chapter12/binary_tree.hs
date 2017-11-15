@@ -20,4 +20,4 @@ unfold f b = case f b of
 -- 3 3 3   3   3  3  3  3
 -- But it seems to be a bit harder for deep trees. I'm not sure I know how to visualize deep tree this way :(
 treeBuild :: Integer -> BinaryTree Integer
-treeBuild = unfold (\i -> if i == 0 then Nothing else Just(i-1, i, i-1)
+treeBuild = unfold (\i -> if i == 0 then Nothing else Just(i-1, i, i-1))
