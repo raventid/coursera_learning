@@ -73,3 +73,5 @@ After some thinking I have an answer. This is the same as in Racket. You don't h
 to add `[]` to the end of the *original* infinite list, you are moving 
 through the spines and build a *new* list, so what you get are values one by one, 
 you just collect them into the *new* list with take.
+
+Checked how take work and yes, internally it does that `unsafeTake 1   (x: _) = [x]`, now I understand this completely, great.
