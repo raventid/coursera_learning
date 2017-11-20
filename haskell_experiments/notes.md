@@ -67,4 +67,9 @@ $ stack ghci --ghci-options -XNoImplicitPrelude
 # Questions I have
 Not sure I completely understand the way spine works in terms of strictness and nonstrictness. To note it's pages 358-359 of Programming Haskell. So I'm waiting for chapter on strictness and nonstrictness to make it clear.
 
-Chapter 12: anamorphisms. How x : iterate f (f x) works? How it adds `[]`, to a tail of a list.
+Chapter 12: anamorphisms. How x : iterate f (f x) works? How it adds `[]`, to a tail of a list. 
+
+After some thinking I have an answer. This is the same as in Racket. You don't have 
+to add `[]` to the end of the *original* infinite list, you are moving 
+through the spines and build a *new* list, so what you get are values one by one, 
+you just collect them into the *new* list with take.
