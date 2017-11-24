@@ -30,8 +30,7 @@ gameWords = do
 
 randomWord :: WordList -> IO String
 randomWord wl = do
-  randomIndex <- randomRIO (0,0)
-  -- my code goes here
+  randomIndex <- randomRIO (0,100)
   return $ wl !! randomIndex
 
 randomWord' :: IO String
@@ -122,7 +121,7 @@ runGame puzzle = forever $ do
   guess <- getLine
   case guess of
     [c] -> handleGuess puzzle c >>= runGame
-    _ ->putStrLn "Your guess must\
+    _ -> putStrLn "Your guess must\
                  \ be a single character"
 
 main :: IO ()
