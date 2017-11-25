@@ -1,5 +1,17 @@
-module Chpater13 where
--- BTW, I'm not sure it's chapter 13.
+module Chapter13 where
+
+import Control.Monad
+import System.Exit (exitSuccess)
+
+palindrome :: IO ()
+palindrome = forever $ do
+    putStr "Enter your word: "
+    line1 <- getLine
+    case (line1 == reverse line1) of
+      True -> putStrLn "It's a palindrome!"
+      False -> do
+                putStrLn "Nope!"
+                exitSuccess
 
 type Name = String
 type Age = Integer
