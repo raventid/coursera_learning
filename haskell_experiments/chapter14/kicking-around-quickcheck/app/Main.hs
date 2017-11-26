@@ -72,6 +72,7 @@ sumGenCharInt = sumGenEqual
 --           Arbitrary b) =>
 --          Gen (Sum a b)
 --   arbitrary = sumGenEqual
+-- Here we use the same idea as in Bounded class.
 
 sumGenFirstPls :: (Arbitrary a,
                    Arbitrary b) =>
