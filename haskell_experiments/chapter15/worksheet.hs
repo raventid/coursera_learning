@@ -18,8 +18,13 @@ import Data.Monoid
 
 -- As far as I understand now mempty is a 'Identity'
 
--- NOTE: Numberic do not have Monoid instance.(it's not comprehensible what operation should it be - summation or multiplication)
+-- Numberic do not have Monoid instance.(it's not comprehensible what operation should it be - summation or multiplication)
 -- i.e. should mappend 1 1 be 1 + 1 or 1 * 1 ? :)
+
+-- We can use newtypes from Data.Monoid, wich solve this problem with numeric monoids.
+-- Sum's monoid is `+` and Product's monoid is `*`
+-- Sum "Frank" <> Sum "Herbert"
+-- No instance for (Num [Char]) arising from a use of ‘<>’
 
 data Server = Server String
 
