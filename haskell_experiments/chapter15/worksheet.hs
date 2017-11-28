@@ -12,10 +12,6 @@ import Data.Monoid
 --   mconcat :: [m] -> m
 --   mconcat = foldr mappend mempty
 
--- List is one of many classes who have Monoid instance.
--- For list there is a funny thing:
--- foldr mappend mempty == foldr append []
-
 -- As far as I understand now mempty is a 'Identity'
 
 -- Numberic do not have Monoid instance.(it's not comprehensible what operation should it be - summation or multiplication)
@@ -25,6 +21,12 @@ import Data.Monoid
 -- Sum's monoid is `+` and Product's monoid is `*`
 -- Sum "Frank" <> Sum "Herbert"
 -- No instance for (Num [Char]) arising from a use of ‘<>’
+
+-- We cannot(quite expectedly) use mappend with 3 arguments:
+-- mappend (Sum 8) (Sum 9) (Sum 10)
+-- But we can definitely be smart and do this:
+-- mconcat [(Sum 8), (Sum 9), (Sum 10)]
+
 
 data Server = Server String
 
