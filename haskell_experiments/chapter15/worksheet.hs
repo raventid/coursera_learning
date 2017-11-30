@@ -27,6 +27,9 @@ import Data.Monoid
 -- But we can definitely be smart and do this:
 -- mconcat [(Sum 8), (Sum 9), (Sum 10)]
 
+-- Monoid concept is very strongly associated with catamorphism.
+-- foldr mappend mempty ([2, 4, 6] :: [Product Int])
+-- foldr mappend mempty ["blah", "woot"]
 
 data Server = Server String
 
