@@ -40,13 +40,16 @@ data Server = Server String
 -- 1) intention 2) type-safetry 3) add instance of typeclass for your type
 newtype Server' = Server' String
 
--- left identity
+
+-- Laws of Monoid:
+
+-- 1) Left identity
 -- mappend memty x = x
 
--- right identity
+-- 2) Right identity
 -- mappend x memty = x
 
--- Associativity
+-- 3) Associativity
 -- mappend x (mappend y z) = mappend (mappend x y) z
 
 
