@@ -52,4 +52,15 @@ newtype Server' = Server' String
 -- 3) Associativity
 -- mappend x (mappend y z) = mappend (mappend x y) z
 
+-- For every monoid, for every type, rules above - are laws.
+mappendingBool :: Bool
+mappendingBool = getAll $ All True <> All True
 
+mappendingBool' :: Bool
+mappendingBool' = getAny $ Any True <> Any False
+
+mappendingMaybe :: Maybe Int
+mappendingMaybe =  getFirst $ First (Just 1) `mappend` First (Just 2)
+
+mappendingMaybe' :: Maybe Int
+mappendingMaybe' = getLast $ Last (Just 1) `mappend` Last (Just 2)
