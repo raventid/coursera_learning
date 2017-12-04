@@ -64,3 +64,17 @@ mappendingMaybe =  getFirst $ First (Just 1) `mappend` First (Just 2)
 
 mappendingMaybe' :: Maybe Int
 mappendingMaybe' = getLast $ Last (Just 1) `mappend` Last (Just 2)
+
+
+-- `a` is a phantom
+data Booly a =
+    True'
+  | False'
+  deriving (Eq, Show)
+
+-- GHC don't ask me to add Monoid constraint to `a`, cause it is phantom.
+-- But GHC will ask for mempty impelementation wich is not here.
+instance Monoid (Booly a) where
+  mappend False' _ = False'
+  mappend _ False' = False'
+  mappend True' True' = True'
