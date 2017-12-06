@@ -52,6 +52,8 @@ newtype Server' = Server' String
 -- 3) Associativity
 -- mappend x (mappend y z) = mappend (mappend x y) z
 
+-- 4) The binary operation must be associative and it must have a sensible identity value
+
 -- For every monoid, for every type, rules above - are laws.
 mappendingBool :: Bool
 mappendingBool = getAll $ All True <> All True
@@ -78,3 +80,25 @@ instance Monoid (Booly a) where
   mappend False' _ = False'
   mappend _ False' = False'
   mappend True' True' = True'
+
+
+-- Madness
+
+type Verb = String
+type Adjective = String
+type Adverb = String
+type Noun = String
+type Exclamation = String
+
+
+madlibbin' :: Exclamation
+           -> Adverb
+           -> Noun
+           -> Adjective
+           -> String
+madlibbin' e adv noun adj = mconcat [
+  e, " !he said",
+  e , "! he said " ,
+  adv , " as he jumped into his car " ,
+  noun , " and drove off with his " ,
+  adj , " wife." ]
