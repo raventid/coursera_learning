@@ -31,15 +31,14 @@ import Data.Monoid
 -- foldr mappend mempty ([2, 4, 6] :: [Product Int])
 -- foldr mappend mempty ["blah", "woot"]
 
-data Server = Server String
-
+-- One more time about newtype:
 -- newtype create constraint that we have only 1 unary constructor
 -- that means that we won't have any runtime overhead
 -- It's smth like single member C union
 -- TODO: Find the way to watch memory layout and disasm code.
--- 1) intention 2) type-safetry 3) add instance of typeclass for your type
-newtype Server' = Server' String
-
+-- 1) intention
+-- 2) type-safetry
+-- 3) add instance of typeclass for your type
 
 -- Laws of Monoid:
 
