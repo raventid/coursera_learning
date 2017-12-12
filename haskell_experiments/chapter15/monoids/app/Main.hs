@@ -42,18 +42,49 @@ runBullTests = do
   quickCheck (mlr :: Bull -> Bool)
 
 
--- Execrcise Maybe Another Monoid
-newtype First' a =
-  First' { getFirst' :: Maybe a }
+-- Copied Optional to this file from exercises of this chapter.
+data Optional a =
+    Nada
+  | Only a
   deriving (Eq, Show)
 
-instance Monoid (First' a) where
-  mempty = undefined
-  mappend = undefined
+instance Monoid a => Monoid(Optional a) where
+  mempty = Nada
 
-firstMappend :: First' a -> First' a -> First' a
+  -- mappend
+  mappend (Only x) (Only y) = Only (mappend x y)
+  mappend (Only x) _ = Only (mappend x mempty)
+  mappend _ (Only y) = Only (mappend mempty y)
+  mappend Nada Nada = mempty
+
+-- Crap, had to write Arbitrary for my own Optional. I'm suffering :)
+genOnly :: Arbitrary a => Gen (Optional a)
+genOnly = do
+  x <- arbitrary
+  return $ Only x
+
+instance Arbitrary a => Arbitrary (Optional a) where
+  arbitrary =
+    frequency [ (1, genOnly)
+              , (1, return Nada) ]
+
+
+-- Exercise Maybe Another Monoid
+-- I modified signature and made a ad-hoc polymorphic and not fully, I want this garanty.
+newtype First' a =
+  First' { getFirst' :: Optional a }
+  deriving (Eq, Show)
+
+instance (Monoid a) => Monoid (First' a) where
+  mempty =  First' { getFirst' = Nada }
+  mappend (First' { getFirst' =  x }) (First' { getFirst' = y }) = First' { getFirst' = mappend x y }
+
+firstMappend :: (Monoid a) => First' a -> First' a -> First' a
 firstMappend = mappend
 
+-- It might seem weird that it works, but as far as I understand it does it like this. It looks that I'm using FirstMappend in quickCheck
+-- and it sees that I'm generating correct arbitrary data for it, so GHC allow me to write this, despite original type
+-- requires Optional wrapper.
 type FirstMappend =
      First' String
   -> First' String
@@ -61,6 +92,14 @@ type FirstMappend =
   -> Bool
 
 type FstId = First' String -> Bool
+
+genFirst :: Arbitrary a => Gen (First' a)
+genFirst = do
+  x <- arbitrary
+  return First' { getFirst' = x }
+
+instance Arbitrary a => Arbitrary (First' a) where
+  arbitrary = genFirst
 
 runMaybeAnotherMonoidTest :: IO ()
 runMaybeAnotherMonoidTest = do
