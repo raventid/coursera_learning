@@ -179,5 +179,29 @@ type OrAssoc = Or String (Sum Int) -> Or String (Sum Int) -> Or String (Sum Int)
 runExercise8Spec :: IO ()
 runExercise8Spec = quickCheck (semigroupAssoc :: OrAssoc)
 
+-- 9.
+
+newtype Combine a b = Combine { unCombine :: a -> b }
+
+instance Semigroup b => Semigroup (Combine a b) where
+  Combine f <> Combine g = Combine (f <> g)
+
+-- genFunc :: (CoArbitrary a, Arbitrary b) => Gen (a -> b)
+-- genFunc = arbitrary
+
+-- genCombine :: (CoArbitrary a, Arbitrary b) => Gen (Combine a b)
+-- genCombine = do
+--   f <- genFunc
+--   return $ Combine f
+
+instance (CoArbitrary a, Arbitrary b) => Arbitrary (Combine a b) where
+    arbitrary = do
+      f <- arbitrary
+      return $ Combine f
+
+-- Not sure about this one, should think a bit more.
+-- runExercise9Spec :: IO ()
+-- runExercise9Spec = quickCheck (semigroup :: Combine)
+
 main :: IO ()
 main = putStrLn "Stub main function. Write your code in main."
