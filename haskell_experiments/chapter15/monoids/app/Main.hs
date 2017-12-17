@@ -107,5 +107,28 @@ runMaybeAnotherMonoidTest = do
   quickCheck (monoidLeftIdentity :: FstId)
   quickCheck (monoidRightIdentity :: FstId)
 
+
+-- Monoid exercises
+-- Monoid exercises are duplicating Semigroup exercises a bit. Hope it's not terrible.
+data Trivial = Trivial deriving (Eq, Show)
+
+instance Monoid Trivial where
+  mempty = undefined
+  mappend = (<>)
+
+instance Arbitrary Trivial where
+  arbitrary = return Trivial
+
+type TrivAssoc = Trivial -> Trivial -> Trivial -> Bool
+
+runExercise1Spec :: IO ()
+runExercise1Spec = do
+  let mli = monoidLeftIdentity
+      mlr = monoidRightIdentity
+      ma  = monoidAssoc
+  quickCheck (ma  :: Trivial -> Trivial -> Trivial -> Bool)
+  quickCheck (mli :: Trivial -> Bool)
+  quickCheck (mlr :: Trivial -> Bool)
+
 main :: IO ()
 main = putStrLn "You've hitted main stub. Write your code in main."
