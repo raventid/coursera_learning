@@ -203,5 +203,11 @@ instance (CoArbitrary a, Arbitrary b) => Arbitrary (Combine a b) where
 -- runExercise9Spec :: IO ()
 -- runExercise9Spec = quickCheck (semigroup :: Combine)
 
+-- 10.
+-- TODO
+
+-- 11.
+-- TODO
+
 main :: IO ()
 main = putStrLn "Stub main function. Write your code in main."
