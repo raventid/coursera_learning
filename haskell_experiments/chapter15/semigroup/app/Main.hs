@@ -207,7 +207,34 @@ instance (CoArbitrary a, Arbitrary b) => Arbitrary (Combine a b) where
 -- TODO
 
 -- 11.
--- TODO
+data Validation a b =
+    Failure' a
+  | Success' b
+  deriving (Eq, Show)
+
+-- Playing with syntax. It's a bit more concise, but I'm not sure it's beautiful.
+instance Semigroup (Validation a b) where
+      f@(Failure' x) <> Success' _ = f
+      Success' _ <> f@(Failure' x) = f
+      f@(Failure' x) <> Failure' _ = f
+      s@(Success' x) <> Success' _ = s
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary (Validation a b) where
+  arbitrary = genValidation
+
+-- Just play with this. Writing code right inside of an Arbitrary instance hides
+-- Gen wrapper. Here we make it clean and visible.
+genValidation :: (Arbitrary a, Arbitrary b) => Gen (Validation a b)
+genValidation = do
+  a <- arbitrary
+  b <- arbitrary
+  elements [ Failure' a
+           , Success' b ]
+
+type ValidationAssoc = Validation String [Int] -> Validation String [Int] -> Validation String [Int] -> Bool
+
+runExercise11Spec :: IO ()
+runExercise11Spec = quickCheck (semigroupAssoc :: ValidationAssoc)
 
 main :: IO ()
 main = putStrLn "Stub main function. Write your code in main."
