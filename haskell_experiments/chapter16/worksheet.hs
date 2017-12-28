@@ -55,3 +55,11 @@ class WeirdTypeClass f where
 -- 2. Law of composition
 -- fmap (f . g) = fmap f . fmap g
 -- If implementation of fmap does not do that - Functor is broken.
+
+
+-- By combining (fmap . fmap) and more times we can go deeper into the structure.
+
+-- Just fmap - deconstruct external list
+-- (fmap . fmap) - goes inside Just, Nothing, Just
+-- (fmap. fmap . fmap) - goes inside list, inside Just, Nothing, Just
+-- [Just ['a', 'b'], Nothing, Just ['a', 'b']]
