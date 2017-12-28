@@ -18,7 +18,6 @@ module Chapter16 where
 -- > Just 2
 
 
-
 -- Add to repl to examine types:
 -- :set -XTypeApplications
 
@@ -63,3 +62,19 @@ class WeirdTypeClass f where
 -- (fmap . fmap) - goes inside Just, Nothing, Just
 -- (fmap. fmap . fmap) - goes inside list, inside Just, Nothing, Just
 -- [Just ['a', 'b'], Nothing, Just ['a', 'b']]
+
+replaceWithP :: b -> Char
+replaceWithP = const 'p'
+
+lms :: [Maybe [Char]]
+lms = [Just "Ave", Nothing, Just "woohoo"]
+
+-- Just making the argument more specific
+replaceWithP' :: [Maybe [Char]] -> Char
+replaceWithP' = replaceWithP
+
+liftedReplace :: Functor f => f a -> f Char
+liftedReplace = fmap replaceWithP
+
+liftedReplace' :: [Maybe [Char]] -> [Char]
+liftedReplace' = liftedReplace
