@@ -78,3 +78,93 @@ liftedReplace = fmap replaceWithP
 
 liftedReplace' :: [Maybe [Char]] -> [Char]
 liftedReplace' = liftedReplace
+
+
+-- With double unwrapping with fmap!
+
+-- Prelude> :t (fmap . fmap) replaceWithP
+-- (fmap . fmap) replaceWithP :: (Functor f1, Functor f) => f (f1 a) -> f (f1 Char)
+twiceLifted :: (Functor f1, Functor f) => f (f1 a) -> f (f1 Char)
+twiceLifted = (fmap . fmap) replaceWithP
+
+-- Making it more specific
+twiceLifted' :: [Maybe [Char]] -> [Maybe Char]
+twiceLifted' = twiceLifted
+-- f ~ []
+-- f1 ~ Maybe
+
+
+-- With triple unwrapping with fmap!
+
+-- Prelude> let rWP = replaceWithP
+-- Prelude> :t (fmap . fmap . fmap) rWP
+-- (fmap . fmap . fmap) replaceWithP
+--   :: (Functor f2, Functor f1, Functor f)
+-- => f (f1 (f2 a)) -> f (f1 (f2 Char))
+thriceLifted :: (Functor f2, Functor f1, Functor f) => f (f1 (f2 a)) -> f (f1 (f2 Char))
+thriceLifted = (fmap . fmap . fmap) replaceWithP
+
+-- More specific or "concrete"
+thriceLifted' :: [Maybe [Char]] -> [Maybe [Char]]
+thriceLifted' = thriceLifted
+-- f ~ []
+-- f1 ~ Maybe
+-- f2 ~ []
+
+fromCharToInt' :: Char -> Int
+fromCharToInt' c = 7
+
+fromCharLifted' :: [Maybe [Char]] -> [Maybe [Int]]
+fromCharLifted' = (fmap . fmap .fmap) fromCharToInt'
+
+fromCharLifted'' :: [Maybe [Char]] -> [Maybe [Int]]
+fromCharLifted'' = (fmap . fmap . fmap) (\c -> 7)
+
+runExamplesForReplacement :: IO ()
+runExamplesForReplacement = do
+  putStr "replaceWithP' lms: "
+  print (replaceWithP' lms)
+  putStr "liftedReplace lms: "
+  print (liftedReplace lms)
+  putStr "liftedReplace' lms:  "
+  print (liftedReplace' lms)
+  putStr "twiceLifted lms:     "
+  print (twiceLifted lms)
+  putStr "twiceLifted' lms:    "
+  print (twiceLifted' lms)
+  putStr "thriceLifted lms:    "
+  print (thriceLifted lms)
+  putStr "thriceLifted' lms:   "
+  print (thriceLifted' lms)
+
+
+-- Exercises: Heavy lifting.
+-- There is a small misunderstanding from my side. I don't feel why Functor is the same
+-- as composition in case of  fmap (+2) (+3) == (+2) . (+3)
+-- 1.
+a = map (+1) $ read "[1]" :: [Int]
+-- Prelude> a
+-- [2]
+
+-- 2.
+b = (fmap . fmap) (++ "lol") (Just ["Hi,", "Hello"])
+-- Prelude> b
+-- Just ["Hi,lol","Hellolol"]
+
+-- 3.
+c = fmap (*2) (\x -> x - 2)
+-- Prelude> c 1
+-- -2
+
+-- 4.
+d = fmap ((return '1' ++) . show) (\x -> [x, 1..3])
+-- Prelude> d 0
+-- "1[0,1,2,3]"
+
+-- 5. Cannot simply use `e` here, cause I declared it before, in Ruby I can(source of sorrow)
+e' :: IO Integer
+e' = let ioi = readIO "1" :: IO Integer
+         changed = fmap (read . ("123"++) . show) ioi
+    in fmap (*3) changed
+-- Prelude> e
+-- 3693
