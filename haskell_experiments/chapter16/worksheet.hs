@@ -169,3 +169,50 @@ e' = let ioi = readIO "1" :: IO Integer
 -- Prelude> e
 -- 3693
 
+
+-- Let's use Functor for refactoring!
+incIfJust :: Num a => Maybe a -> Maybe a
+incIfJust (Just n) = Just $ n + 1
+incIfJust Nothing = Nothing
+
+showIfJust :: Show a => Maybe a -> Maybe String
+showIfJust (Just s) = Just $ show s
+showIfJust Nothing = Nothing
+
+
+-- OK, there is a pattern here(a bit like in folds), so let's use fmap!
+incMaybe'' :: Num a => Maybe a -> Maybe a
+incMaybe'' = fmap (+1)
+
+showMaybe'' :: Show a => Maybe a -> Maybe String
+showMaybe'' = fmap show
+
+-- But, wait! fmap works with functors! Yeah, we can make our functions more abstract
+-- 'lifted' because they've been
+-- lifted over some structure f
+liftedInc :: (Functor f, Num b) => f b -> f b
+liftedInc = fmap (+1)
+
+liftedShow :: (Functor f, Show a) => f a -> f String
+liftedShow = fmap show
+-- Now we can use them with every Functor defined in the World!
+
+-- Just a small exercise from chapter. Extremly simple.
+data Possibly a =
+    LolNope
+  | Yeppers a
+  deriving (Eq, Show)
+
+instance Functor Possibly where
+  fmap f (Yeppers x) = Yeppers (f x)
+  fmap f LolNope = LolNope
+
+-- The same stuff with Either
+data Sum a b =
+    First a
+  | Second b
+  deriving (Eq, Show)
+
+instance Functor (Sum a) where
+  fmap f (First x) = First x
+  fmap f (Second y) = Second (f y)
