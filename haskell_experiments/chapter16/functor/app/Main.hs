@@ -44,8 +44,16 @@ functorCompose' x (Fun _ f) (Fun _ g) = (fmap g (fmap f x)) == (fmap (g . f) x)
 -- General setup. I will use Ints everywhere in specs.
 type IntToInt = Fun Int Int
 
-type IntID a = a -> Bool -- For Identity proof.
-type IntFC a = a -> IntToInt -> IntToInt -> Bool -- For composition proof.
+type ID a = a -> Bool -- For Identity proof.
+type FC a = a -> IntToInt -> IntToInt -> Bool -- For composition proof.
+
+-- Could be nice to generate types dynamically with this. Not sure how to do it.
+-- proofIdentity :: a -> b
+-- proofIdentity x = functorIdentity :: (IntID x)
+
+-- And the same with composition.
+-- proofComposition
+
 
 -- 1.
 newtype Identity a = Identity a deriving(Eq, Show)
@@ -62,15 +70,131 @@ type IdentityBase = Identity Int -- Concrete type
 
 runIOF1spec :: IO ()
 runIOF1spec = do
-  quickCheck (functorIdentity :: (IntID IdentityBase))
-  quickCheck (functorCompose' :: (IntFC IdentityBase))
+  quickCheck (functorIdentity :: (ID IdentityBase))
+  quickCheck (functorCompose' :: (FC IdentityBase))
 
--- 2. data Pair a = Pair a a
--- 3. data Two a b = Two a b
--- 4. data Three a b c = Three a b c
--- 5. data Three' a b = Three' a b b
--- 6. data Four a b c d = Four a b c d
--- 7. data Four' a b = Four' a a a b
+-- 2.
+data Pair a = Pair a a deriving(Eq, Show)
 
+instance Functor(Pair) where
+  fmap f (Pair a b) = Pair (f a) (f b)
+
+instance (Arbitrary a) => Arbitrary(Pair a) where
+  arbitrary = do
+    x <- arbitrary
+    y <- arbitrary
+    return $ Pair x y
+
+type PairBase = Pair Int
+
+runIOF2Spec :: IO ()
+runIOF2Spec = do
+  quickCheck (functorIdentity :: (ID PairBase))
+  quickCheck (functorCompose' :: (FC PairBase))
+
+-- 3.
+data Two a b = Two a b
+
+instance Functor(Two a) where
+  fmap f (Two a b) = Two a $ f b
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary(Two a b) where
+  arbitrary = do
+    x <- arbitrary
+    y <- arbitrary
+    return $ Two x y
+
+type TwoBase = Two Int Int
+
+runIOF3Spec :: IO ()
+runIOF3Spec = do
+  quickCheck (functorIdentity :: (ID PairBase))
+  quickCheck (functorCompose' :: (FC PairBase))
+
+-- 4.
+data Three a b c = Three a b c deriving(Eq, Show)
+
+instance Functor(Three a b) where
+  fmap f (Three a b c) = Three a b $ f c
+
+instance (Arbitrary a, Arbitrary b, Arbitrary c) => Arbitrary(Three a b c) where
+  arbitrary = do
+    x <- arbitrary
+    y <- arbitrary
+    z <- arbitrary
+    return $ Three x y z
+
+type ThreeBase = Three Int Int Int
+
+runIOF4Spec :: IO ()
+runIOF4Spec = do
+  quickCheck (functorIdentity :: (ID ThreeBase))
+  quickCheck (functorCompose' :: (FC ThreeBase))
+
+-- 5.
+data Three' a b = Three' a b b deriving(Eq, Show)
+
+instance Functor(Three' a) where
+  fmap f (Three' a b c) = Three' a (f b) (f c)
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary(Three' a b) where
+  arbitrary = do
+    x <- arbitrary
+    y <- arbitrary
+    z <- arbitrary
+    return $ Three' x y z
+
+type ThreeBase' = Three' Int Int
+
+runIOF5Spec :: IO ()
+runIOF5Spec = do
+  quickCheck (functorIdentity :: (ID ThreeBase'))
+  quickCheck (functorCompose' :: (FC ThreeBase'))
+
+-- 6.
+data Four a b c d = Four a b c d deriving(Eq, Show)
+
+instance Functor(Four a b c) where
+  fmap f (Four a b c d) = Four a  b c (f d)
+
+instance (Arbitrary a, Arbitrary b, Arbitrary c, Arbitrary d) => Arbitrary(Four a b c d) where
+  arbitrary = do
+    x <- arbitrary
+    y <- arbitrary
+    z <- arbitrary
+    w <- arbitrary
+    return $ Four x y z w
+
+type FourBase = Four Int Int Int Int
+
+runIOF6Spec :: IO ()
+runIOF6Spec = do
+  quickCheck (functorIdentity :: (ID FourBase))
+  quickCheck (functorCompose' :: (FC FourBase))
+
+
+-- 7.
+data Four' a b = Four' a a a b deriving(Eq, Show)
+
+instance Functor(Four' a) where
+  fmap f (Four' a b c d) = Four' a  b c (f d)
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary(Four' a b) where
+  arbitrary = do
+    x <- arbitrary
+    y <- arbitrary
+    z <- arbitrary
+    w <- arbitrary
+    return $ Four' x y z w
+
+type FourBase' = Four' Int Int
+
+runIOF7Spec :: IO ()
+runIOF7Spec = do
+  quickCheck (functorIdentity :: (ID FourBase'))
+  quickCheck (functorCompose' :: (FC FourBase'))
+
+
+-- Main function. Stub, I'm not using.
 main :: IO ()
 main = putStrLn "Main stub as usual."
