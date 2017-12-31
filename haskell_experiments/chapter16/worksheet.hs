@@ -216,3 +216,17 @@ data Sum a b =
 instance Functor (Sum a) where
   fmap f (First x) = First x
   fmap f (Second y) = Second (f y)
+
+
+-- IO Functor theory
+-- `fmap` can lift over
+
+-- In this case the side effect of fmap is that we'll block until user enter smth on getLine
+-- getLine :: IO String
+-- read :: Read a => String -> a
+
+-- We use `fmap to jump inside IO and use String`
+
+
+getInt :: IO Int
+getInt = fmap read getLine
