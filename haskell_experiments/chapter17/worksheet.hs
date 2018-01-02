@@ -1,6 +1,7 @@
 module Chapter17 where
 
 import Control.Applicative
+import Data.Monoid
 import Data.List (elemIndex)
 
 -- Idea is quite straightforward
@@ -79,7 +80,7 @@ y'' = lookup 2 $ zip xs ys
 summed :: Maybe Integer
 summed = fmap sum $ (,) <$> x'' <*> y''
 
--- Identity Instances
+-- Exercise: Identity Instances
 newtype Identity a = Identity a deriving (Eq, Ord, Show)
 
 instance Functor Identity where
@@ -88,3 +89,51 @@ instance Functor Identity where
 instance Applicative Identity where
   pure a = Identity a
   (<*>) (Identity f) (Identity x) = Identity (f x)
+
+-- Exercise: Constant Instance
+newtype Constant a b =
+  Constant { getConstant :: a } deriving (Eq, Ord, Show)
+
+instance Functor (Constant a) where
+  fmap _ (Constant a) = Constant a
+
+instance Monoid a => Applicative (Constant a) where
+  pure a = Constant { getConstant = mempty }
+  (<*>) (Constant a) (Constant a') = Constant { getConstant = (a <> a') }
+
+-- Validations. Maybe applicative.
+validateLength :: Int -> String -> Maybe String
+validateLength maxLen s =
+  if (length s) > maxLen
+  then Nothing
+  else Just s
+
+newtype Name =
+   Name String deriving (Eq, Show)
+
+newtype Address =
+  Address String deriving (Eq, Show)
+
+mkName :: String -> Maybe Name
+mkName s = fmap Name $ validateLength 25 s
+
+mkAddress :: String -> Maybe Address
+mkAddress s = fmap Address $ validateLength 100 s
+
+data Person =
+  Person Name Address
+  deriving (Eq, Show)
+
+mkPerson :: String -> String -> Maybe Person
+mkPerson n a =
+  case mkName n of
+    Nothing -> Nothing
+    Just n' ->
+      case mkAddress a of
+        Nothing -> Nothing
+        Just a' ->
+          Just $ Person n' a'
+
+mkPerson' :: String -> String -> Maybe Person
+mkPerson' n a =
+  Person <$> mkName n <*> mkAddress a
