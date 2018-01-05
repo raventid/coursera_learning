@@ -188,7 +188,3 @@ instance Applicative List where
 append :: List a -> List a -> List a
 append Nil ys = ys
 append (Cons x xs) ys = Cons x $ xs `append` ys
-
-fold :: (a -> b -> b) -> b -> List a -> b
-fold _ b Nil = b
-fold f b (Cons h t) = f h (fold f b t)
