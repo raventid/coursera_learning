@@ -160,3 +160,35 @@ mkPerson' n a d =
 
 fu1 = const <$> Just "Hello" <*> pure "world"
 fu2 = (,,,) <$> Just 90 <*> Just 10 <*> Just "Tierness" <*> pure [1, 2, 3]
+
+
+--  List Applicative Exercise
+data List a =
+    Nil
+  | Cons a (List a)
+  deriving (Eq, Show)
+
+instance Functor List where
+  fmap f Nil = Nil
+  fmap f (Cons x xs) = Cons (f x) (fmap f xs)
+
+instance Applicative List where
+  pure a = Cons a Nil
+
+  _ <*> Nil = Nil
+  Nil <*> _ = Nil
+  (Cons f fs) <*> xs = append (f <$> xs) (fs <*> xs)
+
+-- let f = Cons (+1) (Cons (*2) Nil)
+-- let v = Cons 1 (Cons 2 Nil)
+-- f <*> v
+-- (Cons (+1) (Cons (*2) Nil)) <*> (Cons 1 (Cons 2 Nil)) -- one liner
+-- Cons 2 (Cons 3 (Cons 2 (Cons 4 Nil))) -- It should be this, as an answer.
+
+append :: List a -> List a -> List a
+append Nil ys = ys
+append (Cons x xs) ys = Cons x $ xs `append` ys
+
+fold :: (a -> b -> b) -> b -> List a -> b
+fold _ b Nil = b
+fold f b (Cons h t) = f h (fold f b t)
