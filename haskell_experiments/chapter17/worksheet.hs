@@ -114,29 +114,38 @@ newtype Name =
 newtype Address =
   Address String deriving (Eq, Show)
 
+newtype Dog =
+  Dog String deriving (Eq, Show)
+
 mkName :: String -> Maybe Name
 mkName s = fmap Name $ validateLength 25 s
 
 mkAddress :: String -> Maybe Address
 mkAddress s = fmap Address $ validateLength 100 s
 
+mkDog :: String -> Maybe Dog
+mkDog s = fmap Dog $ validateLength 5 s
+
 data Person =
-  Person Name Address
+  Person Name Address Dog
   deriving (Eq, Show)
 
-mkPerson :: String -> String -> Maybe Person
-mkPerson n a =
+mkPerson :: String -> String -> String -> Maybe Person
+mkPerson n a d =
   case mkName n of
     Nothing -> Nothing
     Just n' ->
       case mkAddress a of
         Nothing -> Nothing
         Just a' ->
-          Just $ Person n' a'
+          case mkDog d of
+            Nothing -> Nothing
+            Just d' ->
+              Just $ Person n' a' d'
 
-mkPerson' :: String -> String -> Maybe Person
-mkPerson' n a =
-  Person <$> mkName n <*> mkAddress a
+mkPerson' :: String -> String -> String -> Maybe Person
+mkPerson' n a d =
+  Person <$> mkName n <*> mkAddress a <*> mkDog d
 
 
 -- Just a reminder
@@ -146,3 +155,8 @@ mkPerson' n a =
 --   Nothing <*> _ = Nothing
 --   _ <*> Nothing = Nothing
 --   Justf <*> Just a = Just (f a)
+
+-- Exercise: Fixer Upper
+
+fu1 = const <$> Just "Hello" <*> pure "world"
+fu2 = (,,,) <$> Just 90 <*> Just 10 <*> Just "Tierness" <*> pure [1, 2, 3]
