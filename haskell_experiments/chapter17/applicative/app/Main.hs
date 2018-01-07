@@ -1,7 +1,7 @@
 module Main where
 
 import Data.Monoid
-import Test.QuickCheck
+import Test.QuickCheck hiding (Success)
 import Test.QuickCheck.Checkers
 import Test.QuickCheck.Classes
 
@@ -92,7 +92,7 @@ data Validation e a =
 
 -- same as Either
 instance Functor (Validation e) where
-  fmap = undefined
+  fmap f (Success a) = Success (f a)
 
 -- This is different
 instance Monoid e => Applicative (Validation e) where
@@ -109,7 +109,7 @@ instance Monoid e => Applicative (Validation e) where
 
 
 
- 
+
 
 
 
