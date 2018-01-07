@@ -1,7 +1,7 @@
 module Main where
 
 import Data.Monoid
-import Test.QuickCheck hiding (Success)
+import Test.QuickCheck hiding (Success, Failure)
 import Test.QuickCheck.Checkers
 import Test.QuickCheck.Classes
 
@@ -93,25 +93,39 @@ data Validation e a =
 -- same as Either
 instance Functor (Validation e) where
   fmap f (Success a) = Success (f a)
+  fmap _ (Failure e) = Failure e
 
 -- This is different
 instance Monoid e => Applicative (Validation e) where
-  pure = undefined
-  (<*>) = undefined
+  pure a = Success a
+
+  (Success a) <*> (Success a') = Success (a a')
+  (Failure e) <*> (Success a)  = Failure e
+  (Success a) <*> (Failure e)  = Failure e
+  (Failure e) <*> (Failure e') = Failure (e <> e')
 
 
+instance (Arbitrary a, Arbitrary e) => Arbitrary(Validation e a) where
+  arbitrary = genArbitraryValidation
+
+-- I'm using this for practice, but surely we can put this code inside instance realization.
+
+genArbitraryValidation :: (Arbitrary a, Arbitrary e) => Gen(Validation e a)
+genArbitraryValidation = do
+  a <- arbitrary
+  e <- arbitrary
+  elements [Failure e, Success a]
 
 
+instance (Eq a, Eq e) => EqProp(Validation e a) where
+  (=-=) = eq
 
 
-
-
-
-
-
-
-
-
+testApplicativeForValidation :: IO ()
+testApplicativeForValidation = do
+  putStrLn "Test Validation's applicative instance:"
+  -- TODO: This is ugly. Not sure how to make it looks nice.
+  quickBatch (applicative (undefined :: Validation String (String, String, String)))
 
 
 -- universal main for every task here (or it might just stay empty)
