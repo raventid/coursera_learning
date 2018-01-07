@@ -199,4 +199,4 @@ vowels :: String
 vowels = "aeiou"
 
 combos :: [a] -> [b] -> [c] -> [(a, b, c)]
-combos xs ys zs = liftA3 (,,) xs ys zs
+combos = liftA3 (,,)
