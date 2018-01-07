@@ -3,6 +3,7 @@ module Chapter17 where
 import Control.Applicative
 import Data.Monoid
 import Data.List (elemIndex)
+import Control.Applicative (liftA3)
 
 -- Idea is quite straightforward
 -- We have to unify high level types and apply function to arguments
@@ -188,3 +189,14 @@ instance Applicative List where
 append :: List a -> List a -> List a
 append Nil ys = ys
 append (Cons x xs) ys = Cons x $ xs `append` ys
+
+
+-- Exercise from the end of chapter - Combinations with listA3
+stops :: String
+stops = "pbtdkg"
+
+vowels :: String
+vowels = "aeiou"
+
+combos :: [a] -> [b] -> [c] -> [(a, b, c)]
+combos xs ys zs = liftA3 (,,) xs ys zs
