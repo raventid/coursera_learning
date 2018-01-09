@@ -123,3 +123,69 @@ doSomething'' n =
 -- try to rewrite with applicative (which is impossible, but we should try)
 -- doSomething''' n =
 --  f' n <*> g' a <*> h' b
+
+
+-- Either monad
+
+-- years ago
+type Founded = Int
+
+-- number of programmers
+type Coders = Int
+
+data SoftwareShop = Shop {
+    founded :: Founded
+  , programmers :: Coders
+} deriving (Eq, Show)
+
+data FoundedError =
+    NegativeYears Founded
+  | TooManyYears Founded
+  | NegativeCoders Coders
+  | TooManyCoders Coders
+  | TooManyCodersForYears Founded Coders
+  deriving (Eq, Show)
+
+validateFounded :: Int -> Either FoundedError Founded
+validateFounded n | n < 0 = Left $ NegativeYears n
+                  | n > 500 = Left $ TooManyYears n
+                  | otherwise = Right n
+
+-- Tho, many programmers *are* negative.
+validateCoders :: Int -> Either FoundedError Coders
+validateCoders n | n < 0 = Left $ NegativeCoders n
+                 | n > 5000 = Left $ TooManyCoders n
+                 | otherwise = Right n
+
+mkSoftware :: Int -> Int -> Either FoundedError SoftwareShop
+mkSoftware years coders = do
+  founded <- validateFounded years
+  programmers <- validateCoders coders
+  if programmers > div founded 10
+    then Left $ TooManyCodersForYears founded programmers
+    else Right $ Shop founded programmers
+
+-- We have to unpack Either values here to use them.
+-- mkSoftware' :: Int -> Int -> Either FoundedError SoftwareShop
+-- mkSoftware' years coders = if programmers > div founded 10
+--                            then Left $ TooManyCodersForYears founded programmers
+--                            else Right $ Shop founded programmers
+--                            where programmers = validateCoders coders
+--                                  founded = validateFouned years
+
+-- Exercise: Either monad
+data Sum a b =
+    First a
+  | Second b
+  deriving (Eq, Show)
+
+instance Functor (Sum a) where
+  fmap = undefined
+
+instance Applicative (Sum a) where
+  pure = undefined
+  (<*>) = undefined
+
+instance Monad (Sum a) where
+  return = pure
+  (>>=) = undefined
