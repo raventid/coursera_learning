@@ -2,6 +2,7 @@ module Chapter18 where
 
 import Control.Monad (join)
 import Control.Applicative
+import Data.Monoid ((<>))
 
 -- Monad types and rules as a nice reminder for me.
 -- (>>) :: Monad m => m a -> m b -> m b -- the same as applicative `*>`
@@ -180,11 +181,19 @@ data Sum a b =
   deriving (Eq, Show)
 
 instance Functor (Sum a) where
-  fmap = undefined
+  fmap _ (First a) = First a
+  fmap f (Second b) = Second (f b)
 
+-- In Haskell std we return `First a` if we have `First` anywhere, which is correct in
+-- my opinion. But in previous exervices I used Monoid to merge the same heads, which is wrong?
+-- But my checkers spec passed, so looks like it worked correclty in both ways...
+-- TODO: Find out the truth.
 instance Applicative (Sum a) where
-  pure = undefined
-  (<*>) = undefined
+  pure = Second
+
+  (<*>) (First a)  (First a') = First a -- I used to write (a <> a'), added todo.
+  (<*>) _          (First a)  = First a
+  (<*>) (Second f) (Second x) = Second (f x)
 
 instance Monad (Sum a) where
   return = pure
