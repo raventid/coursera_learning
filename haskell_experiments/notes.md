@@ -75,3 +75,13 @@ through the spines and build a *new* list, so what you get are values one by one
 you just collect them into the *new* list with take.
 
 Checked how take work and yes, internally it does that `unsafeTake 1   (x: _) = [x]`, now I understand this completely, great.
+
+
+Applicative question:
+
+-- Examples of what I'm talking about could be found in chapters 17 and chapters 18.
+
+In Haskell std we return `First a` if we have `First` anywhere, which is correct in
+my opinion. But in previous exervices I used Monoid to merge the same heads, which is wrong?
+But my checkers spec passed, so looks like it worked correclty in both ways...
+
