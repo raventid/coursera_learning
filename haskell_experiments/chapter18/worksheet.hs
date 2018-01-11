@@ -197,4 +197,6 @@ instance Applicative (Sum a) where
 
 instance Monad (Sum a) where
   return = pure
-  (>>=) = undefined
+
+  (>>=) (First a) _ = First a
+  (>>=) (Second b) f = f b
