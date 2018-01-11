@@ -1,0 +1,64 @@
+-- This file has been generated from package.yaml by hpack version 0.20.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 981cddd8e4657891f8e03e3b597f7025b4c78535493270f9a09adec4187bbfab
+
+name:           monads
+version:        0.1.0.0
+description:    Please see the README on Github at <https://github.com/githubuser/monads#readme>
+homepage:       https://github.com/githubuser/monads#readme
+bug-reports:    https://github.com/githubuser/monads/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2018 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+
+extra-source-files:
+    ChangeLog.md
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/monads
+
+library
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_monads
+  default-language: Haskell2010
+
+executable monads-exe
+  main-is: Main.hs
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , monads
+    , QuickCheck
+    , checkers
+  other-modules:
+      Paths_monads
+  default-language: Haskell2010
+
+test-suite monads-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , monads
+  other-modules:
+      Paths_monads
+  default-language: Haskell2010
