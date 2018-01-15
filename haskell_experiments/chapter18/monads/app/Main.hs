@@ -23,12 +23,11 @@ import Test.QuickCheck.Classes
 
 
 
--- Bad monad stuff
-
+-- Bad monad stuff (fixed after my tweaks)
 data CountMe a = CountMe Integer a deriving (Eq, Show)
 
 instance Functor CountMe where
-  fmap f (CountMe i a) = CountMe (i + 1) (f a)
+  fmap f (CountMe i a) = CountMe i (f a) -- it was ... CountMe (i + 1) ...
 
 instance Applicative CountMe where
   pure = CountMe 0
@@ -36,7 +35,9 @@ instance Applicative CountMe where
 
 instance Monad CountMe where
   return = pure
-  CountMe n a >>= f = let CountMe _ b = f a in CountMe (n+1) b
+  CountMe n a >>= f =
+    let CountMe n' b = f a -- was -> CountMe _ b ...
+    in  CountMe (n + n') b -- was -> CountMe (n + 1) ...
 
 instance Arbitrary a => Arbitrary (CountMe a) where
   arbitrary = CountMe <$> arbitrary <*> arbitrary
