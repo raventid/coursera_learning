@@ -200,3 +200,12 @@ instance Monad (Sum a) where
 
   (>>=) (First a) _ = First a
   (>>=) (Second b) f = f b
+
+
+-- Composition based on Monads
+-- It happens that monads composing extremly well!
+mcomp :: Monad m => (b -> m c) -> (a -> m b) -> a -> m c
+mcomp f g a = join (f <$> (g a))
+
+mcomp'' :: Monad m => (b -> m c) -> (a -> m b) -> a -> m c
+mcomp'' f g a = g a >>= f
