@@ -16,6 +16,27 @@
 // and what does it do after all??????
 #define on_error(...) { fprintf(stderr, __VA_ARGS__); fflush(stderr); exit(1); }
 
+// Try to make universal function for making socket non-blocking
+// Not sure about this warning, but it looks wrong:
+
+/* Comparison of constant -1 with boolean expression is */
+/* always false [-Wtautological-constant-out-of-range-compare] */
+/* if (-1 == (flags == fcntl(fd, F_GETFL, 0))) { */
+/*   ~~ ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+int set_nonblock(int fd) {
+  int flags;
+  #if defined (O_NONBLOCK)
+  if (-1 == (flags == fcntl(fd, F_GETFL, 0))) {
+    flags = 0;
+  }
+
+  return fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+  #else
+  flags = 1;
+  return iofcntl(fd, FIONBIO, &flags);
+  #endif
+}
+
 static struct kevent *events;
 // this is how many events we get from queue in this iteration?
 static int events_used = 0;
@@ -58,14 +79,18 @@ static void event_server_listen (int port) {
   // PF_INET - ipv4 protocol version, it works with AF_INET somehow :)
   /* A SOCK_STREAM type provides sequenced, reliable, two-way connection based */
   /* byte streams.  An out-of-band data transmission mechanism may be supported. */
+  // Third argument is protocol, where 0 means default protocol
+  // for SOCK_STREAM it is tcp, and for SOCK_DGRAM it is udp.
+  // but we can use exact protocols like IPPROTO_TCP and IPPROTO_UDP.
   server_fd = socket(AF_INET, SOCK_STREAM, 0);
 
   if (server_fd < 0) on_error("Could not create server socket: %s\n", strerror(errno))
 
-  server.sin_family = AF_INET; // it means ipv4
+  server.sin_family = AF_INET; // it means ipv4, duplicate of domain in socket call ^
   // host to network. network is big endian. host depends
   server.sin_port = htons(port);
   // htonl is for `uint32_t hostlong` and htons is for `uint16_t hostshort`
+  // INADDR_LOOPBACK - 127.0.0.1
   server.sin_addr.s_addr = htonl(INADDR_ANY);
 
   int opt_val = 1;
@@ -77,7 +102,9 @@ static void event_server_listen (int port) {
   // not sure I completely understand what is opt_val?
   setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt_val, sizeof(opt_val));
 
-  // bind, great, totally forgot all of this crap.
+  // first is a file descriptor
+  // second is our socketaddr struct
+  // and third is the size of our socket struct
   err = bind(server_fd, (struct sockaddr *) &server, sizeof(server));
   if (err < 0) on_error("Could not bind server socket: %s\n", strerror(errno));
 
@@ -87,6 +114,8 @@ static void event_server_listen (int port) {
   err = fcntl(server_fd, F_SETFL, flags | O_NONBLOCK);
   if (err < 0) on_error("Could set server socket to be non blocking: %s\n", strerror(errno));
 
+  // SOMAXCONN - maximum amount of request queue length for current OS. usually 128.
+  // if queue excedes 128 request, the rest is cut down, sorry (I think it's possible to make this number bigger)
   err = listen(server_fd, SOMAXCONN);
   if (err < 0) on_error("Could not listen: %s\n", strerror(errno));
 }
@@ -197,6 +226,9 @@ static int event_on_accept (struct event_data *self, struct kevent *event) {
   struct sockaddr client;
   socklen_t client_len = sizeof(client);
 
+  // client will collect client data (ip and port), client_len is length for this
+  // structure.
+  // in return we get client_socket descriptor (client will use this socket to do it's job)
   int client_fd = accept(server_fd, &client, &client_len);
   int flags;
   int err;
