@@ -16,25 +16,22 @@
 // and what does it do after all??????
 #define on_error(...) { fprintf(stderr, __VA_ARGS__); fflush(stderr); exit(1); }
 
-// Try to make universal function for making socket non-blocking
-// Not sure about this warning, but it looks wrong:
-
-/* Comparison of constant -1 with boolean expression is */
-/* always false [-Wtautological-constant-out-of-range-compare] */
-/* if (-1 == (flags == fcntl(fd, F_GETFL, 0))) { */
-/*   ~~ ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+// Try to make universal function for making socket non-blocking:
 int set_nonblock(int fd) {
   int flags;
-  #if defined (O_NONBLOCK)
-  if (-1 == (flags == fcntl(fd, F_GETFL, 0))) {
+#if defined (O_NONBLOCK)
+
+  if (-1 == (flags = fcntl(fd, F_GETFL, 0))) {
     flags = 0;
   }
-
   return fcntl(fd, F_SETFL, flags | O_NONBLOCK);
-  #else
+
+#else
+
   flags = 1;
-  return iofcntl(fd, FIONBIO, &flags);
-  #endif
+  return ioctl(fd, FIONBIO, &flags);
+
+#endif
 }
 
 static struct kevent *events;
@@ -99,7 +96,15 @@ static void event_server_listen (int port) {
   /* SO_REUSEADDR indicates that the rules used in validating addresses sup- */
   /* plied in a bind(2) call should allow reuse of local addresses. */
 
-  // not sure I completely understand what is opt_val?
+  // if we make kill, address will be busy for some time after this,
+  // so with SO_REUSEADDR we can start our application on the same address without any problem.
+  // we can also set timeout here, using setsockopt() like this:
+  // struct timeval tv {
+  //   tv.tv_sec = 16;
+  //   tv.tv_usec = 0;
+  // }
+  //                           SO_SNDTIMEOUT
+  // setsockopt(s, SOL_SOCKET, SO_RCVTIMEOUT, (char *) &tv, sizeof(tv))
   setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt_val, sizeof(opt_val));
 
   // first is a file descriptor
@@ -108,6 +113,10 @@ static void event_server_listen (int port) {
   err = bind(server_fd, (struct sockaddr *) &server, sizeof(server));
   if (err < 0) on_error("Could not bind server socket: %s\n", strerror(errno));
 
+
+  // Those two calls just make socket nonblocking, we can use my set_nonblock
+  // function written above. But we can stick with this hand-written crap,
+  // it also works after all.
   flags = fcntl(server_fd, F_GETFL, 0);
   if (flags < 0) on_error("Could not get server socket flags: %s\n", strerror(errno))
 
