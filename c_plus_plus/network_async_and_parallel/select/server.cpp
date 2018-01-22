@@ -12,6 +12,9 @@
 // cause I see just a couple of warnings from clang and it compiles nicely to binary
 // and I'm running it on the *same* machine I compile it. Weird!
 
+// TODO: Run this crap in Docker(Linux) and see if it works.
+// Perhaps OS X protects me from segfault?(with `illegal instruction 4`)
+
 int set_nonblock(int fd) {
   int flags;
 
