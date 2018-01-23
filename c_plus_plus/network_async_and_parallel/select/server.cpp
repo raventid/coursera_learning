@@ -32,6 +32,9 @@ int set_nonblock(int fd) {
 // Maximum select pull - 1024 descriptors.
 // Select
 int main(int argc, char **argv) {
+  int a;
+  std::cout << "Hello";
+  std::cin >> a;
 
   int MasterSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
   std::set<int> SlaveSockets;
@@ -40,7 +43,6 @@ int main(int argc, char **argv) {
   SockAddr.sin_family = AF_INET;
   SockAddr.sin_port = htons(12345);
   SockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-
   bind(MasterSocket, (struct sockaddr *)(&SockAddr), sizeof(SockAddr));
 
   // We need to set socket in non-blocking mode to accept many requests.
@@ -48,12 +50,22 @@ int main(int argc, char **argv) {
 
   listen(MasterSocket, SOMAXCONN);
 
+  std::cout << "Hello";
+  std::cin >> a;
+  fd_set Set; // 1024 bits
+
   while(true) {
-    fd_set Set; // 1024 bits
     FD_ZERO(&Set);
     FD_SET(MasterSocket, &Set);
-    for(auto Iter = SlaveSockets.begin(); Iter != SlaveSockets.end(); Iter++) {
-      FD_SET(*Iter, &Set);
+    std::cout << "Hello";
+    std::cin >> a;
+
+    for(int Iter : SlaveSockets) {
+      std::cout << "Hello(" << Iter << ")";
+      std::cin >> a;
+
+      std::cout << Iter;
+      //FD_SET(Iter, &Set);
     }
 
     int Max = std::max(MasterSocket, *std::max_element(SlaveSockets.begin(), SlaveSockets.end()));
