@@ -14,6 +14,18 @@
 
 // TODO: Run this crap in Docker(Linux) and see if it works.
 // Perhaps OS X protects me from segfault?(with `illegal instruction 4`)
+// Looks like this is the case, but is it segfaulting on Linux?
+// for(auto I : SlaveSockets) with empty sockets will segfault.
+
+// Checked on Linux, with minimal tweaks it works fine. Problem is OS X. Well
+// it will be extremly cool to find out what is wrong!
+
+// Wrapped some parts of code into `counter` check. Problem is in range-based `for` it works
+// the wrong way(as far as I see, right now).
+
+// Current problem is select, it spams client with `send`, how does it work?
+// maybe some smart OS X socket caching??? Is there anything like that here?
+// Maybe problem is that I'm using `sys/select.h`? Perhaps it's out of date?
 
 int set_nonblock(int fd) {
   int flags;
@@ -32,10 +44,6 @@ int set_nonblock(int fd) {
 // Maximum select pull - 1024 descriptors.
 // Select
 int main(int argc, char **argv) {
-  int a;
-  std::cout << "Hello";
-  std::cin >> a;
-
   int MasterSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
   std::set<int> SlaveSockets;
 
@@ -50,26 +58,29 @@ int main(int argc, char **argv) {
 
   listen(MasterSocket, SOMAXCONN);
 
-  std::cout << "Hello";
-  std::cin >> a;
+  int count = 0;
   fd_set Set; // 1024 bits
 
   while(true) {
     FD_ZERO(&Set);
     FD_SET(MasterSocket, &Set);
-    std::cout << "Hello";
-    std::cin >> a;
 
-    for(int Iter : SlaveSockets) {
-      std::cout << "Hello(" << Iter << ")";
-      std::cin >> a;
-
-      std::cout << Iter;
-      //FD_SET(Iter, &Set);
+    if (count > 0) {
+      for(auto Iter : SlaveSockets) {
+        FD_SET(Iter, &Set);
+      }
     }
 
-    int Max = std::max(MasterSocket, *std::max_element(SlaveSockets.begin(), SlaveSockets.end()));
 
+    int Max = 0;
+
+    if (count > 0) {
+      Max = std::max(MasterSocket, *std::max_element(SlaveSockets.begin(), SlaveSockets.end()));
+    } else {
+      Max = MasterSocket;
+    }
+
+    count++;
     // select will block us. after it will unblock will get our 1024 bits set
     // with the next information:
     // 1 - if there is some activity on socket and 0 if there is no
