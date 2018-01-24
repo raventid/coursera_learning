@@ -27,6 +27,17 @@
 // maybe some smart OS X socket caching??? Is there anything like that here?
 // Maybe problem is that I'm using `sys/select.h`? Perhaps it's out of date?
 
+// UPD:
+// TODO: Find some Rust bindings to work with `select`. Implement the same stuff.
+
+// TODO: Rewrite this in plain C. Recompile with clang.
+
+// TODO: Recompile in 32bit mode. Wow!!!!
+
+// PCI-D cache optimization
+
+// TODO: Try blocking to inscrease cache.
+
 int set_nonblock(int fd) {
   int flags;
 
@@ -51,6 +62,7 @@ int main(int argc, char **argv) {
   SockAddr.sin_family = AF_INET;
   SockAddr.sin_port = htons(12345);
   SockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+
   bind(MasterSocket, (struct sockaddr *)(&SockAddr), sizeof(SockAddr));
 
   // We need to set socket in non-blocking mode to accept many requests.
