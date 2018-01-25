@@ -92,16 +92,11 @@ int main()
     std::set<int> clientSockets;
 
     fd_set fds;
-    int a;
     while (true) {
         FD_ZERO(&fds);
         FD_SET(serverSocket, &fds);
 
         for (auto sock: clientSockets) {
-          // trying to debug this crap, but it just do not work.
-            std::cerr << "wtf?"
-            std::cout << "sock(" << sock << ")";
-            std::cin >> a;
             FD_SET(sock, &fds);
         }
 
