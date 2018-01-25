@@ -76,6 +76,8 @@ int main() {
 
           // It works fine this way. Wtf??? Whats wrong with recv, and what's
           // actually going on here?
+
+          // How poll and select work after all? Why read affect them and thet block?
           int RecvSize = read(Set[i].fd, Buffer, 1024);
           // int RecvSize = recv(Set[i].fd, Buffer, 1024, SO_NOSIGPIPE);
           if ((RecvSize == 0) && (errno != EAGAIN)) {
