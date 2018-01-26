@@ -26,7 +26,8 @@ int set_nonblock(int fd) {
 }
 
 // This is really weird!
-// I see the same error, as with `select`. Server spawns an enourmous amount of messages, without stopping.
+// I see the same error, as with `select`. Server spawns an enourmous(infinite) amount of messages, without stopping.
+// Looks like using `read` instead of `recv` make it work. Wat? Isn't `recv` is just `read` with additional tweaks.
 // Cool! Something to research!
 
 
