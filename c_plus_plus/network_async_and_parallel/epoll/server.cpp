@@ -6,7 +6,7 @@
 
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet.h>
+#include <netinet/in.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/epoll.h>
@@ -47,9 +47,46 @@ int main() {
 
   listen(MasterSocket, SOMAXCONN);
 
+  // Epoll descriptor;
+  int Epoll = epoll_create1(0);
+
+  // This block is used to create epoll event to register
+  // any socket.
+  struct epoll_event Event;
+  Event.data.fd = MasterSocket;
+  Event.events = EPOLLIN;
+
+  epoll_ctl(Epoll, EPOLL_CTL_ADD, MasterSocket, &Event);
+
+
   while(true) {
-    for() {
-      
+    // Create array of events
+    struct epoll_event Events[MAX_EVENTS];
+    int N = epoll_wait(Epoll, Events, MAX_EVENTS, -1);
+
+    for(unsigned int i = 0; i < N; i++) {
+      if(Events[i].data.fd == MasterSocket) {
+        int SlaveSocket = accept(MasterSocket, 0, 0);
+        set_nonblock(SlaveSocket);
+
+        struct epoll_event Event;
+        Event.data.fd = SlaveSocket;
+        Event.events = EPOLLIN;
+
+        // We don't need any Set to save SlaveSockets
+        // because we already have internal epoll storage
+        // to watch for our resources. Yay!
+        epoll_ctl(Epoll, EPOLL_CTL_ADD, SlaveSocket, &Event);
+      } else {
+        static char Buffer[1024];
+        int RecvResult = recv(Events[i].data.fd, Buffer, 1024, 0);
+        if ((RecvResult == 0) && (errno != EAGAIN)) {
+          shutdown(Events[i].data.fd, SHUT_RDWR);
+          close(Events[i].data.fd);
+        } else if (RecvResult > 0) {
+          send(Events[i].data.fd, Buffer, RecvResult, MSG_NOSIGNAL);
+        }
+      }
     }
   }
 
