@@ -1,5 +1,8 @@
 // Only for Linux :)
 // So we'll use Docker to compile this on OS X.
+// TODO: Add instruction about Docker:
+// How to build container, run and expose port.
+
 #include <iostream>
 #include <algorithm>
 #include <set>
