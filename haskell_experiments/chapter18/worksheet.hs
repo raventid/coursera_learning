@@ -7,7 +7,7 @@ import Data.Monoid ((<>))
 -- Monad types and rules as a nice reminder for me.
 -- (>>) :: Monad m => m a -> m b -> m b -- the same as applicative `*>`
 -- (>>=) :: Monad m => m a -> (a -> m b) -> m b
--- return :: a -> m a -- the same as applicative `pure`
+-- return :: a -> m a -- the same as applicative's `pure`
 
 -- This `bind` function is just a (>>=) flipped.
 bind :: Monad m => (a -> m b) -> m a -> m b
