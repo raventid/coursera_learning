@@ -32,13 +32,18 @@ enum command {WORRY, QUIET, COME};
 
 void Dispatch(std::vector<state>& v, command command, int attr) {
   switch(command) {
+  // We could use this approach. Quite interesting.
+  // метод resize может как уменьшать размер вектора, так и увеличивать,
+  // поэтому специально рассматривать случаи с положительным
+  // и отрицательным person_count не нужно
+  // is_nervous.resize(is_nervous.size() + person_count, false);
   case COME:
     if (attr > 0) {
-      for(int i = 1; i < attr; i++) {
+      for(int i = 0; i < attr; i++) {
         v.push_back(_QUIET);
       }
     } else {
-      for(int i = 1; i < attr; i++) {
+      for(int i = 0; i < -attr; i++) {
         v.erase(v.end() - 1);
       }
     }
@@ -48,7 +53,8 @@ void Dispatch(std::vector<state>& v, command command, int attr) {
     break;
   case QUIET:
     v[attr] = _QUIET;
-}
+    break;
+  }
 }
 
 int WorryCount(const std::vector<state>& q) {
