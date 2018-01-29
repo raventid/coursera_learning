@@ -47,5 +47,27 @@
 // Порядок вывода дел в рамках каждой операции значения не имеет.
 
 int main() {
+  int Q;
+  std::cin >> Q;
+
+
+  for(int i = 0; i < Q; i++) {
+    std::string command;
+    int dayNumber;
+    std::string todoName;
+
+    std::cin >> command;
+    if (command == "ADD") {
+      std::cin >> dayNumber;
+      std::cin >> todoName;
+    }
+    if (command == "DUMP") {
+      std::cin >> dayNumber;
+    }
+    if (command == "NEXT") {
+
+    }
+  }
+
   return 0;
 }
