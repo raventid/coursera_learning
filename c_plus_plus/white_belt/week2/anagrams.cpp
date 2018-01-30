@@ -10,12 +10,9 @@ std::map<char, int> BuildCharCounters(const std::string& word) {
   std::map<char, int> dict;
 
   for(const auto letter : word) {
-    if(dict[letter]) {
-      dict[letter]++;
-    } else {
-      dict[letter] = 1;
-    }
+    dict[letter]++; // we don't need to check if element exists, c++ is smart
   }
+
   return dict;
 }
 
