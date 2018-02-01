@@ -53,5 +53,33 @@ badMonadSpec = do
   quickBatch $ applicative trigger
   quickBatch $ monad trigger
 
+
+data Nope a =
+  NopeDotJpg
+
+-- instance Monoid Nope where
+
+
+data PhhhbbtttEither b a =
+  Left a
+  | Right b
+
+newtype Identity a = Identity a deriving (Eq, Ord, Show)
+
+instance Functor Identity where
+  fmap = undefined
+
+instance Applicative Identity where
+  pure = undefined
+  (<*>) = undefined
+
+instance Monad Identity where
+  return = pure
+  (>>=) = undefined
+
+data List a =
+  Nil
+  | Cons a (List a)
+
 main :: IO ()
 main = putStrLn "My favorite stub function for main, the way I like it"
