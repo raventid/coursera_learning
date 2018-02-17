@@ -27,8 +27,8 @@
 // if (out < 0) set ng = 1
 
 CHIP ALU {
-    IN  
-        x[16], y[16],  // 16-bit inputs        
+    IN
+        x[16], y[16],  // 16-bit inputs
         zx, // zero the x input?
         nx, // negate the x input?
         zy, // zero the y input?
@@ -36,17 +36,19 @@ CHIP ALU {
         f,  // compute out = x + y (if 1) or x & y (if 0)
         no; // negate the out output?
 
-    OUT 
+    OUT
         out[16], // 16-bit output
         zr, // 1 if (out == 0), 0 otherwise
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
     /**
-    * Filter through zero flags    
+    * Filter through zero flags
     */
-    Mux16(a=x, b=false, sel=zx, out=x1);
-    Mux16(a=y, b=false, sel=zy, out=y1); 
+    Not16(in[0]=zx, in[1]=zx, in[2]=zx, in[3]=zx, in[4]=zx, in[5]=zx, in[6]=zx, in[7]=zx, in[8]=zx, in[9]=zx, in[10]=zx, in[11]=zx, in[12]=zx, in[13]=zx, in[14]=zx, in[15]=zx, out=xValueHelperOperand);
+    And16(a=x, b=xValueHelperOperand, out=x1);
+    // Mux16(a=x, b=false, sel=zx, out=x1);
+    Mux16(a=y, b=false, sel=zy, out=y1);
 
     /**
     * Filter through negate flags
