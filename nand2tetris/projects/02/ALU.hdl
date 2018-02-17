@@ -73,8 +73,11 @@ CHIP ALU {
 
     Not16(in=functionApplied, out=negationOfFunctionApplied);
 
+
     Mux16(a=functionApplied, b=negationOfFunctionApplied, sel=no, out=out, out[15]=ng, out[0..7]=leftHalf, out[8..15]=rightHalf);
 
+    // TODO: Is it any way to make it look nicer? Use less cheaps?
+    // I don't see it right now.
     Or8Way(in=leftHalf, out=left);
     Or8Way(in=rightHalf, out=right);
     Or(a=left, b=right, out=notZero);
