@@ -17,6 +17,20 @@ CHIP PC {
     IN in[16],load,inc,reset;
     OUT out[16];
 
-    PARTS:
-    // Put your code here:
+  PARTS:
+  // Where is sequential chip part?
+  // If I'm not using sequential logic how can I save state?
+
+
+  // Increment value:
+  Inc16(in=localyDuplicatedOut, out=incrementedValue);
+
+  // Increment current value or not?:
+  Mux16(a=localyDuplicatedOut, b=incrementedValue, sel=inc, out=valueAfterIncrement);
+
+  // Take the value we need, indicated by load bit:
+  Mux16(a=valueAfterIncrement, b=in, sel=load, out=valueAfterLoad);
+
+  // Reset value to 0 if needed and outputs to external and local buses:
+  Mux16(a=valueAfterLoad, b=false, sel=reset, out=out, out=localyDuplicatedOut);
 }
