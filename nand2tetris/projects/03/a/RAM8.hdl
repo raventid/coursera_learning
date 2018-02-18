@@ -15,6 +15,29 @@ CHIP RAM8 {
     IN in[16], load, address[3];
     OUT out[16];
 
-    PARTS:
-    // Put your code here:
+  PARTS:
+  // TODO: Find a better way to setup a load bit.
+  // I use enourmous amount of components to setup a load bit. There should be a better way to do this.
+  Mux8Way16(a[0..14]=false, a[15]=load, b=false, c=false, d=false, e=false, f=false, g=false, h=false, sel=address, out[15]=firstload);
+  Mux8Way16(a=false, b[0..14]=false, b[15]=load, c=false, d=false, e=false, f=false, g=false, h=false, sel=address, out[15]=secondload);
+  Mux8Way16(a=false, b=false, c[0..14]=false, c[15]=load, d=false, e=false, f=false, g=false, h=false, sel=address, out[15]=thirdload);
+  Mux8Way16(a=false, b=false, c=false, d[0..14]=false, d[15]=load, e=false, f=false, g=false, h=false, sel=address, out[15]=forthload);
+  Mux8Way16(a=false, b=false, c=false, d=false, e[0..14]=false, e[15]=load, f=false, g=false, h=false, sel=address, out[15]=fifthload);
+  Mux8Way16(a=false, b=false, c=false, d=false, e=false, f[0..14]=false, f[15]=load, g=false, h=false, sel=address, out[15]=sixthload);
+  Mux8Way16(a=false, b=false, c=false, d=false, e=false, f=false, g[0..14]=false, g[15]=load, h=false, sel=address, out[15]=seventhload);
+  Mux8Way16(a=false, b=false, c=false, d=false, e=false, f=false, g=false, h[0..14]=false, h[15]=load, sel=address, out[15]=eightthload);
+
+  // Smallest bit in the bus saves write load bit from input, so will at smallest bit
+  // to understand where to fireup load flag.
+  Register(in=in, load=firstload, out=firstOut);
+  Register(in=in, load=secondload, out=secondOut);
+  Register(in=in, load=thirdload, out=thirdOut);
+  Register(in=in, load=forthload, out=forthOut);
+  Register(in=in, load=fifthload, out=fifthOut);
+  Register(in=in, load=sixthload, out=sixthOut);
+  Register(in=in, load=seventhload, out=seventhOut);
+  Register(in=in, load=eightthload, out=eightthOut);
+
+  Mux8Way16(a=firstOut, b=secondOut, c=thirdOut, d=forthOut, e=fifthOut, f=sixthOut, g=seventhOut, h=eightthOut, sel=address, out=out);
 }
+
