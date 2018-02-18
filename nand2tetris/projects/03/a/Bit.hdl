@@ -14,7 +14,8 @@ CHIP Bit {
     IN in, load;
     OUT out;
 
-    PARTS:
-    // Put your code here:
-    // DFF(in=,out=);
+  PARTS:
+    // Not(in=in, out=notIn);
+    Mux(a=previousState, b=in, sel=load, out=val);
+    DFF(in=val, out=out, out=previousState);
 }
