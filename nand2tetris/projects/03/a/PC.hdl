@@ -11,6 +11,8 @@
  * else                    out[t+1] = out[t]
  */
 
+
+// +++++++ DO EVERYTHING IN `b` FOLDER BEFORE DOING PC +++++++
 CHIP PC {
     IN in[16],load,inc,reset;
     OUT out[16];
