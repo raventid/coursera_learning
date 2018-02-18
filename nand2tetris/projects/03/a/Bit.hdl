@@ -9,6 +9,7 @@
  *                 else out does not change (out[t+1] = out[t])
  */
 
+// ++++++++++ 1 ++++++++++
 CHIP Bit {
     IN in, load;
     OUT out;
