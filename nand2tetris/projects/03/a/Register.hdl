@@ -9,6 +9,7 @@
  * else out does not change
  */
 
+// ++++++++++ 2 ++++++++++
 CHIP Register {
     IN in[16], load;
     OUT out[16];
