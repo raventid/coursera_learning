@@ -5,8 +5,8 @@
 
 /**
  * Memory of 4K registers, each 16 bit-wide. Out holds the value
- * stored at the memory location specified by address. If load==1, then 
- * the in value is loaded into the memory location specified by address 
+ * stored at the memory location specified by address. If load==1, then
+ * the in value is loaded into the memory location specified by address
  * (the loaded value will be emitted to out from the next time step onward).
  */
 
@@ -14,6 +14,27 @@ CHIP RAM4K {
     IN in[16], load, address[12];
     OUT out[16];
 
-    PARTS:
-    // Put your code here:
+  PARTS:
+  // TODO: Find a better way to setup a load bit.
+  // I use enourmous amount of components to setup a load bit. There should be a better way to do this.
+  Mux8Way16(a[0..14]=false, a[15]=load, b=false, c=false, d=false, e=false, f=false, g=false, h=false, sel=address[0..2], out[15]=firstload);
+  Mux8Way16(a=false, b[0..14]=false, b[15]=load, c=false, d=false, e=false, f=false, g=false, h=false, sel=address[0..2], out[15]=secondload);
+  Mux8Way16(a=false, b=false, c[0..14]=false, c[15]=load, d=false, e=false, f=false, g=false, h=false, sel=address[0..2], out[15]=thirdload);
+  Mux8Way16(a=false, b=false, c=false, d[0..14]=false, d[15]=load, e=false, f=false, g=false, h=false, sel=address[0..2], out[15]=forthload);
+  Mux8Way16(a=false, b=false, c=false, d=false, e[0..14]=false, e[15]=load, f=false, g=false, h=false, sel=address[0..2], out[15]=fifthload);
+  Mux8Way16(a=false, b=false, c=false, d=false, e=false, f[0..14]=false, f[15]=load, g=false, h=false, sel=address[0..2], out[15]=sixthload);
+  Mux8Way16(a=false, b=false, c=false, d=false, e=false, f=false, g[0..14]=false, g[15]=load, h=false, sel=address[0..2], out[15]=seventhload);
+  Mux8Way16(a=false, b=false, c=false, d=false, e=false, f=false, g=false, h[0..14]=false, h[15]=load, sel=address[0..2], out[15]=eightthload);
+
+
+  RAM512(in=in, load=firstload, address=address[3..11], out=out1);
+  RAM512(in=in, load=secondload, address=address[3..11], out=out2);
+  RAM512(in=in, load=thirdload, address=address[3..11], out=out3);
+  RAM512(in=in, load=forthload, address=address[3..11], out=out4);
+  RAM512(in=in, load=fifthload, address=address[3..11], out=out5);
+  RAM512(in=in, load=sixthload, address=address[3..11], out=out6);
+  RAM512(in=in, load=seventhload, address=address[3..11], out=out7);
+  RAM512(in=in, load=eightthload, address=address[3..11], out=out8);
+
+  Mux8Way16(a=out1, b=out2, c=out3, d=out4, e=out5, f=out6, g=out7, h=out8, sel=address[0..2], out=out);
 }
