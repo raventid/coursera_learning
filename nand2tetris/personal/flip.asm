@@ -8,7 +8,7 @@
 
 @R1
 D=M
-@temp
+@temp // asm go and find some available register, where I can store my information
 M=D
 
 @R0
@@ -18,9 +18,14 @@ M=D
 
 @temp
 D=M
-@R=0
+@R0
 M=D
 
 (END)
   @END
   0;JMP
+
+// in this assembler dialect we'll have the next rules
+// 1) A reference to a symbol that has no corresponding label
+//    declaration is treated as a reference to a variable.
+// 2) Variables are allocated to the RAM from address 16 onward.
