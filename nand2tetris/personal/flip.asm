@@ -6,20 +6,22 @@
 // R1 = R0
 // R0 = temp
 
+// Whitespace instruction are ignored!!! This can lead to NOP slide if you are not accurate.
+
 @R1
-D=M
+D=M // We are at R1 make: D = Ram[R1]
 @temp // asm go and find some available register, where I can store my information
-M=D
+M=D // We are at temp make: Ram[temp] = D
 
 @R0
-D=M
+D=M // We are at R0: D = Ram[R0]
 @R1
-M=D
+M=D // We are at R1: Ram[R1] = D
 
 @temp
-D=M
+D=M // We are at temp: D = Ram[temp]
 @R0
-M=D
+M=D // We are at R0: Ram[R0] = D
 
 (END)
   @END
