@@ -4,3 +4,4 @@ version = "0.1.0"
 authors = ["Julian Kulesh <julian.kulesh@kupibilet.ru>"]
 
 [dependencies]
+num = "0.1.27"
