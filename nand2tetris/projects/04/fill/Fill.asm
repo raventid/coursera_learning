@@ -19,7 +19,7 @@
 
   @color
   M=-1 // -1 stands for black screen(in personal folder there is some explanation)
-  // 0 stands for black screen(in personal folder there is some explanation)
+       // 0 stands for white screen(in personal folder there is some explanation)
 
 (INPUT)
   @KBD
