@@ -5,7 +5,7 @@ enum MyOption<T> {
 
 enum MyResult<T, E> {
   Ok(T),
-  Err(E) 
+  Err(E)
 }
 
 enum BinaryTree<T> {
@@ -13,13 +13,13 @@ enum BinaryTree<T> {
   NonEmpty(Box<(T, BinaryTree<T>, BinaryTree<T>)>)
 }
 
-// We have to importe internal structures, cause Rust carefully hide internal structure from us.
+// We have to import internal structures, cause Rust carefully hides internal structures from us.
 use self::BinaryTree::*;
 
 impl<T: Ord> BinaryTree<T> {
   fn add(&mut self, value: T) {
     match *self {
-      Empty => 
+      Empty =>
         *self = NonEmpty(Box::new((value, Empty, Empty))),
       NonEmpty(ref mut node) =>
         if value <= node.0 {
