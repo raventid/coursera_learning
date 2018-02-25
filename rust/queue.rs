@@ -15,7 +15,7 @@ impl<T> Queue<T> {
   fn push(&mut self, c: T) {
     self.younger.push(c);
   }
-  
+
   fn pop(&mut self) -> Option<T> {
     if self.older.is_empty() {
       if self.younger.is_empty() {
@@ -29,9 +29,9 @@ impl<T> Queue<T> {
     self.older.pop()
   }
 
-  // Here will take ownership for queue 
+  // Here will take ownership for queue
   fn split(self) -> (Vec<T>, Vec<T>) {
-    (self.older, self.younger) 
+    (self.older, self.younger)
   }
 }
 
