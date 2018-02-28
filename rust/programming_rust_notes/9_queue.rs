@@ -16,3 +16,6 @@ impl<T> Queue<T> {
         self.younger.is_empty() == self.older.is_empty()
     }
 }
+
+// Use `turbofish` when you need to create simple variable (can't infer type here)
+let mut q = Queue::<char>::new();
