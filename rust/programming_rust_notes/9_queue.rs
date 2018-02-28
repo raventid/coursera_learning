@@ -4,7 +4,7 @@ pub struct Queue<T> {
 }
 
 impl<T> Queue<T> {
-    pub fn new() -> Queue<T> {
+    pub fn new() -> Self {
         Queue { older: Vec::new(), younger: Vec::new() }
     }
 
