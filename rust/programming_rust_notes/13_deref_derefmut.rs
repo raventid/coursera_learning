@@ -39,6 +39,10 @@ impl<T> DerefMut for Selector<T> {
 // In a sense, this is a way to get a limited form of deref coercion
 // in checking AsRef bounds on type variables.
 
+
+// Small note:
+// Fn() is shorthand for Fn() -> ()
+
 fn main() {
     let mut s = Selector { elements: vec!['x', 'y', 'z'],
                            current: 2 };
