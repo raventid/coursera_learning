@@ -1,0 +1,1 @@
+let symbol_table = "symbol table"
