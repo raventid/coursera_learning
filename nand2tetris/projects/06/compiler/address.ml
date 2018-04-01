@@ -1,3 +1,4 @@
+(* Optional type which represents address or lack of address *)
 type t =
   | Undefined
   | Address of int
