@@ -11,7 +11,7 @@ jbuilder build main.exe
 To compile your program run:
 
 ```
-path/to/main.exe path/to/your_file.asm 
+path/to/main.exe path/to/your_file.asm
 ```
 
 Your .hack file will be created in the same folder as an .asm file.
