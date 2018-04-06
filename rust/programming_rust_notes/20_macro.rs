@@ -14,8 +14,22 @@ macro_rules! assert_special {
     });
 }
 
+macro_rules! vector {
+    ($elem:expr, $n:expr) => {
+        ::std::vec::from_elem($elem, $n)
+    };
+    ($($x:expr),*) => {
+        <[_]>::into_vec(Box::new([ $( $x ), *]))
+    };
+    ($($x:expr),+ ,) => {
+        vector![$($x), *]
+    }
+}
 
 fn main() {
     let val = assert_special!("hello", "hello");
     println!("{:?}", val);
+
+    let some_vector = vector![10, 1];
+    println!("{:?}", some_vector);
 }
