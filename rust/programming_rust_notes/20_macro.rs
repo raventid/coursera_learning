@@ -26,6 +26,22 @@ macro_rules! vector {
     }
 }
 
+
+// Pattern language of regular expressions:
+
+// $( ... )* Match 0 or more times with no separator
+
+// $( ... ),* Match 0 or more times, separated by commas
+
+// $( ... );* Match 0 or more times, separated by semicolons
+
+// $( ... )+ Match 1 or more times with no separator
+
+// $( ... ),+ Match 1 or more times, separated by commas
+
+// $( ... );+ Match 1 or more times, separated by semicolons
+
+
 fn main() {
     let val = assert_special!("hello", "hello");
     println!("{:?}", val);
