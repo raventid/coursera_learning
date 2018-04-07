@@ -21,6 +21,7 @@ macro_rules! vector {
     ($($x:expr),*) => {
         <[_]>::into_vec(Box::new([ $( $x ), *]))
     };
+    // adds support for trailing comma
     ($($x:expr),+ ,) => {
         vector![$($x), *]
     }
