@@ -23,6 +23,7 @@ macro_rules! vector {
     };
     // adds support for trailing comma
     ($($x:expr),+ ,) => {
+        // delegate creation to second macro case
         vector![$($x), *]
     }
 }
@@ -49,4 +50,8 @@ fn main() {
 
     let some_vector = vector![10, 1];
     println!("{:?}", some_vector);
+
+    // third case with trailing comma
+    let some_vector_with_trailing_comma = vector![10, 1, 10,];
+    println!("{:?}", some_vector_with_trailing_comma);
 }
