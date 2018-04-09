@@ -57,6 +57,58 @@ enum Json {
     Object(Box<HashMap<String, Json>>)
 }
 
+// Json macro:
+macro_rules! json {
+    (null) => {
+        Json::Null
+    };
+    // expr does not work here, because in json! macro we need not Rust code, but very specific stuff
+    // tt - token tree is very good for this, it matches either
+    // a properly matched pair of brackets, (...) [...] or {...}, and everything in between,
+    // including nested token trees;
+    // or a single token that isn’t a bracket, like 1926 or "Knots".
+    ([ $( $element:tt ), * ]) => {
+        // let's convert some JSON stuff to Rust (will call our json! recursivly)
+        Json::Array(vec![ $( json!($element)), * ])
+    };
+    ({ $( $key:tt : $value:tt ), * }) => {
+        // don't forget to wrap ($key.to_string(), json!($value)) in parenthesis.
+        Json::Object(Box::new(vec![$( ($key.to_string(), json!($value)) ), *].into_iter().collect()))
+    };
+    ($other:tt) => {
+        Json::from($other)
+    };
+}
+
+impl From<bool> for Json {
+    fn from(b: bool) -> Json {
+        Json::Boolean(b)
+    }
+}
+
+impl From<String> for Json {
+    fn from(s: String) -> Json {
+        Json::String(s)
+    }
+}
+
+impl<'a> From<&'a str> for Json {
+    fn from(s: &'a str) -> Json {
+        Json::String(s.to_string())
+    }
+}
+
+macro_rules! impl_json_for {
+    ( $( $t:ident ), * ) => {
+        $(
+            impl From<$t> for Json {
+                fn from(number: $t) -> Json {
+                    Json::Number(number as f64)
+                }
+            }
+        )*
+    }
+}
 
 fn main() {
     let val = assert_special!("hello", "hello");
@@ -81,15 +133,25 @@ fn main() {
         ].into_iter().collect()))
     ]);
 
-    // let's delegate this code generation to macro
-    let students = json!([{
-        "name": "Raventid",
-        "class_of": 32
-    },
-    {
-        "name": "Raventida",
-        "age": 26
-    }]);
-
     println!("{:?}", students);
+
+    // Test for json macro:
+    assert_eq!(json!(null), Json::Null);
+
+    impl_json_for!(u8, i8, u16, u32, i32, u64, i64, usize, isize, f32, f64);
+
+    let one_more_test = json!({
+        "width": 10
+        // "height": (10 * 2)
+    });
+
+    // let's delegate this code generation to macro
+    // let students_with_macro = json!([{
+    //     "name": "Raventid",
+    //     "class_of": 32
+    // },
+    // {
+    //     "name": "Raventida",
+    //     "age": 26
+    // }]);
 }
