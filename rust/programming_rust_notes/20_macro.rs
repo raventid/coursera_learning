@@ -71,10 +71,20 @@ macro_rules! json {
         // let's convert some JSON stuff to Rust (will call our json! recursivly)
         Json::Array(vec![ $( json!($element)), * ])
     };
+    // ({ $( $key:tt : $value:tt ), * }) => {
+    //     // don't forget to wrap ($key.to_string(), json!($value)) in parenthesis.
+    //     Json::Object(Box::new(vec![$( ($key.to_string(), json!($value)) ), *].into_iter().collect()))
+    // };
+
+    // object macro with local variable instead of into_iter()
     ({ $( $key:tt : $value:tt ), * }) => {
-        // don't forget to wrap ($key.to_string(), json!($value)) in parenthesis.
-        Json::Object(Box::new(vec![$( ($key.to_string(), json!($value)) ), *].into_iter().collect()))
+        {
+            let mut fields = Box::new(HashMap::new());
+            $( fields.insert($key.to_string(), json!($value)); )*
+                Json::Object(fields)
+        }
     };
+
     ($other:tt) => {
         Json::from($other)
     };
