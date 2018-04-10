@@ -150,18 +150,20 @@ fn main() {
 
     impl_json_for!(u8, i8, u16, u32, i32, u64, i64, usize, isize, f32, f64);
 
-    let one_more_test = json!({
+    let _one_more_test = json!({
         "width": 10
         // "height": (10 * 2)
     });
 
     // let's delegate this code generation to macro
-    // let students_with_macro = json!([{
-    //     "name": "Raventid",
-    //     "class_of": 32
-    // },
-    // {
-    //     "name": "Raventida",
-    //     "age": 26
-    // }]);
+    let students_with_macro = json!([{
+        "name": "Raventid",
+        "age": 32
+    },
+    {
+        "name": "Raventida",
+        "age": 26
+    }]);
+
+    println!("{:?}", students_with_macro);
 }
