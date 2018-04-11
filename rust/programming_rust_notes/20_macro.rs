@@ -78,6 +78,7 @@ macro_rules! json {
 
     // object macro with local variable instead of into_iter()
     ({ $( $key:tt : $value:tt ), * }) => {
+        // wrap this code in scope
         {
             let mut fields = Box::new(HashMap::new());
             $( fields.insert($key.to_string(), json!($value)); )*
