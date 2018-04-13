@@ -69,8 +69,11 @@ view model =
   div []
     [ h1 [] [
         --  Pretty ugly. Is it view or update? Definitely it's helper function + some path constant. Or even structure.
-        img [src ("https://www.wpclipart.com/recreation/games/dice/die_face_" ++ (toString model.dieFace) ++ ".png")] []
+        img [src (buildImgSrc (toString model.dieFace))] []
       ]
     , button [ onClick Roll ] [ text "Roll" ]
     , button [ onClick RollOutbound] [ text "RollOutbound" ]
     ]
+
+buildImgSrc : String -> String
+buildImgSrc dieFace = "https://www.wpclipart.com/recreation/games/dice/die_face_" ++ dieFace ++ ".png"
