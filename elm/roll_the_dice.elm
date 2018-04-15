@@ -68,7 +68,6 @@ view : Model -> Html Msg
 view model =
   div []
     [ h1 [] [
-        --  Pretty ugly. Is it view or update? Definitely it's helper function + some path constant. Or even structure.
         img [src (buildImgSrc (toString model.dieFace))] []
       ]
     , button [ onClick Roll ] [ text "Roll" ]
