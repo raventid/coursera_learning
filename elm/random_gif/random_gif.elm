@@ -19,8 +19,8 @@ main =
 
 
 
--- MODEL
 
+-- MODEL
 
 type alias Model =
   { topic : String
@@ -36,11 +36,12 @@ init topic =
 
 
 
--- UPDATE
 
+-- UPDATE
 
 type Msg
   = MorePlease
+  | ChangeTopic String
   | NewGif (Result Http.Error String)
 
 
@@ -56,15 +57,19 @@ update msg model =
     NewGif (Err _) ->
       (model, Cmd.none)
 
+    ChangeTopic newTopic ->
+      ({model | topic = newTopic}, Cmd.none)
+
+
 
 
 -- VIEW
 
-
 view : Model -> Html Msg
 view model =
   div []
-    [ h2 [] [text model.topic]
+    [ h1 [] [text model.topic]
+    , input [ placeholder "Custom topic", onInput ChangeTopic ] []
     , button [ onClick MorePlease ] [ text "More Please!" ]
     , br [] []
     , img [src model.gifUrl] []
@@ -72,8 +77,8 @@ view model =
 
 
 
--- SUBSCRIPTIONS
 
+-- SUBSCRIPTIONS
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -81,8 +86,8 @@ subscriptions model =
 
 
 
--- HTTP
 
+-- HTTP
 
 getRandomGif : String -> Cmd Msg
 getRandomGif topic =
