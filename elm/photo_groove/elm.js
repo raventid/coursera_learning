@@ -8145,6 +8145,31 @@ var _elm_lang$html$Html_Attributes$classList = function (list) {
 };
 var _elm_lang$html$Html_Attributes$style = _elm_lang$virtual_dom$VirtualDom$style;
 
+var _user$project$PhotoGroove$initialModel = {
+	ctor: '::',
+	_0: {url: '1.jpeg'},
+	_1: {
+		ctor: '::',
+		_0: {url: '2.jpeg'},
+		_1: {
+			ctor: '::',
+			_0: {url: '3.jpeg'},
+			_1: {ctor: '[]'}
+		}
+	}
+};
+var _user$project$PhotoGroove$urlPrefix = 'http://elm-in-action.com/';
+var _user$project$PhotoGroove$viewThumbnail = function (thumbnail) {
+	return A2(
+		_elm_lang$html$Html$img,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$src(
+				A2(_elm_lang$core$Basics_ops['++'], _user$project$PhotoGroove$urlPrefix, thumbnail.url)),
+			_1: {ctor: '[]'}
+		},
+		{ctor: '[]'});
+};
 var _user$project$PhotoGroove$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -8172,46 +8197,13 @@ var _user$project$PhotoGroove$view = function (model) {
 						_0: _elm_lang$html$Html_Attributes$id('thumbnail'),
 						_1: {ctor: '[]'}
 					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$img,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$src('http://elm-in-action.com/1.jpeg'),
-								_1: {ctor: '[]'}
-							},
-							{ctor: '[]'}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$img,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$src('http://elm-in-action.com/2.jpeg'),
-									_1: {ctor: '[]'}
-								},
-								{ctor: '[]'}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$img,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$src('http://elm-in-action.com/3.jpeg'),
-										_1: {ctor: '[]'}
-									},
-									{ctor: '[]'}),
-								_1: {ctor: '[]'}
-							}
-						}
-					}),
+					A2(_elm_lang$core$List$map, _user$project$PhotoGroove$viewThumbnail, model)),
 				_1: {ctor: '[]'}
 			}
 		});
 };
 var _user$project$PhotoGroove$main = _elm_lang$virtual_dom$Native_VirtualDom.staticProgram(
-	_user$project$PhotoGroove$view('NO MODEL YET'));
+	_user$project$PhotoGroove$view(_user$project$PhotoGroove$initialModel));
 
 var Elm = {};
 Elm['PhotoGroove'] = Elm['PhotoGroove'] || {};
