@@ -18,7 +18,17 @@ view model =
         ]
 
 
-viewThumbnail thumbnail =
-    img [ src ( urlPrefix ++ thumbnail.url ) ] []
+viewThumbnail selectedUrl thumbnail =
+    if selectedUrl == thumbnail.url then
+        img
+        [ src ( urlPrefix ++ thumbnail.url )
+        , class "selected"
+        ]
+        []
+    else
+        img
+        [ src ( urlPrefix ++ thumbnail.url ) ]
+        []
+
 
 main = view initialModel
