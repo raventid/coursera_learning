@@ -8262,9 +8262,19 @@ var _elm_lang$html$Html_Events$Options = F2(
 
 var _user$project$PhotoGroove$update = F2(
 	function (msg, model) {
-		return _elm_lang$core$Native_Utils.eq(msg.operation, 'SELECT_PHOTO') ? _elm_lang$core$Native_Utils.update(
-			model,
-			{selectedUrl: msg.data}) : model;
+		var _p0 = msg.operation;
+		switch (_p0) {
+			case 'SELECT_PHOTO':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{selectedUrl: msg.data});
+			case 'SURPRISE_ME':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{selectedUrl: '2.jpeg'});
+			default:
+				return model;
+		}
 	});
 var _user$project$PhotoGroove$initialModel = {
 	photos: {
@@ -8282,6 +8292,7 @@ var _user$project$PhotoGroove$initialModel = {
 	},
 	selectedUrl: '1.jpeg'
 };
+var _user$project$PhotoGroove$photoArray = _elm_lang$core$Array$fromList(_user$project$PhotoGroove$initialModel.photos);
 var _user$project$PhotoGroove$urlPrefix = 'http://elm-in-action.com/';
 var _user$project$PhotoGroove$viewThumbnail = F2(
 	function (selectedUrl, thumbnail) {
@@ -8347,28 +8358,55 @@ var _user$project$PhotoGroove$view = function (model) {
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_elm_lang$html$Html$img,
+						_elm_lang$html$Html$button,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('large'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$src(
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										_user$project$PhotoGroove$urlPrefix,
-										A2(_elm_lang$core$Basics_ops['++'], 'large/', model.selectedUrl))),
-								_1: {ctor: '[]'}
-							}
+							_0: _elm_lang$html$Html_Events$onClick(
+								{operation: 'SURPRISE_ME', data: ''}),
+							_1: {ctor: '[]'}
 						},
-						{ctor: '[]'}),
-					_1: {ctor: '[]'}
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Surprise me!'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$img,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('large'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$src(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											_user$project$PhotoGroove$urlPrefix,
+											A2(_elm_lang$core$Basics_ops['++'], 'large/', model.selectedUrl))),
+									_1: {ctor: '[]'}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		});
 };
 var _user$project$PhotoGroove$main = _elm_lang$html$Html$beginnerProgram(
 	{model: _user$project$PhotoGroove$initialModel, view: _user$project$PhotoGroove$view, update: _user$project$PhotoGroove$update})();
+var _user$project$PhotoGroove$Photo = function (a) {
+	return {url: a};
+};
+var _user$project$PhotoGroove$Model = F2(
+	function (a, b) {
+		return {photos: a, selectedUrl: b};
+	});
+var _user$project$PhotoGroove$Msg = F2(
+	function (a, b) {
+		return {operation: a, data: b};
+	});
 
 var Elm = {};
 Elm['PhotoGroove'] = Elm['PhotoGroove'] || {};
