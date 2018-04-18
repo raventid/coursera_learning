@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Array exposing (Array)
+import Random
 
 urlPrefix : String
 urlPrefix = "http://elm-in-action.com/"
@@ -21,6 +22,7 @@ type Msg =
       SelectByUrl String
     | SurpriseMe
     | SetSize ThumbnailSize
+    | SelectByIndex Int
 
 type ThumbnailSize =
       Small
@@ -66,15 +68,17 @@ viewThumbnail selectedUrl thumbnail =
          ]
          []
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SelectByUrl url ->
-            { model | selectedUrl = url }
+            ( { model | selectedUrl = url }, Cmd.none )
+        SelectByIndex index ->
+            ( { model | selectedUrl = getPhotoUrl index }, Cmd.none )
         SurpriseMe ->
-            { model | selectedUrl = "2.jpeg" }
+            ( model, Random.generate SelectByIndex randomPhotoPicker )
         SetSize size ->
-            { model | chosenSize = size }
+            ( { model | chosenSize = size }, Cmd.none )
 
 photoArray : Array Photo
 photoArray = Array.fromList initialModel.photos
@@ -87,7 +91,6 @@ viewSizeChooser size =
         , text (sizeToString size)
         ]
 
-
 sizeToString : ThumbnailSize -> String
 sizeToString size =
     case size of
@@ -98,9 +101,17 @@ sizeToString size =
         Large ->
             "large"
 
-main = Html.beginnerProgram
+getPhotoUrl : Int -> String
+getPhotoUrl number = ( toString number ) ++ ".jpeg"
+
+randomPhotoPicker : Random.Generator Int
+randomPhotoPicker = Random.int 1 (Array.length photoArray)
+
+main : Program Never Model Msg
+main = Html.program
        {
-         model = initialModel
+         init = ( initialModel, Cmd.none )
        , view = view
        , update = update
+       , subscriptions = (\model -> Sub.none)
        }
