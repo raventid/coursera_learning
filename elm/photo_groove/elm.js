@@ -9051,12 +9051,6 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
-var _user$project$PhotoGroove$getPhotoUrl = function (number) {
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		_elm_lang$core$Basics$toString(number),
-		'.jpeg');
-};
 var _user$project$PhotoGroove$sizeToString = function (size) {
 	var _p0 = size;
 	switch (_p0.ctor) {
@@ -9067,6 +9061,13 @@ var _user$project$PhotoGroove$sizeToString = function (size) {
 		default:
 			return 'large';
 	}
+};
+var _user$project$PhotoGroove$pickExtension = '.jpeg';
+var _user$project$PhotoGroove$getPhotoUrl = function (number) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		_elm_lang$core$Basics$toString(number),
+		_user$project$PhotoGroove$pickExtension);
 };
 var _user$project$PhotoGroove$urlPrefix = 'http://elm-in-action.com/';
 var _user$project$PhotoGroove$Photo = function (a) {
