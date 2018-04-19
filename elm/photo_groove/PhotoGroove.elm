@@ -18,7 +18,8 @@ type alias Photo =
 
 type alias Model =
     { photos : List Photo
-    , selectedUrl : String
+    , selectedUrl : Maybe String
+    , loadingError : Maybe String
     , chosenSize : ThumbnailSize
     }
 
@@ -36,8 +37,9 @@ type ThumbnailSize =
 initialModel : Model
 initialModel =
     {
-      photos = [ { url = "1.jpeg" } , { url = "2.jpeg" } , { url = "3.jpeg" } ]
-    , selectedUrl = "1.jpeg"
+      photos = []
+    , selectedUrl = Nothing
+    , loadingError = Nothing
     , chosenSize = Medium
     }
 
@@ -53,18 +55,22 @@ view model =
         , button
             [ onClick SurpriseMe ]
             [ text "Surprise me!" ]
-        , img
-            [ class "large"
-            , src ( urlPrefix ++ "large/" ++ model.selectedUrl )
-            ]
-            []
+        , viewLarge model.selectedUrl
         ]
 
-viewThumbnail : String -> Photo -> Html Msg
+viewLarge : Maybe String -> Html Msg
+viewLarge maybeUrl =
+    case maybeUrl of
+        Nothing ->
+            text ""
+        Just url ->
+            img [ class "large", src ( urlPrefix ++ "large/" ++ url ) ] []
+
+viewThumbnail : Maybe String -> Photo -> Html Msg
 viewThumbnail selectedUrl thumbnail =
      img
          [ src ( urlPrefix ++ thumbnail.url )
-         , classList [ ( "selected", selectedUrl == thumbnail.url ) ]
+         , classList [ ( "selected", selectedUrl == Just thumbnail.url ) ]
          , onClick ( SelectByUrl thumbnail.url )
          ]
          []
@@ -73,7 +79,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SelectByUrl url ->
-            ( { model | selectedUrl = url }, Cmd.none )
+            ( { model | selectedUrl = Just url }, Cmd.none )
         SelectByIndex index ->
             ( { model | selectedUrl = getPhotoUrl index }, Cmd.none )
         SurpriseMe ->
@@ -103,8 +109,13 @@ sizeToString size =
         Large ->
             "large"
 
-getPhotoUrl : Int -> String
-getPhotoUrl number = ( toString number ) ++ pickExtension
+getPhotoUrl : Int -> Maybe String
+getPhotoUrl index =
+    case Array.get index photoArray of
+        Just photo ->
+            Just photo.url
+        Nothing ->
+            Nothing
 
 randomPhotoPicker : Random.Generator Int
 randomPhotoPicker = Random.int 1 ( Array.length photoArray )

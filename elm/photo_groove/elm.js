@@ -9063,19 +9063,36 @@ var _user$project$PhotoGroove$sizeToString = function (size) {
 	}
 };
 var _user$project$PhotoGroove$pickExtension = '.jpeg';
-var _user$project$PhotoGroove$getPhotoUrl = function (number) {
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		_elm_lang$core$Basics$toString(number),
-		_user$project$PhotoGroove$pickExtension);
-};
 var _user$project$PhotoGroove$urlPrefix = 'http://elm-in-action.com/';
+var _user$project$PhotoGroove$viewLarge = function (maybeUrl) {
+	var _p1 = maybeUrl;
+	if (_p1.ctor === 'Nothing') {
+		return _elm_lang$html$Html$text('');
+	} else {
+		return A2(
+			_elm_lang$html$Html$img,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('large'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$src(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_user$project$PhotoGroove$urlPrefix,
+							A2(_elm_lang$core$Basics_ops['++'], 'large/', _p1._0))),
+					_1: {ctor: '[]'}
+				}
+			},
+			{ctor: '[]'});
+	}
+};
 var _user$project$PhotoGroove$Photo = function (a) {
 	return {url: a};
 };
-var _user$project$PhotoGroove$Model = F3(
-	function (a, b, c) {
-		return {photos: a, selectedUrl: b, chosenSize: c};
+var _user$project$PhotoGroove$Model = F4(
+	function (a, b, c, d) {
+		return {photos: a, selectedUrl: b, loadingError: c, chosenSize: d};
 	});
 var _user$project$PhotoGroove$SelectByIndex = function (a) {
 	return {ctor: 'SelectByIndex', _0: a};
@@ -9134,7 +9151,9 @@ var _user$project$PhotoGroove$viewThumbnail = F2(
 							_0: {
 								ctor: '_Tuple2',
 								_0: 'selected',
-								_1: _elm_lang$core$Native_Utils.eq(selectedUrl, thumbnail.url)
+								_1: _elm_lang$core$Native_Utils.eq(
+									selectedUrl,
+									_elm_lang$core$Maybe$Just(thumbnail.url))
 							},
 							_1: {ctor: '[]'}
 						}),
@@ -9151,37 +9170,36 @@ var _user$project$PhotoGroove$viewThumbnail = F2(
 var _user$project$PhotoGroove$Large = {ctor: 'Large'};
 var _user$project$PhotoGroove$Medium = {ctor: 'Medium'};
 var _user$project$PhotoGroove$initialModel = {
-	photos: {
-		ctor: '::',
-		_0: {url: '1.jpeg'},
-		_1: {
-			ctor: '::',
-			_0: {url: '2.jpeg'},
-			_1: {
-				ctor: '::',
-				_0: {url: '3.jpeg'},
-				_1: {ctor: '[]'}
-			}
-		}
-	},
-	selectedUrl: '1.jpeg',
+	photos: {ctor: '[]'},
+	selectedUrl: _elm_lang$core$Maybe$Nothing,
+	loadingError: _elm_lang$core$Maybe$Nothing,
 	chosenSize: _user$project$PhotoGroove$Medium
 };
 var _user$project$PhotoGroove$photoArray = _elm_lang$core$Array$fromList(_user$project$PhotoGroove$initialModel.photos);
+var _user$project$PhotoGroove$getPhotoUrl = function (index) {
+	var _p2 = A2(_elm_lang$core$Array$get, index, _user$project$PhotoGroove$photoArray);
+	if (_p2.ctor === 'Just') {
+		return _elm_lang$core$Maybe$Just(_p2._0.url);
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
 var _user$project$PhotoGroove$randomPhotoPicker = A2(
 	_elm_lang$core$Random$int,
 	1,
 	_elm_lang$core$Array$length(_user$project$PhotoGroove$photoArray));
 var _user$project$PhotoGroove$update = F2(
 	function (msg, model) {
-		var _p1 = msg;
-		switch (_p1.ctor) {
+		var _p3 = msg;
+		switch (_p3.ctor) {
 			case 'SelectByUrl':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{selectedUrl: _p1._0}),
+						{
+							selectedUrl: _elm_lang$core$Maybe$Just(_p3._0)
+						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SelectByIndex':
@@ -9190,7 +9208,7 @@ var _user$project$PhotoGroove$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							selectedUrl: _user$project$PhotoGroove$getPhotoUrl(_p1._0)
+							selectedUrl: _user$project$PhotoGroove$getPhotoUrl(_p3._0)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -9205,7 +9223,7 @@ var _user$project$PhotoGroove$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{chosenSize: _p1._0}),
+						{chosenSize: _p3._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 		}
@@ -9298,22 +9316,7 @@ var _user$project$PhotoGroove$view = function (model) {
 								}),
 							_1: {
 								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$img,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('large'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$src(
-												A2(
-													_elm_lang$core$Basics_ops['++'],
-													_user$project$PhotoGroove$urlPrefix,
-													A2(_elm_lang$core$Basics_ops['++'], 'large/', model.selectedUrl))),
-											_1: {ctor: '[]'}
-										}
-									},
-									{ctor: '[]'}),
+								_0: _user$project$PhotoGroove$viewLarge(model.selectedUrl),
 								_1: {ctor: '[]'}
 							}
 						}
