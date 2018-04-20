@@ -60,6 +60,18 @@ view model =
         , viewLarge model.selectedUrl
         ]
 
+viewOrError : Model -> Html Msg
+viewOrError model =
+    case model.loadingError of
+        Nothing ->
+            view model
+        Just errorMsg ->
+            div [class "error-message"]
+                [ h1 [] [text "Photo groove"]
+                , p [] [text errorMsg]
+                ]
+
+
 viewLarge : Maybe String -> Html Msg
 viewLarge maybeUrl =
     case maybeUrl of
@@ -106,10 +118,9 @@ update msg model =
                 -- The same as ( \url -> { url = url } )
                 photos = List.map Photo urls
             in
-                ( { model | photos = photos }, Cmd.none )
+                ( { model | photos = photos, selectedUrl = List.head urls }, Cmd.none )
         LoadPhotos (Err _) ->
-            ( model, Cmd.none )
-
+            ( { model | loadingError = Just "Error! (Try turning it off and on again.)" }, Cmd.none)
 photoArray : Array Photo
 photoArray = Array.fromList initialModel.photos
 
@@ -149,7 +160,7 @@ main : Program Never Model Msg
 main = Html.program
        {
          init = ( initialModel, initialCmd )
-       , view = view
+       , view = viewOrError
        , update = update
        , subscriptions = ( \_ -> Sub.none )
        }
