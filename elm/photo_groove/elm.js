@@ -9701,11 +9701,11 @@ var _user$project$PhotoGroove$viewThumbnail = F2(
 							thumbnail.title,
 							A2(
 								_elm_lang$core$Basics_ops['++'],
-								'[',
+								' [',
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									_elm_lang$core$Basics$toString(thumbnail.size),
-									' KB')))),
+									' KB]')))),
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$html$Html_Attributes$classList(
