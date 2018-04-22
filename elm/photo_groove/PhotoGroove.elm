@@ -1,12 +1,15 @@
-module PhotoGroove exposing (..)
+port module PhotoGroove exposing (..)
 
-import Html exposing (..)
-import Html.Events exposing (..)
-import Http
 import Array exposing (Array)
 import Random
+
+import Http
+
+import Html exposing (..)
 import Html.Attributes exposing (id, class, classList, src, name, type_, title)
-import Json.Decode exposing (string, int, list, Decoder)
+import Html.Events exposing (onClick, on)
+
+import Json.Decode exposing (string, int, list, Decoder, at)
 import Json.Decode.Pipeline exposing (decode, required, optional)
 
 urlPrefix : String
@@ -27,6 +30,16 @@ type alias Model =
     , selectedUrl : Maybe String
     , loadingError : Maybe String
     , chosenSize : ThumbnailSize
+    , hue : Int
+    , ripple : Int
+    , noise : Int
+    }
+
+port setFilters : FilterOptions -> Cmd msg
+
+type alias FilterOptions =
+    { url : String
+    , filters : List { name : String, amount : Float}
     }
 
 type Msg =
@@ -35,6 +48,9 @@ type Msg =
     | SetSize ThumbnailSize
     | SelectByIndex Int
     | LoadPhotos (Result Http.Error (List Photo))
+    | SetHue Int
+    | SetRipple Int
+    | SetNoise Int
 
 type ThumbnailSize =
       Small
@@ -48,6 +64,9 @@ initialModel =
     , selectedUrl = Nothing
     , loadingError = Nothing
     , chosenSize = Medium
+    , hue = 0
+    , ripple = 0
+    , noise = 0
     }
 
 view : Model -> Html Msg
@@ -63,19 +82,19 @@ view model =
             [ onClick SurpriseMe ]
             [ text "Surprise me!" ]
         , div [class "filters"]
-            [ viewFilter "Hue" 0
-            , viewFilter "Ripple" 0
-            , viewFilter "Noise" 0
+            [ viewFilter SetHue "Hue" model.hue
+            , viewFilter SetRipple "Ripple" model.ripple
+            , viewFilter SetNoise "Noise" model.noise
             ]
         , viewLarge model.selectedUrl
         ]
 
 
-viewFilter : String -> Int -> Html Msg
-viewFilter name magnitude =
+viewFilter :(Int -> Msg) -> String -> Int -> Html Msg
+viewFilter toMsg name magnitude =
     div [ class "filter-slider" ]
         [ label [] [text name ]
-        , paperSlider [Html.Attributes.max "11"] []
+        , paperSlider [Html.Attributes.max "11", onImmediateValueChange toMsg] []
         , label [] [text (toString magnitude) ]
         ]
 
@@ -97,7 +116,7 @@ viewLarge maybeUrl =
         Nothing ->
             text ""
         Just url ->
-            img [ class "large", src ( urlPrefix ++ "large/" ++ url ) ] []
+            canvas [ id "main-canvas", class "large"] []
 
 viewThumbnail : Maybe String -> Photo -> Html Msg
 viewThumbnail selectedUrl thumbnail =
@@ -109,11 +128,26 @@ viewThumbnail selectedUrl thumbnail =
          ]
          []
 
+applyFilters : Model -> ( Model, Cmd Msg )
+applyFilters model =
+    case model.selectedUrl of
+        Just selectedUrl ->
+            let filters =
+                    [ {name = "Hue", amount = toFloat model.hue / 11}
+                    , {name = "Ripple", amount = toFloat model.ripple / 11}
+                    , {name = "Noise", amount = toFloat model.noise / 11}
+                    ]
+                url = urlPrefix ++ "large/" ++ selectedUrl
+            in
+                ( model, setFilters { url = url, filters = filters } )
+        Nothing ->
+            ( model, Cmd.none )
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SelectByUrl url ->
-            ( { model | selectedUrl = Just url }, Cmd.none )
+            applyFilters { model | selectedUrl = Just url }
         SelectByIndex index ->
             let
                 newSelectedUrl : Maybe String
@@ -123,7 +157,7 @@ update msg model =
                         |> Array.get index
                         |> Maybe.map .url
             in
-                ( { model | selectedUrl = newSelectedUrl }, Cmd.none )
+                 applyFilters { model | selectedUrl = newSelectedUrl }
         SurpriseMe ->
             let
                 randomPhotoPicker =
@@ -136,6 +170,12 @@ update msg model =
                 ( { model | photos = photos, selectedUrl = Maybe.map .url (List.head photos) }, Cmd.none )
         LoadPhotos (Err text) ->
             ( { model | loadingError = Just ("Error! (Try turning it off and on again.)" ++ toString text) }, Cmd.none)
+        SetHue hue ->
+            applyFilters { model | hue = hue }
+        SetRipple ripple ->
+            applyFilters  { model | ripple = ripple }
+        SetNoise noise ->
+            applyFilters  { model | noise = noise }
 
 photoArray : Array Photo
 photoArray = Array.fromList initialModel.photos
@@ -174,11 +214,22 @@ getPhotoUrl index =
         Nothing ->
             Nothing
 
+
+
+-- Integration of paper-sliders BEGIN.
+
 paperSlider : List (Attribute msg) -> List (Html msg) -> Html msg
 paperSlider =
     -- All of the functions done like this, i.e. `h1 [] []` is just a `node "h1"`
     node "paper-slider"
 
+onImmediateValueChange : (Int -> msg) -> Attribute msg
+onImmediateValueChange toMsg =
+    at ["target", "immediateValue"] int
+        |> Json.Decode.map toMsg
+        |> on "immediate-value-changed"
+
+-- Integration of paper-sliders END.
 
 initialCmd : Cmd Msg
 initialCmd =
