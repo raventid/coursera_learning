@@ -9492,6 +9492,7 @@ var _elm_lang$http$Http$StringPart = F2(
 	});
 var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
 
+var _user$project$PhotoGroove$paperSlider = _elm_lang$html$Html$node('paper-slider');
 var _user$project$PhotoGroove$sizeToString = function (size) {
 	var _p0 = size;
 	switch (_p0.ctor) {
@@ -9503,6 +9504,51 @@ var _user$project$PhotoGroove$sizeToString = function (size) {
 			return 'large';
 	}
 };
+var _user$project$PhotoGroove$viewFilter = F2(
+	function (name, magnitude) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('filter-slider'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$label,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(name),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_user$project$PhotoGroove$paperSlider,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$max('11'),
+							_1: {ctor: '[]'}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$label,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(magnitude)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
 var _user$project$PhotoGroove$pickExtension = '.jpeg';
 var _user$project$PhotoGroove$urlPrefix = 'http://elm-in-action.com/';
 var _user$project$PhotoGroove$viewLarge = function (maybeUrl) {
@@ -9836,8 +9882,31 @@ var _user$project$PhotoGroove$view = function (model) {
 								}),
 							_1: {
 								ctor: '::',
-								_0: _user$project$PhotoGroove$viewLarge(model.selectedUrl),
-								_1: {ctor: '[]'}
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('filters'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(_user$project$PhotoGroove$viewFilter, 'Hue', 0),
+										_1: {
+											ctor: '::',
+											_0: A2(_user$project$PhotoGroove$viewFilter, 'Ripple', 0),
+											_1: {
+												ctor: '::',
+												_0: A2(_user$project$PhotoGroove$viewFilter, 'Noise', 0),
+												_1: {ctor: '[]'}
+											}
+										}
+									}),
+								_1: {
+									ctor: '::',
+									_0: _user$project$PhotoGroove$viewLarge(model.selectedUrl),
+									_1: {ctor: '[]'}
+								}
 							}
 						}
 					}

@@ -62,7 +62,21 @@ view model =
         , button
             [ onClick SurpriseMe ]
             [ text "Surprise me!" ]
+        , div [class "filters"]
+            [ viewFilter "Hue" 0
+            , viewFilter "Ripple" 0
+            , viewFilter "Noise" 0
+            ]
         , viewLarge model.selectedUrl
+        ]
+
+
+viewFilter : String -> Int -> Html Msg
+viewFilter name magnitude =
+    div [ class "filter-slider" ]
+        [ label [] [text name ]
+        , paperSlider [Html.Attributes.max "11"] []
+        , label [] [text (toString magnitude) ]
         ]
 
 viewOrError : Model -> Html Msg
@@ -159,6 +173,12 @@ getPhotoUrl index =
             Just photo.url
         Nothing ->
             Nothing
+
+paperSlider : List (Attribute msg) -> List (Html msg) -> Html msg
+paperSlider =
+    -- All of the functions done like this, i.e. `h1 [] []` is just a `node "h1"`
+    node "paper-slider"
+
 
 initialCmd : Cmd Msg
 initialCmd =
