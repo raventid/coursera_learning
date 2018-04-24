@@ -8,7 +8,7 @@
 // arr = 100
 @100 // set A register to 100, set M register to content of Memory[100]
 D=A
-@arr // asks asembler to find first available memory slot and sets A to this slot number (here 16 I suppose), set M register to content of Memory[16]
+@arr_pointer // asks asembler to find first available memory slot and sets A to this slot number (here 16 I suppose), set M register to content of Memory[16]
 M=D // D equals 100, so Memory[16] = 100
 
 // n = 10
@@ -32,7 +32,7 @@ M=0 // Memory[18] = 0
   D;JEQ // jump to end if D equals to 0
 
   // RAM[arr+i] = -1
-  @arr // array starts with address 16, so A = 16
+  @arr_pointer // array starts with address 16, so A = 16
   D=M // D equals to what we have in Memory[16], at the beginning this is 100
   @i // let's get back to @i, at the beginning this is 18
   A=D+M // We assign directly to address register, new stuff we assign content of Memory[16], which is 100 + what we have @i this is 0
