@@ -13,7 +13,7 @@
 
   @SCREEN
   D=A
-  @address
+  @screen_address
   M=D // address = 16384 (base address of the Hack screen)
 
 (LOOP)
@@ -24,7 +24,7 @@
   @END
   D;JGT // if i>n goto END
 
-  @address
+  @screen_address
   A=M
   M=-1 // RAM[address] = -1 (16 pixels) (-1 == 1111111111111111)
 
@@ -32,7 +32,7 @@
   M=M+1 // i = i + 1
   @32
   D=A
-  @address
+  @screen_address
   M=D+M // address = address + 32
   @LOOP
   0;JMP // goto LOOP
