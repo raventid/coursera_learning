@@ -4,6 +4,8 @@
 //           else
 //              R1 = 0
 
+// TODO: I need to check instructions numbers. Not sure about do we count @ labels or not.
+
 @R0
 D=M
 
