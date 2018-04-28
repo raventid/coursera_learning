@@ -38,7 +38,7 @@ M=0 // sum = 0
   @n
   D=D-M
   @STOP
-  D;JGT // if i > n goto STOP
+  D;JGT // if i > n goto STOP (perhaps switch to `i - n > 0` comment? explains everything much better)
   @sum
   D=M
   @i
