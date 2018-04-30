@@ -7,7 +7,7 @@ let create () = []
 
 let add t symbol_name address = List.Assoc.add t symbol_name address
 
-(* Is there any other list implementation, with optional equal function *)
+(* TODO: Is there any other list implementation, with optional equal function? *)
 let find t symbol_name = List.Assoc.find ~equal:(=) t symbol_name
 
 let exists t symbol_name = List.Assoc.mem t symbol_name
