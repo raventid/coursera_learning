@@ -55,14 +55,14 @@
   0;JMP
 
 (LOOP)
-	@index // create index to iterate over screen
+	@index
 	D=M // set D to content of iterator
 
 	@last_screen_address
-  D=D-M // set D to (index - count)
+  D=D-M // set D to (current_screen_position - last_screen_position)
 
 	@INPUT
-	D;JEQ // if index - count = 0 goto INIT
+	D;JEQ // if index - count = 0 goto INPUT
 
   @color
   D=M // set D to color we want to use
@@ -72,7 +72,7 @@
   M=D // set Memory of index to correct color
 
   @index
-  M=M+1 // set screen pointer to point to next memory register
+  M=M+1 // set screen pointer to point to next memory register of screen
 
   @LOOP
   0;JMP // goto LOOP
