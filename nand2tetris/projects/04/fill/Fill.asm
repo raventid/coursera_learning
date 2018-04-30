@@ -11,19 +11,28 @@
 // "white" in every pixel;
 // the screen should remain fully clear as long as no key is pressed.
 
-(INIT)
-  @SCREEN
-  D=A
-  @screen
-  M=D // address = 16384 (base address of the Hack screen)
 
-  @color
-  M=-1 // -1 stands for black screen(in personal folder there is some explanation)
-       // 0 stands for white screen(in personal folder there is some explanation)
+// Genereal notes about screen:
+// Base screen address = 16384 (base address of the Hack screen)
+// (512 * 32) / 16  // size of screen
+// count = 8192 (# of bytes)
+// -1 stands for black screen(in personal folder there is some explanation)
+// 0 stands for white screen(in personal folder there is some explanation)
+
+(INIT)
+  @24576
+  D=A
+  @last_screen_address
+  M=D
 
 (INPUT)
-  @KBD
-  D = M
+  @SCREEN
+  D=A
+  @index
+  M=D // set index to beginning of the screen
+
+	@KBD
+	D=M
 
   @SET_COLOR_TO_BLACK
   D;JNE
@@ -33,43 +42,37 @@
 
 (SET_COLOR_TO_BLACK)
   @color
-  M = -1
+  M=-1
 
   @LOOP
   0;JMP
 
 (SET_COLOR_TO_WHITE)
   @color
-  M = 0
+  M=0
 
   @LOOP
   0;JMP
 
-// TODO: It does not work. But I like the overall design much better then any other.
-// It would be nice to debug this code and fix.
 (LOOP)
-  @i
-  D=M // We don't need i in fact. I think screen is enough for any operation.
-  @n
-  D=D-M
-  @INIT
-  D;JGT // if i>n goto END
+	@index // create index to iterate over screen
+	D=M // set D to content of iterator
 
-  @screen
-  A=M
+	@last_screen_address
+  D=D-M // set D to (index - count)
 
-  // I guess something is wrong here. I put something in wrong register?
+	@INPUT
+	D;JEQ // if index - count = 0 goto INIT
+
   @color
-  D = M
+  D=M // set D to color we want to use
 
-  @screen
-  M = D // set all bits in register to right color
+  @index
+  A=M // set A register to required address, we store current screen address in @index
+  M=D // set Memory of index to correct color
 
-  @i
-  M=M+1 // i = i + 1
-  @32
-  D=A
-  @screen
-  M=D+M // address = address + 32
+  @index
+  M=M+1 // set screen pointer to point to next memory register
+
   @LOOP
   0;JMP // goto LOOP
