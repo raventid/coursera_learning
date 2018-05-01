@@ -1,6 +1,9 @@
 # Build
 
-This project uses dune build system (jbuilder in the past), by Jane Street.
+This project uses `dune` build system (`jbuilder` in the past), by Jane Street.
+Also I use `Core` by Jane Street. 
+
+Thank you Jane Street!
 
 To start a build run:
 
