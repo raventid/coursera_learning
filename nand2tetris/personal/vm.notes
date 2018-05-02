@@ -12,3 +12,17 @@ push constant 17
 pop local 2
 pop static 5
 push argument 3
+
+We have 8 virtual memory segments:
+
+1. local
+2. argument
+3. this
+4. that
+5. constant
+6. static
+7. pointer
+8. temp
+
+Memory segments are accessed randomly. You can read from stack 2 or 3. You can push
+to arguments 2 or 4, that's not a problem.
