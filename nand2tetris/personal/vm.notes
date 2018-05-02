@@ -1,0 +1,14 @@
+1. Basic stack intro:
+
+add
+sub
+neg
+or
+
+
+2. Memory segments:
+
+push constant 17
+pop local 2
+pop static 5
+push argument 3
