@@ -20,14 +20,14 @@ We have 8 virtual memory segments:
 3. this
 4. that
 
-Summary: We treat those segments the same way:
+Summary: We treat those segments the same way, each of them has some reserved space in memory:
 - push segment i
 - pop segment i
 
 
 5. constant
 Summary: We have only push operation here, we cannot pop constants.
-- push segment i
+- push constant i
 
 
 6. static
