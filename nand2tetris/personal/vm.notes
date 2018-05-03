@@ -19,10 +19,48 @@ We have 8 virtual memory segments:
 2. argument
 3. this
 4. that
+
+Summary: We treat those segments the same way:
+- push segment i
+- pop segment i
+
+
 5. constant
+Summary: We have only push operation here, we cannot pop constants.
+- push segment i
+
+
 6. static
+Summary: represent static variables.
+pop static i
+push static i
+
+Unlike local vars, which are uniq for each function. All vm functions should see the same static vars.
+
+Will treat them like this: `static i` in file `Foo.asm` will become `Foo.i`
+
+If we'll write them like this in Hack asm
+
+```
+D = stack pop 2
+Foo.2 // this will be RAM[16]
+M=D
+
+D = stack pop 5
+Foo.5 // this will be RAM[17]
+M=D
+```
+So static variables will be placed from 16 to 255 memory registers.
+
 7. pointer
+Summary: Until compiler it's hard to get why we need this.
+It has only two position 0(refers to THIS) and 1(refers to THAT).
+
 8. temp
+
+Summary:
+push temp i
+pop temp i
 
 Memory segments are accessed randomly. You can read from stack 2 or 3. You can push
 to arguments 2 or 4, that's not a problem.
