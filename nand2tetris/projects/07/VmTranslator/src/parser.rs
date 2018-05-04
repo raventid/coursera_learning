@@ -1,23 +1,27 @@
 use std::io::{ BufReader };
 use std::io::prelude::*;
 use std::fs::File;
+use regex::Regex;
+
 pub struct Parser {
+    pub current_command: Command,
+
     target_descriptor: BufReader<File>,
-    pub current_command: (Command, String),
-    pub next_command: (Command, String)
+    next_command: Command
 }
 
 // All available command types for virtual machine
+#[derive(Debug)]
 pub enum Command {
-   C_ARITHMETIC,
-   C_PUSH,
-   C_POP,
-   C_LABEL,
-   C_GOTO,
-   C_IF,
-   C_FUNCTION,
-   C_RETURN,
-   C_CALL,
+    C_ARITHMETIC,
+    C_PUSH { raw: String, segment: String, index: usize },
+    C_POP { raw: String, segment: String, index: usize },
+    C_LABEL,
+    C_GOTO,
+    C_IF,
+    C_FUNCTION,
+    C_RETURN,
+    C_CALL,
 }
 
 impl Parser {
@@ -26,11 +30,11 @@ impl Parser {
         let f = File::open(input_file).unwrap();
         let b = BufReader::new(f);
 
-        // for line in b.by_ref().lines() {
-        //     println!("{}", line.unwrap());
-        // }
-
-        Parser { target_descriptor: b, current_command: (Command::C_CALL, "".to_string()), next_command: (Command::C_CALL, "".to_string())}
+        Parser {
+            target_descriptor: b,
+            current_command: Command::C_CALL,
+            next_command: Command::C_CALL
+        }
     }
 
     // Are there more command in the input?
@@ -39,7 +43,7 @@ impl Parser {
         for line in self.target_descriptor.by_ref().lines() {
             if let Ok(str) = line {
                 if str.starts_with("push") {
-                    self.next_command = (Command::C_CALL, str);
+                    self.next_command = command_type(str);
                     return (false, true)
                 }
                 return (false, false)
@@ -58,8 +62,17 @@ impl Parser {
         true
     }
 
-    // Returns enum variant representing the current_command. I might not need it, because I can pattern match :)
-    pub fn command_type(&self) -> Command {
+}
+
+// Returns enum variant representing the current_command. I might not need it, because I can pattern match :)
+    #[allow(unreachable_code)]
+    fn command_type(command : String) -> Command {
+        let push_regexp = Regex::new(r"push ([a-z]*) ([0-9]*)").unwrap();
+        let cap = push_regexp.captures(&command).unwrap();
+        return Command::C_PUSH { raw: cap[0].to_string(), segment: cap[1].to_string(), index: cap[2].parse().unwrap() };
+
+        let pop_regexp = Regex::new(r"pop (?P<segment>) (?P<index>)").unwrap();
+        let m = pop_regexp.captures(&command).unwrap();
+
         Command::C_ARITHMETIC
     }
-}

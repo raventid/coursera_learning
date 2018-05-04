@@ -2,6 +2,8 @@
 #![allow(unused_variables)]
 #![allow(dead_code)]
 
+extern crate regex;
+
 mod parser;
 use parser::Parser;
 
@@ -27,8 +29,8 @@ fn main() {
             // 4) parser: advance
             parser.advance();
             // 4) parser: send me command and token type
-            let command_type = parser.command_type();
-            println!("{}", parser.current_command.1);
+            // let command_type = parser.command_type();
+            println!("{:?}", parser.current_command);
         }
 
         if end_of_stream {
