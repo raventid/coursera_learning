@@ -42,7 +42,7 @@ impl Parser {
     pub fn has_more_commands(&mut self) -> (bool, bool) {
         for line in self.target_descriptor.by_ref().lines() {
             if let Ok(str) = line {
-                if str.starts_with("push") {
+                if str.starts_with("push") || str.starts_with("pop") {
                     self.next_command = command_type(str);
                     return (false, true)
                 }
@@ -65,14 +65,27 @@ impl Parser {
 }
 
 // Returns enum variant representing the current_command. I might not need it, because I can pattern match :)
-    #[allow(unreachable_code)]
-    fn command_type(command : String) -> Command {
-        let push_regexp = Regex::new(r"push ([a-z]*) ([0-9]*)").unwrap();
-        let cap = push_regexp.captures(&command).unwrap();
-        return Command::C_PUSH { raw: cap[0].to_string(), segment: cap[1].to_string(), index: cap[2].parse().unwrap() };
-
-        let pop_regexp = Regex::new(r"pop (?P<segment>) (?P<index>)").unwrap();
-        let m = pop_regexp.captures(&command).unwrap();
-
-        Command::C_ARITHMETIC
+#[allow(unreachable_code)]
+fn command_type(command : String) -> Command {
+    // It's not very smart to compile regexp every time.
+    // Gonna fix it later.
+    let push_regexp = Regex::new(r"push ([a-z]*) ([0-9]*)").unwrap();
+    if let Some(cap) = push_regexp.captures(&command) {
+        return Command::C_PUSH {
+            raw: cap[0].to_string(),
+            segment: cap[1].to_string(),
+            index: cap[2].parse().unwrap()
+        };
     }
+
+    let pop_regexp = Regex::new(r"pop ([a-z]*) ([0-9]*)").unwrap();
+    if let Some(cap) = pop_regexp.captures(&command) {
+        return Command::C_POP {
+            raw: cap[0].to_string(),
+            segment: cap[1].to_string(),
+            index: cap[2].parse().unwrap()
+        };
+    }
+
+    Command::C_ARITHMETIC
+}
