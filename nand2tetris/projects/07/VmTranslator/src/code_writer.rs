@@ -33,8 +33,32 @@ impl CodeWriter {
     // Writes to the file assembly code which represents current arithmetic command
     pub fn write_arithmetic(&mut self, raw : &String, opcode : &String) {
         let helper_comment = format!("// {}\n", raw);
-        let code = format!("opcode is {:?}\n", opcode);
         self.target_descriptor.write(&helper_comment.into_bytes());
+
+
+        let code = format!(
+            "@{stack_pointer}
+M=M-1
+A=M
+D=M // take first argument for operation
+
+@{register1}
+M=D
+
+@{stack_pointer}
+M=M-1
+A=M
+D=M // take second argument for operation
+
+@{register1}
+D=D-M // perform your action
+
+@{stack_pointer}
+A=M // move to memory cell pointed by stack_pointer
+M=D // put operation result to this cell",
+            stack_pointer=STACK_POINTER,
+            register1="R13"
+        );
         self.target_descriptor.write(&code.into_bytes());
     }
 
