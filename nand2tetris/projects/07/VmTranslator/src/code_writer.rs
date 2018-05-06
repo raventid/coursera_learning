@@ -26,9 +26,28 @@ impl CodeWriter {
     // Writes assembly for push and pop commands
     pub fn write_push_pop(&mut self, raw : &String, segment : &String, index : &usize) {
         let helper_comment = format!("// {}\n", raw);
-        let code = format!("segment is {:?}\n", segment);
         self.target_descriptor.write(&helper_comment.into_bytes());
-        self.target_descriptor.write(&code.into_bytes());
+
+        let at = format!("@{}\n", index);
+        self.target_descriptor.write(&at.into_bytes());
+
+        let action = format!("D=A\n");
+        self.target_descriptor.write(&action.into_bytes());
+
+        let set_stack_pointer = format!("@SP\n");
+        self.target_descriptor.write(&set_stack_pointer.into_bytes());
+
+        let move_address_to_current_stack_pointer = format!("A=M\n");
+        self.target_descriptor.write(&move_address_to_current_stack_pointer.into_bytes());
+
+        let move_value_to_stack = format!("M=D\n");
+        self.target_descriptor.write(&move_value_to_stack.into_bytes());
+
+        let set_stack_pointer = format!("@SP\n");
+        self.target_descriptor.write(&set_stack_pointer.into_bytes());
+
+        let bump_stack_pointer = format!("M=M+1\n");
+        self.target_descriptor.write(&bump_stack_pointer.into_bytes());
     }
 }
 
