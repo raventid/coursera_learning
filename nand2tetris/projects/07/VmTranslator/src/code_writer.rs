@@ -1,28 +1,33 @@
-use std::io::{ BufReader, Error };
-use std::io::prelude::*;
+use std::io::{ Error };
 use std::result::Result;
 use std::fs::File;
+use std::io::LineWriter;
+use std::io::Write;
 
-// Opens the output file, and gets ready to write into it
-fn constructor(output_file : String) -> Result<(), Error> {
-    let file = File::open(output_file)?;
-    let buffer = BufReader::new(file);
+pub struct CodeWriter {
+    target_descriptor: LineWriter<File>
+}
 
-    for line in buffer.lines() {
-        println!("{}", line.unwrap());
+impl CodeWriter {
+    // Opens the output file, and gets ready to write into it
+    pub fn new(target_file : String) -> Result<Self, Error> {
+        let file = File::create(target_file)?;
+        let line_writer = LineWriter::new(file);
+
+        Ok( CodeWriter{ target_descriptor: line_writer} )
     }
 
-    Ok(())
-}
+    // Writes to the file assembly code which represents current arithmetic command
+    pub fn write_arithmetic(&mut self, raw : &String, opcode : &String) {
+        let code = format!("opcode is {:?}", opcode);
+        self.target_descriptor.write_all(&code.into_bytes());
+    }
 
-// Writes to the file assembly code which represents current arithmetic command
-fn write_arithmetic() {
-
-}
-
-// Writes assembly for push and pop commands
-fn write_push_pop() {
-
+    // Writes assembly for push and pop commands
+    pub fn write_push_pop(&mut self, raw : &String, segment : &String, index : &usize) {
+        let code = format!("segment is {:?}", segment);
+        self.target_descriptor.write_all(&code.into_bytes());
+    }
 }
 
 // Just closes the file

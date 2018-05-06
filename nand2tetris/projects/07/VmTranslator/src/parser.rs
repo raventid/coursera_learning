@@ -3,25 +3,13 @@ use std::io::prelude::*;
 use std::fs::File;
 use regex::Regex;
 
+use command::Command;
+
 pub struct Parser {
     pub current_command: Command,
 
     target_descriptor: BufReader<File>,
     next_command: Command
-}
-
-// All available command types for virtual machine
-#[derive(Debug)]
-pub enum Command {
-    C_ARITHMETIC,
-    C_PUSH { raw: String, segment: String, index: usize },
-    C_POP { raw: String, segment: String, index: usize },
-    C_LABEL,
-    C_GOTO,
-    C_IF,
-    C_FUNCTION,
-    C_RETURN,
-    C_CALL,
 }
 
 impl Parser {
@@ -42,11 +30,12 @@ impl Parser {
     pub fn has_more_commands(&mut self) -> (bool, bool) {
         for line in self.target_descriptor.by_ref().lines() {
             if let Ok(str) = line {
-                if str.starts_with("push") || str.starts_with("pop") {
+                if ignore_this_line(&str)  {
+                    return (false, false)
+                } else {
                     self.next_command = command_type(str);
                     return (false, true)
                 }
-                return (false, false)
             } else {
                 // ignore this case
             }
@@ -62,6 +51,10 @@ impl Parser {
         true
     }
 
+}
+
+fn ignore_this_line(line : &String) -> bool {
+    line.starts_with("//") || line.is_empty()
 }
 
 // Returns enum variant representing the current_command. I might not need it, because I can pattern match :)
@@ -87,5 +80,16 @@ fn command_type(command : String) -> Command {
         };
     }
 
-    Command::C_ARITHMETIC
+    let arithmetic_regexp = Regex::new(r"(add|sub)").unwrap();
+    if let Some(cap) = arithmetic_regexp.captures(&command) {
+        return Command::C_ARITHMETIC {
+            raw: cap[0].to_string(),
+            opcode: cap[1].to_string()
+        };
+    }
+
+    Command::C_ARITHMETIC {
+        raw: "".to_string(),
+        opcode: "".to_string()
+    }
 }
