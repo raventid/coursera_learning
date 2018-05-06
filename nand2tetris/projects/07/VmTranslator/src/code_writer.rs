@@ -1,8 +1,6 @@
-use std::io::{ Error };
+use std::io::{ Write, LineWriter, Error };
 use std::result::Result;
 use std::fs::File;
-use std::io::LineWriter;
-use std::io::Write;
 
 pub struct CodeWriter {
     target_descriptor: LineWriter<File>
