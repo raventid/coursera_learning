@@ -35,7 +35,6 @@ impl CodeWriter {
         let helper_comment = format!("// {}\n", raw);
         self.target_descriptor.write(&helper_comment.into_bytes());
 
-
         let code = format!(
             "@{stack_pointer}
 M=M-1
@@ -51,7 +50,7 @@ A=M
 D=M // take second argument for operation
 
 @{register1}
-D=D-M // perform your action
+D=D-M // perform your action (THIS LINE WILL DIFFER FOR DIFFERENT OPERATIONS)
 
 @{stack_pointer}
 A=M // move to memory cell pointed by stack_pointer
