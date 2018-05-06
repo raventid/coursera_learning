@@ -17,14 +17,18 @@ impl CodeWriter {
 
     // Writes to the file assembly code which represents current arithmetic command
     pub fn write_arithmetic(&mut self, raw : &String, opcode : &String) {
-        let code = format!("opcode is {:?}", opcode);
-        self.target_descriptor.write_all(&code.into_bytes());
+        let helper_comment = format!("// {}\n", raw);
+        let code = format!("opcode is {:?}\n", opcode);
+        self.target_descriptor.write(&helper_comment.into_bytes());
+        self.target_descriptor.write(&code.into_bytes());
     }
 
     // Writes assembly for push and pop commands
     pub fn write_push_pop(&mut self, raw : &String, segment : &String, index : &usize) {
-        let code = format!("segment is {:?}", segment);
-        self.target_descriptor.write_all(&code.into_bytes());
+        let helper_comment = format!("// {}\n", raw);
+        let code = format!("segment is {:?}\n", segment);
+        self.target_descriptor.write(&helper_comment.into_bytes());
+        self.target_descriptor.write(&code.into_bytes());
     }
 }
 
