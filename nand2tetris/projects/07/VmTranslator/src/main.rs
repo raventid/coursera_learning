@@ -2,6 +2,9 @@
 #![allow(unused_variables)]
 #![allow(dead_code)]
 
+#[macro_use]
+extern crate lazy_static;
+
 extern crate regex;
 
 // use std::path::Path;
@@ -67,8 +70,8 @@ fn main() {
 pub fn compile(code_writer : &mut CodeWriter, command : &Command) {
     match command {
         &C_ARITHMETIC { ref raw, ref opcode } => code_writer.write_arithmetic(raw, opcode),
-        &C_PUSH { ref raw, ref segment, ref index } => code_writer.write_push_pop(raw, segment, index),
-        &C_POP { ref raw, ref segment, ref index } => code_writer.write_push_pop(raw, segment, index),
+        &C_PUSH { ref raw, ref segment, ref index } => code_writer.write_push(raw, segment, index),
+        &C_POP { ref raw, ref segment, ref index } => code_writer.write_pop(raw, segment, index),
         &C_LABEL => println!("undefined"),
         &C_GOTO => println!("undefined"),
         &C_IF => println!("undefined"),
