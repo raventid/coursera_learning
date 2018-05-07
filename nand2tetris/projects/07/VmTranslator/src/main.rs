@@ -24,14 +24,21 @@ fn main() {
     // /Users/julian/Experiments/coursera_learning/nand2tetris/projects/07/MemoryAccess/BasicTest/BasicTest.vm
     // 1) parser: start parser stream
 
-    let target_input = "/Users/julian/Experiments/coursera_learning/nand2tetris/projects/07/MemoryAccess/BasicTest/BasicTest.vm".to_string();
+    let static_test = "/Users/julian/Experiments/coursera_learning/nand2tetris/projects/07/MemoryAccess/StaticTest/StaticTest.vm".to_string();
+
+    let pointer_test = "/Users/julian/Experiments/coursera_learning/nand2tetris/projects/07/MemoryAccess/PointerTest/PointerTest.vm".to_string();
+
+    let basic_test = "/Users/julian/Experiments/coursera_learning/nand2tetris/projects/07/MemoryAccess/BasicTest/BasicTest.vm".to_string();
+
+    let simple_add_test = "/Users/julian/Experiments/coursera_learning/nand2tetris/projects/07/StackArithmetic/SimpleAdd/SimpleAdd.vm".to_string();
+
+    let stack_test = "/Users/julian/Experiments/coursera_learning/nand2tetris/projects/07/StackArithmetic/StackTest/StackTest.vm".to_string();
 
     // add error handling
-    let mut parser = Parser::new(target_input);
-
+    let mut parser = Parser::new(stack_test);
 
     // 2) code_writer: start outup stream
-    let target_file = "./BasicTest.asm".to_string();
+    let target_file = "/Users/julian/Experiments/coursera_learning/nand2tetris/projects/07/StackArithmetic/StackTest/StackTest.asm".to_string();
     // let target_file = Path::new("./BasicTest.asm");
     // let display = target_file.display();
 
@@ -57,6 +64,7 @@ fn main() {
         }
 
         if end_of_stream {
+            code_writer.close();
             break
         }
         // 5) code_writer: dispatche type of token and match against machine representation

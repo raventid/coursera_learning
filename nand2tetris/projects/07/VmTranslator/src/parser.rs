@@ -80,7 +80,7 @@ fn command_type(command : String) -> Command {
         };
     }
 
-    let arithmetic_regexp = Regex::new(r"(add|sub)").unwrap();
+    let arithmetic_regexp = Regex::new(r"(add|sub|neg|eq|gt|lt|and|or|not)").unwrap();
     if let Some(cap) = arithmetic_regexp.captures(&command) {
         return Command::C_ARITHMETIC {
             raw: cap[0].to_string(),
