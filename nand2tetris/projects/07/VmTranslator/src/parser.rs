@@ -80,6 +80,9 @@ fn command_type(command : String) -> Command {
         };
     }
 
+    // We can write macro like this one:
+    // select!( "(add|sub|neg|eq|gt|lt|and|or|not)" => C_ARITHMETIC :with raw :and opcode );
+
     let arithmetic_regexp = Regex::new(r"(add|sub|neg|eq|gt|lt|and|or|not)").unwrap();
     if let Some(cap) = arithmetic_regexp.captures(&command) {
         return Command::C_ARITHMETIC {
