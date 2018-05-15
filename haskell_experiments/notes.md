@@ -64,6 +64,13 @@ Do not load implicit prelude in my session
 $ stack ghci --ghci-options -XNoImplicitPrelude
 
 
+# GHCI
+
+`:set +s`
+
+Very simple timer to measure performance of function built in GHCI.
+
+
 # Questions I have
 Not sure I completely understand the way spine works in terms of strictness and nonstrictness. To note it's pages 358-359 of Programming Haskell. So I'm waiting for chapter on strictness and nonstrictness to make it clear.
 
