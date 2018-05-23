@@ -61,13 +61,13 @@ applyOTP pad text = map bitsToChars bitList
   where bitList = applyOTP' pad text
 
 
-
 -- Let's wrap everything in typeclass
 class Cipher a where
   encode :: a -> String -> String
   decode :: a -> String -> String
 
 
+-- OneTimePad cipher
 data OneTimePad = OTP String
 
 instance Cipher OneTimePad where
@@ -76,3 +76,30 @@ instance Cipher OneTimePad where
 
 myOTP :: OneTimePad
 myOTP = OTP (cycle [minBound .. maxBound])
+
+-- Linear congruential generator
+prng :: Int -> Int -> Int -> Int -> Int
+prng a b maxNumber seed = (a * seed + b) `mod` maxNumber
+
+samplePRNG :: Int -> Int
+samplePRNG = prng 1337 7 100
+
+
+-- StreamCipher, using lcg algo
+data StreamCipher = StreamCipher
+
+-- instance Cipher StreamCipher where
+--   encode StreamCipher text = applySSP text
+--   decode StreamCipher text = applySSP text
+
+streamInts :: [Int]
+streamInts = map samplePRNG [0 .. maxBound]
+
+applySSP' :: String -> [Bits]
+applySSP' target = map (\pair -> (fst pair) `xor` (snd pair)) (zip pad text)
+  where pad = map intToBits streamInts
+        text = map charToBits target
+
+applySSP :: String -> String
+applySSP target = map bitsToChars bitList
+  where bitList = applySSP' target
