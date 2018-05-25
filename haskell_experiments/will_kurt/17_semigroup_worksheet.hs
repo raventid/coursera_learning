@@ -20,6 +20,9 @@ instance Semigroup Color where
   (<>) Blue Yellow = Green
   (<>) Yellow Red = Orange
   (<>) Red Yellow = Orange
-  (<>) a b = if a == b
-             then a
-             else Brown
+  (<>) a b | a == b = a
+           | all (`elem` [Red, Blue, Purple]) [a,b] = Purple
+           | all (`elem` [Blue, Yellow, Green]) [a,b] = Green
+           | all (`elem` [Red, Yellow, Orange]) [a,b] = Purple
+           | otherwise = Brown
+
