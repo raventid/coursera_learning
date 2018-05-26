@@ -27,9 +27,20 @@ defmodule TodoList do
     end
   end
 
+  def delete_entry(todo_list, date) do
+    new_entries = pop_in(todo_list.entries, [:entries, date])
+    # |> Enum.reject(fn {_, entry} -> entry.date == date end)
+
+    %TodoList{ todo_list | entries: new_entries }
+  end
+
   def entries(todo_list, date) do
     todo_list.entries
     |> Stream.filter(fn {_, entry} -> entry.date == date end)
     |> Enum.map(fn {_, entry} -> entry end)
   end
 end
+
+todo_list = TodoList.new()
+todo_list = TodoList.add_entry(todo_list, %{date: ~D[2017-10-10], title: "Hello"})
+TodoList.delete_entry(todo_list, ~D[2017-10-10])
