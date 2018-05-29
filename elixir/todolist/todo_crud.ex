@@ -5,9 +5,7 @@ defmodule TodoList do
     Enum.reduce(
       entries,
       %TodoList{},
-      fn entry, todo_list_acc ->
-        add_entry(todo_list_acc, entry)
-      end
+      &add_entry(&2, &1)
     )
   end
 
