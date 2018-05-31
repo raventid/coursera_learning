@@ -49,3 +49,35 @@ end
 # todo_list = TodoList.add_entry(todo_list, %{date: ~D[2017-10-10], title: "Hello"})
 # TodoList.delete_entry(todo_list, ~D[2017-10-10])
 # TodoList.delete_entry(todo_list, 1)
+
+defmodule TodoList.CsvImporter do
+  @filename "todos.csv"
+  @data_separator ","
+  @date_separator "/"
+
+  # {{year, month, date}, title}
+  def import do
+    @filename
+    |> File.stream!
+    |> Enum.map(&parse(&1))
+    |> Enum.map(fn [date, title] -> create_entry(date, title) end)
+    |> TodoList.new
+  end
+
+  defp parse(line) do
+    String.split(line, @data_separator)
+  end
+
+  defp create_entry(date, title) do
+    %{date: Date.from_erl(parse_date(date)), title: title}
+  end
+
+  defp parse_date(date) do
+    [year, month, day] = String.split(date, @date_separator)
+    {
+      Integer.parse(year) |> elem(0),
+      Integer.parse(month) |> elem(0),
+      Integer.parse(day) |> elem(0)
+    }
+  end
+end
