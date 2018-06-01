@@ -69,7 +69,7 @@ defmodule TodoList.CsvImporter do
   end
 
   defp create_entry(date, title) do
-    %{date: Date.from_erl(parse_date(date)), title: title}
+    %{date: parse_date(date), title: title}
   end
 
   defp parse_date(date) do
@@ -77,6 +77,6 @@ defmodule TodoList.CsvImporter do
       date
       |> String.split(@date_separator)
       |> Enum.map(&String.to_integer/1)
-    {year, month, day}
+    Date.new(year, month, day)
   end
 end
