@@ -65,7 +65,9 @@ defmodule TodoList.CsvImporter do
   end
 
   defp parse(line) do
-    String.split(line, @data_separator)
+    line
+    |> String.replace("\n", "")
+    |> String.split(@data_separator)
   end
 
   defp create_entry(date, title) do
