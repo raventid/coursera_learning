@@ -82,3 +82,12 @@ defmodule TodoList.CsvImporter do
     Date.new(year, month, day)
   end
 end
+
+
+# Let's wrtie some protocols
+# I commented it, beacause I stongly prefer default version
+# defimpl String.Chars, for: TodoList do
+#   def to_string(_) do
+#     "#TodoList"
+#   end
+# end
