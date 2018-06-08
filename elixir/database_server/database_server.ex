@@ -31,7 +31,7 @@ defmodule DatabaseServer do
     receive do
       {:query_result, result} -> result
     after
-      5000 -> {:error, :timeout}
+      30_000 -> {:error, :timeout}
     end
   end
 
@@ -45,7 +45,7 @@ defmodule DatabaseServer do
   end
 
   defp run_query(query_def) do
-    Process.sleep(2000)
+    Process.sleep(2_000)
     "#{query_def} result"
   end
 end
