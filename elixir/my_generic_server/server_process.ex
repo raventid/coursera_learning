@@ -31,8 +31,21 @@ defmodule ServerProcess do
   end
 end
 
-# Callback module for generic server process.
 defmodule KeyValueStore do
+  # Interface functions for client to use.
+  def start do
+    ServerProcess.start(KeyValueStore)
+  end
+
+  def put(pid, key, value) do
+    ServerProcess.call(pid, {:put, key, value})
+  end
+
+  def get(pid, key) do
+    ServerProcess.call(pid, {:get, key})
+  end
+
+  #  Callback function for generic server process. It will call them.
   def init do
     %{}
   end
