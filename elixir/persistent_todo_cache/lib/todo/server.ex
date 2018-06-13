@@ -20,6 +20,26 @@ defmodule Todo.Server do
     # If I start a very long operation here,
     # I may block caller process for a long
     # period of time. So we'll use one trick.
+
+    # One important note about first signal:
+    # If you initialize your process here,
+    # without it being registered under global
+    # name, then everything is fine. Your
+    # message will be the first one you send
+    # to yourself.
+    # But if you are not using pid
+    # and you are using named processes
+    # then caller can send you a message
+    # before you initialized your process
+    # with :real_init. To avoid this
+    # register process name right here
+    # in init. And forbid standard way.
+    send(self(), :real_init)
+    {:ok, nil}
+  end
+
+  @impl GenServer
+  def handle_info(:real_init, state) do
     {:ok, {name, Todo.Database.get(name) || Todo.List.new()}}
   end
 
