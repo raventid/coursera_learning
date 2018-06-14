@@ -34,13 +34,13 @@ defmodule Todo.Server do
     # with :real_init. To avoid this
     # register process name right here
     # in init. And forbid standard way.
-    send(self(), :real_init)
+    send(self(), {:real_init, name})
     {:ok, nil}
   end
 
   @impl GenServer
-  def handle_info(:real_init, state) do
-    {:ok, {name, Todo.Database.get(name) || Todo.List.new()}}
+  def handle_info({:real_init, name}, _) do
+    {:noreply, {name, Todo.Database.get(name) || Todo.List.new()}}
   end
 
   @impl GenServer
@@ -61,6 +61,6 @@ defmodule Todo.Server do
   end
 end
 
-{:ok, cache_pid} = Todo.Cache.start
-bobs_list = Todo.Cache.server_process(cache_pid, "bobs_list")
-Todo.Server.add_entry(bobs_list, %{date: ~D[2018-09-09], title: "Jul"})
+# {:ok, cache_pid} = Todo.Cache.start
+# bobs_list = Todo.Cache.server_process(cache_pid, "bobs_list")
+# Todo.Server.add_entry(bobs_list, %{date: ~D[2018-09-09], title: "Jul"})

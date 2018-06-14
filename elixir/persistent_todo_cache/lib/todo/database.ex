@@ -8,35 +8,39 @@ defmodule Todo.Database do
   end
 
   def store(key, data) do
-    GenServer.cast(__MODULE__, {:store, key, data})
+    key
+    |> choose_worker()
+    |> Todo.DatabaseWorker.store(key, data)
   end
 
   def get(key) do
-    GenServer.call(__MODULE__, {:get, key})
+    key
+    |> choose_worker()
+    |> Todo.DatabaseWorker.get(key)
   end
 
+  defp choose_worker(key) do
+    GenServer.call(__MODULE__, {:choose_worker, key})
+  end
+
+  # Interface for GenServer
+  @impl GenServer
   def init(_) do
     File.mkdir_p!(@db_folder)
-    {:ok, nil}
+    {:ok, start_workers(3)}
   end
 
-  def handle_cast({:store, key, data}, state) do
-    key
-    |> file_name()
-    |> File.write!(:erlang.term_to_binary(data))
-
-    {:noreply, state}
+  @impl GenServer
+  def handle_call({:choose_worker, key}, _, workers) do
+    worker_key = :erlang.phash2(key, 3)
+    {:reply, Map.get(workers, worker_key), workers}
   end
 
-  def handle_call({:get, key}, _, state) do
-    data = case File.read(file_name(key)) do
-             {:ok, contents} -> :erlang.binary_to_term(contents)
-             _ -> nil
-           end
-    {:reply, data, state}
-  end
-
-  defp file_name(key) do
-    Path.join(@db_folder, to_string(key))
+  # Comprehensions are used just for fun.
+  # It's better to use simple iterator.
+  defp start_workers(number) do
+    for worker_number <- 0..(number-1),
+      into: %{},
+      do: {worker_number, Todo.DatabaseWorker.start(@db_folder) |> elem(1)}
   end
 end
