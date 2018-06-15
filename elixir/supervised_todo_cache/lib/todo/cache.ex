@@ -4,7 +4,7 @@ defmodule Todo.Cache do
   # Rename this to start_link, so everyone
   # understand that we are running with
   # supervisor.
-  def start do
+  def start_link(_) do
     IO.puts("Starting supervised cache.")
     GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
@@ -43,3 +43,6 @@ end
 # {:ok, cache_pid} = Todo.Cache.start
 # Todo.Cache.server_process(cache_pid, "My list")
 # Todo.Cache.server_process(cache_pid, "Another guy list")
+
+# Supervisor.start_link([Todo.Cache], strategy: :one_for_one)
+# bobs_list = Todo.Cache.server_process("Bob's list")
