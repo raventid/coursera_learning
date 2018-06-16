@@ -18,7 +18,6 @@ defmodule Todo.Cache do
   # GenServer callbacks.
   @impl GenServer
   def init(_) do
-    Todo.Database.start()
     {:ok, %{}}
   end
 
@@ -28,7 +27,7 @@ defmodule Todo.Cache do
       {:ok, todo_server} ->
         {:reply, todo_server, todo_servers}
       :error ->
-        {:ok, new_server} = Todo.Server.start(todo_list_name)
+        {:ok, new_server} = Todo.Server.start_link(todo_list_name)
 
         {
           :reply,

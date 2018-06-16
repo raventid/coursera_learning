@@ -1,10 +1,24 @@
 defmodule Todo.Database do
-  use GenServer
-
   @db_folder "./persist"
 
-  def start do
-    GenServer.start(__MODULE__, nil, name: __MODULE__)
+  def start_link do
+    File.mkdir_p!(@db_folder)
+
+    children = Enum.map(1..3, &worker_spec/1)
+    Supervisor.start_link(children, strategy: :one_for_one)
+  end
+
+  defp worker_spec(worker_id) do
+    default_worker_spec = { Todo.DatabaseWorker, { @db_folder, worker_id } }
+    Supervisor.child_spec(default_worker_spec, id: worker_id)
+  end
+
+  def child_spec(_) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, []},
+      type: :supervisor
+    }
   end
 
   def store(key, data) do
@@ -20,28 +34,6 @@ defmodule Todo.Database do
   end
 
   defp choose_worker(key) do
-    GenServer.call(__MODULE__, {:choose_worker, key})
-  end
-
-  # Interface for GenServer
-  @impl GenServer
-  def init(_) do
-    IO.puts("Starting database...")
-    File.mkdir_p!(@db_folder)
-    {:ok, start_workers(3)}
-  end
-
-  @impl GenServer
-  def handle_call({:choose_worker, key}, _, workers) do
-    worker_key = :erlang.phash2(key, 3)
-    {:reply, Map.get(workers, worker_key), workers}
-  end
-
-  # Comprehensions are used just for fun.
-  # It's better to use simple iterator.
-  defp start_workers(number) do
-    for worker_number <- 0..(number-1),
-      into: %{},
-      do: {worker_number, Todo.DatabaseWorker.start(@db_folder) |> elem(1)}
+    :erlang.phash2(key, 3) + 1
   end
 end

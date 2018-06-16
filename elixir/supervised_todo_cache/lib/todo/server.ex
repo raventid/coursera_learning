@@ -2,8 +2,8 @@ defmodule Todo.Server do
   use GenServer
 
   # Client Interface.
-  def start(name) do
-    GenServer.start(__MODULE__, name)
+  def start_link(name) do
+    GenServer.start_link(__MODULE__, name)
   end
 
   def add_entry(todo_server, new_entry) do
@@ -64,3 +64,4 @@ end
 # {:ok, cache_pid} = Todo.Cache.start
 # bobs_list = Todo.Cache.server_process(cache_pid, "bobs_list")
 # Todo.Server.add_entry(bobs_list, %{date: ~D[2018-09-09], title: "Jul"})
+# Process.exit(Process.whereis(Todo.Cache), :kill)
