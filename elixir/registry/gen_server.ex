@@ -43,11 +43,19 @@ defmodule SimpleRegistry do
 
   @impl GenServer
   def handle_info({:EXIT, pid, _reason}, state) do
-    {:noreply, deregister_pid(state, pid)}
+    {:noreply, remove_by_pid(state, pid)}
   end
 
   def handle_info(other, state) do
     super(other, state)
+  end
+
+  defp remove_by_pid(state, pid) do
+    keys = state
+    |> Stream.filter(fn {key, val} -> val == pid end)
+    |> Enum.map(fn {key, val} -> key end)
+
+    Map.drop(state, keys)
   end
 end
 
