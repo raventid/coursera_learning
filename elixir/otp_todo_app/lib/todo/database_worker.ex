@@ -48,7 +48,7 @@ defmodule Todo.DatabaseWorker do
     {:reply, data, folder_name}
   end
 
-  defp file_name(folder_name, key) do
+  defp file_name(key, folder_name) do
     Path.join(folder_name, to_string(key))
   end
 end
