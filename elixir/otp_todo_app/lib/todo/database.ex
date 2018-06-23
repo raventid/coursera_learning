@@ -13,24 +13,50 @@ defmodule Todo.Database do
     Supervisor.child_spec(default_worker_spec, id: worker_id)
   end
 
+  # Let's just change typespecs and work with them.
+  # Instead of handwritten:
+  # %{
+  #  id: __MODULE__,
+  #    start: {__MODULE__, :start_link, []},
+  #    type: :supervisor
+  # }
+  #
+  # We'll add a poolboy dependency and use it.
   def child_spec(_) do
-    %{
-      id: __MODULE__,
-      start: {__MODULE__, :start_link, []},
-      type: :supervisor
-    }
+    File.mkdir_p!(@db_folder)
+
+    :poolboy.child_spec(
+      __MODULE__,
+      [
+        name: {:local, __MODULE__},
+        worker_module: Todo.DatabaseWorker,
+        size: 3
+      ],
+      [@db_folder]
+    )
   end
 
+  # We had this here:
+  # key
+  # |> choose_worker()
+  # |> Todo.DatabaseWorker.store(key, data)
+  #
   def store(key, data) do
-    key
-    |> choose_worker()
-    |> Todo.DatabaseWorker.store(key, data)
+    :poolboy.transaction(
+      __MODULE__,
+      fn worker_pid ->
+        Todo.DatabaseWorker.store(worker_pid, key, data)
+      end
+    )
   end
 
   def get(key) do
-    key
-    |> choose_worker()
-    |> Todo.DatabaseWorker.get(key)
+    :poolboy.transaction(
+      __MODULE__,
+      fn worker_pid ->
+        Todo.DatabaseWorker.get(worker_pid, key)
+      end
+    )
   end
 
   defp choose_worker(key) do
