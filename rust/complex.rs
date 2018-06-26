@@ -1,4 +1,5 @@
 // Debug is used to have println! macro for free
+//  PartialEq vs Partial?
 #[derive(Copy,Clone,Debug,PartialEq)]
 struct Complex { r: f64, i: f64 }
 
