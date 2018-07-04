@@ -7,6 +7,8 @@ myGCD a b =  if remainder == 0
              else myGCD b remainder
   where remainder = a `mod` b
 
--- myGCD a b 0 = b
--- myGCD a b remainder = myGCDa 
--- myGCD a b remainder = 
+myRecGCD a b = goMyRecGCD a b 1
+goMyRecGCD a b 0 = a
+goMyRecGCD a b _remainder = goMyRecGCD b remainder remainder
+  where
+    remainder = a `mod` b
