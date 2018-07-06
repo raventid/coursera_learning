@@ -72,9 +72,9 @@ Very simple timer to measure performance of function built in GHCI.
 
 
 # Questions I have
-Not sure I completely understand the way spine works in terms of strictness and nonstrictness. To note it's pages 358-359 of Programming Haskell. So I'm waiting for chapter on strictness and nonstrictness to make it clear.
+- Not sure I completely understand the way spine works in terms of strictness and nonstrictness. To note it's pages 358-359 of Programming Haskell. So I'm waiting for chapter on strictness and nonstrictness to make it clear.
 
-Chapter 12: anamorphisms. How x : iterate f (f x) works? How it adds `[]`, to a tail of a list. 
+- Chapter 12: anamorphisms. How x : iterate f (f x) works? How it adds `[]`, to a tail of a list. 
 
 After some thinking I have an answer. This is the same as in Racket. You don't have 
 to add `[]` to the end of the *original* infinite list, you are moving 
@@ -83,8 +83,9 @@ you just collect them into the *new* list with take.
 
 Checked how take work and yes, internally it does that `unsafeTake 1   (x: _) = [x]`, now I understand this completely, great.
 
+Revisited after year or so. It's not very comprehensible explanation. TODO: should rewrite it to make it clear.
 
-Applicative question:
+- Applicative question:
 
 -- Examples of what I'm talking about could be found in chapters 17 and chapters 18.
 
