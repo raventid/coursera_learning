@@ -17,3 +17,6 @@ getOz aCup = aCup (\flOz -> flOz)
 -- Something like setter. Actually it's just a method which changes object state.
 drink aCup ozDrunk = cup (flOz - ozDrunk)
   where flOz = getOz aCup
+
+-- Check that cup is empty
+isEmpty aCup = getOz aCup == 0
