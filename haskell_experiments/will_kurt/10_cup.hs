@@ -15,6 +15,7 @@ coffeeCup = cup 10
 getOz aCup = aCup (\flOz -> flOz)
 
 -- Something like setter. Actually it's just a method which changes object state.
+-- There is a problem here (we can get negative value, which is logically wrong)
 drink aCup ozDrunk = cup (flOz - ozDrunk)
   where flOz = getOz aCup
 
