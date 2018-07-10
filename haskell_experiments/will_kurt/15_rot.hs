@@ -28,8 +28,14 @@ rotN alphabetSize character = toEnum rotation
         -- To solve this, you modulo your offset by the alphabet size.
         rotation = offset `mod` alphabetSize
 
+-- Int value for the lowest Char is 0
+-- So to get alphabet size you have to use
+-- 1 + largestCharNumber
 largestCharNumber :: Int
 largestCharNumber = fromEnum (maxBound :: Char)
+
+charAlphabetsize :: Int
+charAlphabetsize = 1 + largestCharNumber
 
 rotChar :: Char -> Char
 rotChar charToEncrypt = rotN sizeOfAlphabet charToEncrypt
