@@ -2,10 +2,30 @@ module ROT where
 
 data FourLettersAlphabet = L1 | L2 | L3 | L4 deriving (Show, Enum, Bounded)
 
+-- A couple of notes:
+-- `div` - one more time, 4 `div` 2 = 2 and 5 `div` 2 = 2 too.
+-- `mod` has a superpower btw, it allows you to rotate values
+-- inside some bounds like this:
+-- λ> 28 `mod` 4
+-- 0
+-- λ> 29 `mod` 4
+-- 1
+-- λ> 30 `mod` 4
+-- 2
+-- λ> 31 `mod` 4
+-- 3
+-- λ> 32 `mod` 4
+-- 0
 rotN :: (Bounded a, Enum a) => Int -> a -> a
 rotN alphabetSize character = toEnum rotation
   where halfAlphabet = alphabetSize `div` 2
+        -- To rotate, you add half of your alphabet size
+        -- to the Int value of your letter.
         offset = fromEnum character + halfAlphabet
+        -- For half of your Enum values,
+        -- adding half the size of the alphabet will
+        -- give you an Int outside the bounds of your enum.
+        -- To solve this, you modulo your offset by the alphabet size.
         rotation = offset `mod` alphabetSize
 
 largestCharNumber :: Int
