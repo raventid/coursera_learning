@@ -93,3 +93,12 @@ In Haskell std we return `First a` if we have `First` anywhere, which is correct
 my opinion. But in previous exervices I used Monoid to merge the same heads, which is wrong?
 But my checkers spec passed, so looks like it worked correclty in both ways...
 
+- cycleSucc question, Kurt, q13.3
+What's going on when i call cycleSucc with 12 (which is `Num a`) and not Int?
+I don't understand GHCI outup.
+  ```
+  λ> cycleSucc (12 :: Int)
+  13
+  λ> cycleSucc 12
+  cycleSucc 12 :: (Num a, Ord a, Enum a, Bounded a) => a
+  ```
