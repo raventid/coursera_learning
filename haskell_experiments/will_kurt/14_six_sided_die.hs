@@ -9,6 +9,20 @@ data SixSidedDie =
  | S5
  | S6
 
+-- This is incorrect way to implement show for this type, but..
+show :: SixSidedDie -> String
+show S1 = "one"
+show S2 = "two"
+show S3 = "three"
+show S4 = "four"
+show S5 = "five"
+show S6 = "six"
+-- Problem with code above is that:
+-- Ambiguous occurrence ‘show’
+    -- It could refer to either ‘Prelude.show’, or ‘SixSidedDie.show’
+-- We are lacking polymorphism here, we should write the code the way
+-- we always call standard polymorhic `show` (that's a story about modules)
+
 
 
 instance Enum SixSidedDie where
