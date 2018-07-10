@@ -1,6 +1,5 @@
 module SixSidedDie where
 
-
 data SixSidedDie =
    S1
  | S2
@@ -23,6 +22,15 @@ show S6 = "six"
 -- We are lacking polymorphism here, we should write the code the way
 -- we always call standard polymorhic `show` (that's a story about modules)
 
+
+instance Eq SixSidedDie where
+  (==) S1 S1 = True
+  (==) S2 S2 = True
+  (==) S3 S3 = True
+  (==) S4 S4 = True
+  (==) S5 S5 = True
+  (==) S6 S6 = True
+  (==) _ _ = False -- (/=) will work automatically!
 
 
 instance Enum SixSidedDie where
