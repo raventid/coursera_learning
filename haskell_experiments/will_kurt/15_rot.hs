@@ -50,6 +50,12 @@ fourLetterAlphabetEncoder vals = map rot41 vals
 
 data ThreeLetterAlphabet = Alpha | Beta | Gamma deriving (Show, Enum, Bounded)
 
+-- If alphabet consist of odd (i.e. 3) number
+-- of letters we rotN will show incorrect
+-- decoding result. To fix this
+-- we can create a similar function to rotN,
+-- which adds 1 to the offset
+-- if the alphabet has an odd number of letters.
 rotNdecoder :: (Bounded a, Enum a) => Int -> a -> a
 rotNdecoder n c = toEnum rotation
   where halfN = n `div` 2
