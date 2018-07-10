@@ -33,6 +33,16 @@ intToBits n = leadingFalses ++ reversedBits
 charToBits :: Char -> Bits
 charToBits char = intToBits (fromEnum char)
 
+
+-- To understand this,
+-- it’s helpful to realize that
+-- binary 101 in decimal is 1*2^2 + 0*2^1 + 1*2^0.
+
+-- Because the only two values are 1 or 0,
+-- you take the sum of those nonzero powers.
+
+-- indices thing works like this:
+-- [9,8..0] = [9,8,7,6,5,4,3,2,1,0]
 bitsToInt :: Bits -> Int
 bitsToInt bits = sum (map (\x -> 2^(snd x)) trueLocations)
   where size = length bits
@@ -78,6 +88,7 @@ myOTP :: OneTimePad
 myOTP = OTP (cycle [minBound .. maxBound])
 
 -- Linear congruential generator
+-- https://en.wikipedia.org/wiki/Linear_congruential_generator
 prng :: Int -> Int -> Int -> Int -> Int
 prng a b maxNumber seed = (a * seed + b) `mod` maxNumber
 
