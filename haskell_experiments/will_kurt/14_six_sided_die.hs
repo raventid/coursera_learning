@@ -22,7 +22,6 @@ show S6 = "six"
 -- We are lacking polymorphism here, we should write the code the way
 -- we always call standard polymorhic `show` (that's a story about modules)
 
-
 instance Eq SixSidedDie where
   (==) S1 S1 = True
   (==) S2 S2 = True
@@ -31,7 +30,6 @@ instance Eq SixSidedDie where
   (==) S5 S5 = True
   (==) S6 S6 = True
   (==) _ _ = False -- (/=) will work automatically!
-
 
 instance Enum SixSidedDie where
   toEnum 0 = S1
