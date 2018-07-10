@@ -2,7 +2,7 @@ module FightingRobots where
 
 robot (name, attack, hp) = \message -> message (name, attack, hp)
 
-killerRobot = robot("Killr", 20, 300)
+killerRobot = robot("Killer", 20, 300)
 
 giantRobot = robot("Giant", 4, 500)
 
