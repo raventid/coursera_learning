@@ -20,6 +20,11 @@ instance Enum FiveSidedDie where
   fromEnum S4 = 3
   fromEnum S5 = 4
 
+-- My own typeclass. You can implement it
+-- if you want to throw a die.
+
+-- It should return an Int number representing
+-- the amount of thrown die.
 class (Ord a, Enum a) => Die a where
   throwTheDie :: a -> Int
 
