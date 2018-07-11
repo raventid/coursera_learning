@@ -24,8 +24,8 @@ import Data.Semigroup
 -- The fourth is just our definition of mconcat:
 -- mconcat = foldr mappend mempty
 
-type Events = [String]
-type Probs = [Double]
+newtype Events = Events [String]
+newtype Probs = Probs [Double]
 
 data PTable = PTable Events Probs
 
@@ -34,7 +34,7 @@ data PTable = PTable Events Probs
 -- createPTable ["Event1", "Event2"] [1,2,3]
 -- We'll silently get the wrong answer :(
 createPTable :: Events -> Probs -> PTable
-createPTable events probs = PTable events normalizedProbs
+createPTable (Events events) (Probs probs) = PTable (Events events) (Probs normalizedProbs)
   where totalProbs = sum probs
         normalizedProbs = map (\x -> x/totalProbs) probs
 
@@ -42,7 +42,7 @@ showPair :: String -> Double -> String
 showPair event prob = mconcat [event, "|", show prob, "\n"]
 
 instance Show PTable where
-  show (PTable events probs) = mconcat pairs
+  show (PTable (Events events) (Probs probs)) = mconcat pairs
     where pairs = zipWith showPair events probs
 
 -- Calculate Cartesian product
@@ -67,22 +67,32 @@ cartCombine func l1 l2 = zipWith func newL1 cycledL2
     -- you can use zipWith to combine these two lists.
     cycledL2 = cycle l2
 
-combineEvents :: Events -> Events -> Events
-combineEvents e1 e2 = cartCombine combiner e1 e2
-  where combiner = (\x y -> mconcat [x, "-", y])
+instance Semigroup Events where
+  (<>) e1 (Events []) = e1
+  (<>) (Events []) e2 = e2
+  (<>) (Events e1) (Events e2) = Events $ cartCombine combiner e1 e2
+    where combiner = (\x y -> mconcat [x, "-", y])
 
-combineProbs :: Probs -> Probs -> Probs
-combineProbs p1 p2 = cartCombine (*) p1 p2
+instance Monoid Events where
+  mempty = Events []
+  mappend = (<>)
+
+instance Semigroup Probs where
+  (<>) p1 (Probs []) = p1
+  (<>) (Probs []) p2 = p2
+  (<>) (Probs p1) (Probs p2) = Probs $ cartCombine (*) p1 p2
+
+instance Monoid Probs where
+  mempty = Probs []
+  mappend = (<>)
 
 instance Semigroup PTable where
-  (<>) ptable1 (PTable [] []) = ptable1
-  (<>) (PTable [] []) ptable2 = ptable2
-  (<>) (PTable e1 p1) (PTable e2 p2) = createPTable newEvents newProbs
-    where newEvents = combineEvents e1 e2
-          newProbs = combineProbs p1 p2
+  (<>) ptable1 (PTable (Events []) (Probs [])) = ptable1
+  (<>) (PTable (Events []) (Probs [])) ptable2 = ptable2
+  (<>) (PTable e1 p1) (PTable e2 p2) = createPTable (e1 <> e2) (p1 <> p2)
 
 instance Monoid PTable where
-  mempty = PTable [] []
+  mempty = PTable (Events []) (Probs [])
   mappend = (<>)
 
 
@@ -90,10 +100,10 @@ instance Monoid PTable where
 -- on the coin and blue on the spinner,
 -- you can use your <> operator:
 coin :: PTable
-coin = createPTable ["heads", "tails"] [0.5, 0.5]
+coin = createPTable (Events ["heads", "tails"]) (Probs [0.5, 0.5])
 
 spinner :: PTable
-spinner = createPTable ["red", "blue", "green"] [0.1, 0.2, 0.7]
+spinner = createPTable (Events ["red", "blue", "green"]) (Probs [0.1, 0.2, 0.7])
 
 -- We combine two probabilities (coin + spinner)
 -- The answer we get is "What is the probability to see heads and blue pill"
