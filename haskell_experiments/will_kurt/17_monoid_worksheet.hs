@@ -21,3 +21,23 @@ module MonoidWorksheet where
 
 -- The fourth is just our definition of mconcat:
 -- mconcat = foldr mappend mempty
+type Events = [String]
+type Probs = [Double]
+
+data PTable = PTable Events Probs
+
+-- FIXME: There is no check for user which
+-- helps to avoid this constructor:
+-- createPTable ["Event1", "Event2"] [1,2,3]
+-- We'll silently get the wrong answer :(
+createPTable :: Events -> Probs -> PTable
+createPTable events probs = PTable events normalizedProbs
+  where totalProbs = sum probs
+        normalizedProbs = map (\x -> x/totalProbs) probs
+
+showPair :: String -> Double -> String
+showPair event prob = mconcat [event, "|", show prob, "\n"]
+
+instance Show PTable where
+  show (PTable events probs) = mconcat pairs
+    where pairs = zipWith showPair events probs
