@@ -84,3 +84,18 @@ instance Semigroup PTable where
 instance Monoid PTable where
   mempty = PTable [] []
   mappend = (<>)
+
+
+-- If you want to know the probability of getting tails
+-- on the coin and blue on the spinner,
+-- you can use your <> operator:
+coin :: PTable
+coin = createPTable ["heads", "tails"] [0.5, 0.5]
+
+spinner :: PTable
+spinner = createPTable ["red", "blue", "green"] [0.1, 0.2, 0.7]
+
+-- We combine two probabilities (coin + spinner)
+-- The answer we get is "What is the probability to see heads and blue pill"
+first_composition = coin <> spinner
+throw_coin_three_times = mconcat [coin, coin, coin]
