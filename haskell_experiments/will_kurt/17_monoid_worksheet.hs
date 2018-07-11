@@ -21,6 +21,7 @@ module MonoidWorksheet where
 
 -- The fourth is just our definition of mconcat:
 -- mconcat = foldr mappend mempty
+
 type Events = [String]
 type Probs = [Double]
 
@@ -41,3 +42,25 @@ showPair event prob = mconcat [event, "|", show prob, "\n"]
 instance Show PTable where
   show (PTable events probs) = mconcat pairs
     where pairs = zipWith showPair events probs
+
+-- Calculate Cartesian product
+cartCombine :: (a -> b -> c) -> [a] -> [b] -> [c]
+cartCombine func l1 l2 = zipWith func newL1 cycledL2
+  where
+    -- You need to repeat each element
+    -- in the first list once for
+    -- each element in the second.
+    nToAdd = length l2
+
+    -- Maps l1 and makes nToAdd copies of the element
+    -- λ> map (take 10 . repeat) [1,2]
+    -- [[1,1,1,1,1,1,1,1,1,1],[2,2,2,2,2,2,2,2,2,2]]
+    repeatedL1 = map (take nToAdd . repeat) l1
+
+    -- The preceding line leaves you with
+    -- a lists of lists, and you need to join them.
+    newL1 = mconcat repeatedL1
+
+    -- By cycling the second list,
+    -- you can use zipWith to combine these two lists.
+    cycledL2 = cycle l2
