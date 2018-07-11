@@ -1,5 +1,7 @@
 module MonoidWorksheet where
 
+import Data.Semigroup
+
 -- MONOID RULES ONE MORE TIME, PLS:
 
 -- The first is that mappend mempty x is x.
@@ -64,3 +66,21 @@ cartCombine func l1 l2 = zipWith func newL1 cycledL2
     -- By cycling the second list,
     -- you can use zipWith to combine these two lists.
     cycledL2 = cycle l2
+
+combineEvents :: Events -> Events -> Events
+combineEvents e1 e2 = cartCombine combiner e1 e2
+  where combiner = (\x y -> mconcat [x, "-", y])
+
+combineProbs :: Probs -> Probs -> Probs
+combineProbs p1 p2 = cartCombine (*) p1 p2
+
+instance Semigroup PTable where
+  (<>) ptable1 (PTable [] []) = ptable1
+  (<>) (PTable [] []) ptable2 = ptable2
+  (<>) (PTable e1 p1) (PTable e2 p2) = createPTable newEvents newProbs
+    where newEvents = combineEvents e1 e2
+          newProbs = combineProbs p1 p2
+
+instance Monoid PTable where
+  mempty = PTable [] []
+  mappend = (<>)
