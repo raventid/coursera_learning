@@ -24,3 +24,16 @@ aPoint :: Point3D
 aPoint = Triple 0.1 53.2 12.3
 
 cool_stuff_you_can_do_with_transform = transform (* 3) aPoint
+
+
+-- Lists
+
+-- λ> :info []
+-- data [] a = [] | a : [a] 	-- Defined in ‘GHC.Types’
+
+-- λ> :kind []
+-- [] :: * -> *
+
+-- Kinds are deprecated now (now it's Types). From GHC 8.6 (Should check, not sure).
+
+data List a = Empty | Cons a (List a) deriving Show
