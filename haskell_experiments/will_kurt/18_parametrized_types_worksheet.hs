@@ -51,3 +51,17 @@ ids = [2,7,13,14,21,24]
 
 organs :: [Organ]
 organs = [Heart, Heart, Brain, Spleen, Spleen, Kidney]
+
+-- We'll use Map.fromList to create the Map!
+-- λ> Map.fromList
+-- Map.fromList :: Ord k => [(k, a)] -> Map.Map k a
+-- keys sould be Ord-ered because of the lookup way.
+
+pairs = [(2, Heart), (7, Heart), (13, Brain)]
+
+organPairs :: [(Int, Organ)]
+organPairs = zip ids organs
+
+organCatalog :: Map.Map Int Organ
+organCatalog = Map.fromList organPairs
+
