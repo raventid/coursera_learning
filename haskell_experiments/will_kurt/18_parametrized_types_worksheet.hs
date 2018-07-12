@@ -70,4 +70,10 @@ organCatalog = Map.fromList organPairs
 organInventory :: Map.Map Organ [Int]
 organInventory = Map.fromList [(Heart, [1,2,3])]
 
+possibleDrawers :: [Int]
+possibleDrawers = [1..50]
+
+getDrawerContents :: [Int] -> Map.Map Int Organ -> [Maybe Organ]
+getDrawerContents ids catalog = map getContents ids
+  where getContents = \id -> Map.lookup id catalog
 
