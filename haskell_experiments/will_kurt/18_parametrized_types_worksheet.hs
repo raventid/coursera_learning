@@ -42,3 +42,12 @@ cool_stuff_you_can_do_with_transform = transform (* 3) aPoint
 -- Kinds are deprecated now (now it's Types). From GHC 8.6 (Should check, not sure).
 
 data List a = Empty | Cons a (List a) deriving Show
+
+data Organ = Heart | Brain | Kidney | Spleen deriving (Show, Eq)
+
+-- The idea is to put organs into labeled lockers (let's create this labels)
+ids :: [Int]
+ids = [2,7,13,14,21,24]
+
+organs :: [Organ]
+organs = [Heart, Heart, Brain, Spleen, Spleen, Kidney]
