@@ -1,5 +1,7 @@
 module ParametrizedTypes where
 
+import qualified Data.Map as Map
+
 data Triple a = Triple a a a deriving Show
 
 first :: Triple a -> a
@@ -30,6 +32,9 @@ cool_stuff_you_can_do_with_transform = transform (* 3) aPoint
 
 -- λ> :info []
 -- data [] a = [] | a : [a] 	-- Defined in ‘GHC.Types’
+
+-- λ> :type []
+-- [] :: [t]
 
 -- λ> :kind []
 -- [] :: * -> *
