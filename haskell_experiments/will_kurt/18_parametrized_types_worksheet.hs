@@ -43,7 +43,7 @@ cool_stuff_you_can_do_with_transform = transform (* 3) aPoint
 
 data List a = Empty | Cons a (List a) deriving Show
 
-data Organ = Heart | Brain | Kidney | Spleen deriving (Show, Eq)
+data Organ = Heart | Brain | Kidney | Spleen deriving (Show, Eq, Ord)
 
 -- The idea is to put organs into labeled lockers (let's create this labels)
 ids :: [Int]
@@ -64,4 +64,10 @@ organPairs = zip ids organs
 
 organCatalog :: Map.Map Int Organ
 organCatalog = Map.fromList organPairs
+
+-- My organ inventory. Organ is key.
+-- Value - is list of lockers. (it's better to use Set I guess)
+organInventory :: Map.Map Organ [Int]
+organInventory = Map.fromList [(Heart, [1,2,3])]
+
 
