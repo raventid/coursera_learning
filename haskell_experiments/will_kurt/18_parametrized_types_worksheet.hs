@@ -105,3 +105,63 @@ organList = map showOrgan justTheOrgans
 
 cleanList :: String
 cleanList = intercalate ", " organList
+
+
+
+-- Next task:
+-- You’ll be given a drawer ID.
+-- You need to retrieve an item from the drawer.
+-- Then you’ll put the organ in the appropriate container (a vat, a cooler, or a bag).
+-- Finally, you’ll put the container in the correct location.
+-- Here are the rules for containers and locations:
+
+-- For containers:
+--  Brains go in a vat.
+--  Hearts go in a cooler.
+--  Spleens and kidneys go in a bag.
+
+-- For locations:
+--  Vats and coolers go to the lab.
+--  Bags go to the kitchen.
+
+data Container = Vat Organ | Cooler Organ | Bag Organ
+
+instance Show Container where
+  show (Vat organ) = show organ ++ " in a vat"
+  show (Cooler organ) = show organ ++ " in a cooler"
+  show (Bag organ) = show organ ++ " in a bag"
+
+data Location = Lab | Kitchen | Bathroom deriving Show
+
+organToContainer :: Organ -> Container
+organToContainer Brain = Vat Brain
+organToContainer Heart = Cooler Heart
+organToContainer organ = Bag organ
+
+placeInLocation :: Container -> (Location, Container)
+placeInLocation (Vat a) = (Lab, Vat a)
+placeInLocation (Cooler a) = (Lab, Cooler a)
+placeInLocation (Bag a) = (Kitchen, Bag a)
+
+process :: Organ -> (Location, Container)
+process organ = placeInLocation (organToContainer organ)
+
+report :: (Location, Container) -> String
+report (location, container) = show container ++ " in the " ++ show location
+
+proccessRequest :: Int -> Map.Map Int Organ -> String
+proccessRequest id catalog = processAndReport organ
+  where organ = Map.lookup id catalog
+
+-- Right now your processRequest function handles
+-- reporting when there’s an error.
+-- Ideally, you’d like the report function to handle this.
+-- But to do that given your knowledge so far,
+-- you’d have to rewrite process to accept a Maybe.
+-- You’d be in a worse situation, because you’d no
+-- longer have the advantage of writing a processing function
+-- that you can guarantee doesn’t have to worry about a missing value.
+processAndReport :: (Maybe Organ) -> String
+processAndReport (Just organ) = report (process organ)
+processAndReport Nothing = "error, id not found"
+
