@@ -2,6 +2,7 @@ module ParametrizedTypes where
 
 import Data.List (intercalate)
 import qualified Data.Map as Map
+import Data.Maybe (isNothing)
 
 data Triple a = Triple a a a deriving Show
 
@@ -165,3 +166,6 @@ processAndReport :: (Maybe Organ) -> String
 processAndReport (Just organ) = report (process organ)
 processAndReport Nothing = "error, id not found"
 
+-- q19.1
+emptyDrawers :: Int
+emptyDrawers = length $ filter isNothing $ availableOrgans
