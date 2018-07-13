@@ -77,3 +77,27 @@ getDrawerContents :: [Int] -> Map.Map Int Organ -> [Maybe Organ]
 getDrawerContents ids catalog = map getContents ids
   where getContents = \id -> Map.lookup id catalog
 
+availableOrgans :: [Maybe Organ]
+availableOrgans = getDrawerContents possibleDrawers organCatalog
+
+countOrgan :: Organ -> [Maybe Organ] -> Int
+countOrgan organ available = length (filter
+                                    (\x -> x == Just organ)
+                                    available)
+
+-- Let's create a beautifull printing for
+-- Maybe organs.
+
+isSomething :: Maybe Organ -> Bool
+isSomething Nothing = False
+isSomething (Just _) = True
+
+justTheOrgans :: [Maybe Organ]
+justTheOrgans = filter isSomething availableOrgans
+
+showOrgan :: Maybe Organ -> String
+showOrgan (Just organ) = show organ
+showOrgan Nothing = ""
+
+organList :: [String]
+organList = map showOrgan justTheOrgans
