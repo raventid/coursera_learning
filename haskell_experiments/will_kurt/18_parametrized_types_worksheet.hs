@@ -1,5 +1,6 @@
 module ParametrizedTypes where
 
+import Data.List (intercalate)
 import qualified Data.Map as Map
 
 data Triple a = Triple a a a deriving Show
@@ -101,3 +102,6 @@ showOrgan Nothing = ""
 
 organList :: [String]
 organList = map showOrgan justTheOrgans
+
+cleanList :: String
+cleanList = intercalate ", " organList
