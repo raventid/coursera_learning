@@ -144,3 +144,29 @@ diffTS (TS times values) = TS times (Nothing:diffValues)
         diffValues = zipWith diffPair shiftValues values
 
 -- page 256
+meanMaybe :: (Real a) => [Maybe a] -> Maybe Double
+meanMaybe vals = if any (== Nothing) vals
+                 then Nothing
+                 else (Just avg)
+  where avg = mean (map fromJust vals)
+
+movingAvg :: (Real a) => [Maybe a] -> Int -> [Maybe Double]
+movingAvg [] n = []
+movingAvg vals n = if length nextVals == n
+                   then meanMaybe nextVals:movingAvg restVals n
+                   else []
+  where nextVals = take n vals
+        restVals = tail vals
+
+movingAvgTS :: (Real a) => TS a -> Int -> TS Double
+movingAvgTS (TS [] []) n = TS [] []
+movingAvgTS (TS times values) n = TS times smoothedValues
+  where ma = movingAvg values n
+        nothings = replicate (n `div` 2) Nothing
+        smoothedValues = mconcat [nothings, ma, nothings]
+
+-- Possible extension (a lot of them in fact)
+--  Use the median rather than the mean for smoothing.
+--  Create a function that calculates the div rather than the diff of data, capturing the
+-- percent change.
+--  Implement a function for calculating the standard deviation of a TS type.
