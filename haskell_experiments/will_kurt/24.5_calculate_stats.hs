@@ -15,6 +15,18 @@ countsText (cc, wc, lc) = unwords [ "chars:"
                                   , show lc
                                   ]
 
+-- Cool note about readFile.
+-- It does not close file descriptor.
+-- Yeap, sounds scary and stupid, but
+-- if you think about your IO being lazy
+-- you might guess that if you perform
+-- close file descriptor IO action right in read file
+-- it MIGHT BE CLOSED BEFORE YOU'VE READ THE CONTENT OF A FILE!
+
+-- Lazy! Make me crazy!
+-- Yeap, you have to force Haskell to read the content
+-- of file. it happens in the end of main.
+
 main :: IO ()
 main = do
   args <- getArgs
