@@ -8,6 +8,12 @@ main = do
                     then (read (head args)) :: Int
                     else 0 :: Int
   putStrLn ("Enter " ++ show linesToRead ++ " number:")
-  numbers <- replicateM linesToRead getLine
+  numbers <- myReplicateM linesToRead getLine
   let vals = map read numbers :: [Int]
   print (sum vals)
+
+
+
+-- Not the best place for this excersice, but anyway:
+
+myReplicateM n action = mapM (\_ -> action) [1..n]
