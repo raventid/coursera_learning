@@ -1,5 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+-- WARNING!!!
+-- To work with this example download some .mrc sample
+-- It's easy to find one in the internet. I'll attach a link here.
+
 import qualified Data.ByteString as B
 import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
