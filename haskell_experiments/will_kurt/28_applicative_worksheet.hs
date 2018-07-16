@@ -34,6 +34,16 @@ startingCityExample = Map.lookup "Carcosa" locationDB
 destCityExample = Map.lookup "Innsmouth" locationDB
 exampleApplication = haversine <$> startingCityExample <*> destCityExample
 
+haversineIO :: IO LatLong -> IO LatLong -> IO Double
+haversineIO l1 l2= do
+  left <- fmap id l1
+  right <- fmap id l2
+  return $ haversine left right
+
+-- It's much better with applicative
+haversineIO' :: IO LatLong -> IO LatLong -> IO Double
+haversineIO' l1 l2 = haversine <$> l1 <*> l2
+
 main :: IO ()
 main = do
   putStrLn "Enter the starting city name:"
@@ -44,3 +54,19 @@ main = do
   let destCity = Map.lookup destInput locationDB
   let distance = haversine <$> startingCity <*> destCity
   printDistance distance
+
+-- Not related to city distance
+minOfThree :: (Ord a) => a -> a -> a -> a
+minOfThree x y z = min x (min y z)
+
+readInt :: IO Int
+readInt = read <$> getLine
+
+minOfInts :: IO Int
+minOfInts = minOfThree <$> readInt <*> readInt <*> readInt
+
+minMain :: IO ()
+minMain = do
+  putStrLn "Enter three numbers:"
+  minInt <- minOfInts
+  putStrLn (show minInt ++ " is the smallest")
