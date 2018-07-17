@@ -52,3 +52,7 @@ nameStatement name = "Hello, " ++ name ++ "!"
 
 mainProg :: IO String
 mainProg = (askForName >> getLine) >>= (\name -> return (nameStatement name))
+
+allFmapM :: Monad m => (a -> b) -> m a -> m b
+allFmapM f m = m >>= (return . f)
+
