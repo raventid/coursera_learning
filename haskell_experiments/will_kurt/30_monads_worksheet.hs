@@ -27,5 +27,11 @@ lookupCredits :: UserName -> Maybe PlayerCredits
 lookupCredits username = Map.lookup username creditsDB
 
 -- It works if I comment my type signature, but it just works the wrong way.
--- creditsFromId :: GamerId -> Maybe PlayerCredits -- It's join, actually.
-creditsFromId id = pure lookupCredits <*> lookupUserName id
+creditsFromId :: GamerId -> Maybe PlayerCredits -- It's join, actually.
+creditsFromId id = lookupUserName id >>= lookupCredits
+
+-- Monad bind is:
+-- (>>=) :: Monad m => m a -> (a -> m b) -> m b
+echoVerbose :: IO ()
+echoVerbose = putStrLn "Enter a String an we'll echo it!" >>
+              getLine >>= putStrLn
