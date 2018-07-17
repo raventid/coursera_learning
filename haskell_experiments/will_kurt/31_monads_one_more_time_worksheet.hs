@@ -128,3 +128,36 @@ assessCandidate candidates = do
                    then "passed"
                    else "failed"
    return statement
+
+
+comparePizzas a b = a
+describePizza p = (show . fst) p
+
+mainDoPizza :: IO ()
+mainDoPizza = do
+   putStrLn "What is the size of pizza 1"
+   size1 <- getLine
+   putStrLn "What is the cost of pizza 1"
+   cost1 <- getLine
+   putStrLn "What is the size of pizza 2"
+   size2 <-  getLine
+   putStrLn "What is the cost of pizza 2"
+   cost2 <- getLine
+   let pizza1 = (read size1 :: Int, read cost1 :: Int)
+   let pizza2 = (read size2 :: Int, read cost2 :: Int)
+   let betterPizza = comparePizzas pizza1 pizza2
+   putStrLn (describePizza betterPizza)
+
+mainBindPizza :: IO ()
+mainBindPizza =
+  putStrLn "What is the size of pizza 1" >>
+  getLine >>= (\size1 ->
+    putStrLn "What is the cost of pizza 1" >>
+    getLine >>= (\cost1 ->
+      putStrLn "What is the size of pizza 2" >>
+      getLine >>= (\size2 ->
+        putStrLn "What is the cost of pizza 2" >>
+        getLine >>= (\cost2 -> putStrLn (describePizza (comparePizzas
+                            (read size1 :: Int, read cost1 :: Int)
+                            (read size2 :: Int, read cost2 :: Int)))
+                   ))))
