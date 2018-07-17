@@ -26,6 +26,6 @@ lookupUserName id = Map.lookup id userNameDB
 lookupCredits :: UserName -> Maybe PlayerCredits
 lookupCredits username = Map.lookup username creditsDB
 
-creditsFromId :: GamerId -> Maybe PlayerCredits -- It's join, actually.
-creditsFromId id = lookupCredits <$> maybeId
-  where maybeId = lookupUserName id
+-- It works if I comment my type signature, but it just works the wrong way.
+-- creditsFromId :: GamerId -> Maybe PlayerCredits -- It's join, actually.
+creditsFromId id = pure lookupCredits <*> lookupUserName id
