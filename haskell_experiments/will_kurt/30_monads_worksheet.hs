@@ -56,3 +56,6 @@ mainProg = (askForName >> getLine) >>= (\name -> return (nameStatement name))
 allFmapM :: Monad m => (a -> b) -> m a -> m b
 allFmapM f m = m >>= (return . f)
 
+allApp :: Monad m => m (a -> b) -> m a -> m b
+allApp f m = m >>= (\param -> (f >>= (\fun -> return $ fun param)) )
+-- allApp f m = f >>= (\f -> m >>= (return . f)) -- code reuse with allFmap
