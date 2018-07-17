@@ -59,3 +59,7 @@ allFmapM f m = m >>= (return . f)
 allApp :: Monad m => m (a -> b) -> m a -> m b
 allApp f m = m >>= (\param -> (f >>= (\fun -> return $ fun param)) )
 -- allApp f m = f >>= (\f -> m >>= (return . f)) -- code reuse with allFmap
+
+bind :: Maybe a -> (a -> Maybe b) -> Maybe b
+bind (Just a) f = f a
+bind Nothing f = Nothing
