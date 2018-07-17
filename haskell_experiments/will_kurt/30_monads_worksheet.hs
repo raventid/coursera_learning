@@ -32,6 +32,23 @@ creditsFromId id = lookupUserName id >>= lookupCredits
 
 -- Monad bind is:
 -- (>>=) :: Monad m => m a -> (a -> m b) -> m b
+
+-- Here I'm trying to force IO to avoid using `>>` operator (why not?)
+echoVerbose' :: IO ()
+echoVerbose' = second $ fmap id $ first
+  where first = putStrLn "Enter a String an we'll echo it!"
+        second _ = getLine >>= putStrLn
+
 echoVerbose :: IO ()
-echoVerbose = putStrLn "Enter a String an we'll echo it!" >>
-              getLine >>= putStrLn
+echoVerbose = putStrLn "Enter a String and we'll echo it!" >> getLine >>= putStrLn
+
+
+-- Example with tieing all this stuff together in beautiful programm
+askForName :: IO ()
+askForName = putStrLn "What is your name?"
+
+nameStatement :: String -> String
+nameStatement name = "Hello, " ++ name ++ "!"
+
+mainProg :: IO String
+mainProg = (askForName >> getLine) >>= (\name -> return (nameStatement name))
