@@ -128,8 +128,7 @@ enrollments = [(Enrollment 1 101)
               ,(Enrollment 5 101)
               ,(Enrollment 6 201) ]
 
-studentEnrollmentsQ = HINQ_ (_select (\(st,en) ->
-                                        (studentName st, course en))
+studentEnrollmentsQ = HINQ_ (_select (\(st,en) -> (studentName st, course en)))
                              (_join students enrollments studentId student)
 
 studentEnrollments :: [(Name, Int)]
@@ -141,3 +140,13 @@ englishStudentsQ = HINQ  (_select (fst . fst))
                                  snd
                                  courseId)
                           (_where ((== "English") . courseTitle . snd))
+
+-- Some generic queries examples using HINQ.
+getEnrollments :: String -> [Name]
+getEnrollments courseName =  runHINQ courseQuery
+  where courseQuery = HINQ  (_select (fst . fst))
+                            (_join studentEnrollments
+                                 courses
+                                 snd
+                                 courseId)
+                            (_where ((== courseName) . courseTitle . snd))
