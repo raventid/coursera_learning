@@ -150,3 +150,6 @@ getEnrollments courseName =  runHINQ courseQuery
                                  snd
                                  courseId)
                             (_where ((== courseName) . courseTitle . snd))
+
+-- If we can implement Monoid and Semigroup for HINQ type
+-- we can get mconcat, mappend, so we can easily combine multiple queries.
