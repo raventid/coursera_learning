@@ -1,3 +1,5 @@
+import Control.Monad
+
 data Name = Name
              { firstName ::String
              , lastName :: String }
@@ -30,4 +32,12 @@ _select prop vals = do
   val <- vals
   return (prop val)
 
-spec = _select (firstName . studentName) students
+-- Specs for _select function.
+specSelectBasic = _select (firstName . studentName) students
+specSelectMultipleProps = _select (\x -> (studentId x, gradeLevel x, studentName x)) students
+
+_where :: (a -> Bool) -> [a] -> [a]
+_where test vals = do
+  val <- vals
+  guard (test val)
+  return val
