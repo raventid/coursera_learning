@@ -63,3 +63,19 @@ data Course = Course
 courses :: [Course]
 courses = [Course 101 "French" 100
           ,Course 201 "English" 200]
+
+_join :: Eq c => [a] -> [b] -> (a -> c) -> (b -> c) -> [(a,b)]
+_join data1 data2 prop1 prop2 = do
+  d1 <- data1
+  d2 <- data2
+  let dpairs = (d1,d2)
+  guard ((prop1 (fst dpairs)) == (prop2 (snd dpairs))) -- typo page 419
+  return dpairs
+
+innerJoiningSpec = selectResult
+  where joinData = (_join teachers courses teacherId teacher)
+        whereResult = _where ((== "English") . courseTitle . snd) joinData
+        selectResult = _select (teacherName . fst) whereResult
+
+_hinq selectQuery joinQuery whereQuery =
+  (\joinData -> (\whereResult -> selectQuery whereResult) (whereQuery joinData)) joinQuery
