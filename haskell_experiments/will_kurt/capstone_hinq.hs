@@ -34,6 +34,7 @@ _select prop vals = do
 
 -- Specs for _select function.
 specSelectBasic = _select (firstName . studentName) students
+-- Composition power.
 specSelectMultipleProps = _select (\x -> (studentId x, gradeLevel x, studentName x)) students
 
 _where :: (a -> Bool) -> [a] -> [a]
@@ -41,3 +42,5 @@ _where test vals = do
   val <- vals
   guard (test val)
   return val
+
+specWhere = _where ((\name -> 'J' == head name) . firstName) (_select studentName students)
