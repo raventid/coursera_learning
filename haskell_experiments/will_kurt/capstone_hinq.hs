@@ -44,3 +44,22 @@ _where test vals = do
   return val
 
 specWhere = _where ((\name -> 'J' == head name) . firstName) (_select studentName students)
+
+-- Teacher and Course structures.
+
+data Teacher = Teacher
+  { teacherId :: Int
+  , teacherName :: Name } deriving Show
+
+teachers :: [Teacher]
+teachers = [Teacher 100 (Name "Simone" "De Beauvior")
+           ,Teacher 200 (Name "Susan" "Sontag")]
+
+data Course = Course
+  { courseId :: Int
+  , courseTitle :: String
+  , teacher :: Int } deriving Show
+
+courses :: [Course]
+courses = [Course 101 "French" 100
+          ,Course 201 "English" 200]
