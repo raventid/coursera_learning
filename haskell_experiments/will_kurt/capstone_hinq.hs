@@ -85,3 +85,31 @@ finalResult = _hinq (_select (teacherName . fst))
                     (_join teachers courses teacherId teacher)
                     (_where ((== "English") .courseTitle . snd))
 
+
+-- With reified and abstract types I can make this:
+data HINQ m a b = HINQ (m a -> m b) (m a) (m a -> m a)
+                | HINQ_ (m a -> m b) (m a)
+
+runHINQ :: (Monad m, Alternative m) => HINQ m a b -> m b
+runHINQ (HINQ sClause jClause wClause) = _hinq sClause jClause wClause
+-- This one provides default version of _where clause.
+runHINQ (HINQ_ sClause jClause) = _hinq sClause jClause (_where (\_ -> True))
+
+-- Example query with HINQ type
+-- This stuff is lazy by default so this code want execute
+-- until someone will call it.
+query1 :: HINQ [] (Teacher, Course) Name
+query1  = HINQ (_select (teacherName . fst))
+               (_join teachers courses teacherId teacher)
+               (_where ((== "English") .courseTitle . snd))
+
+possibleTeacher :: Maybe Teacher
+possibleTeacher = Just (head teachers)
+
+possibleCourse :: Maybe Course
+possibleCourse = Just (head courses)
+
+maybeQuery1 :: HINQ Maybe (Teacher, Course) Name
+maybeQuery1 = HINQ (_select (teacherName . fst))
+                   (_join possibleTeacher possibleCourse teacherId teacher)
+                   (_where ((== "French") . courseTitle . snd))
