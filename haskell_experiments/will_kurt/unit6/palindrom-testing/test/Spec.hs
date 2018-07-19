@@ -11,7 +11,7 @@ prop_punctuationInvariant text = preprocess text ==
                                   preprocess noPuncText
    where noPuncText = filter (not . isPunctuation) text
 
-prop_reverseInvariant text = isPalindrome text == (isPalindrome (reverse text))
+prop_reverseInvariant text = isPalindrom text == (isPalindrom (reverse text))
 
 main :: IO ()
 main = do
