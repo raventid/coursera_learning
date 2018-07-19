@@ -1,9 +1,6 @@
 module Main where
 
-import qualified Palindrom
-
-isPalindrom :: String -> Bool
-isPalindrom text = text == reverse text
+import Palindrom
 
 main :: IO ()
 main = do
