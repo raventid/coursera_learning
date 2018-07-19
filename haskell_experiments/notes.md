@@ -62,6 +62,7 @@ $ stack ghci --ghci-options -XNoImplicitPrelude
 
 
 # GHCI
+`:r` - reload all modules without recompiling project
 
 `:set +s`
 
