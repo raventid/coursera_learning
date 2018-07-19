@@ -1,5 +1,7 @@
 module Main where
 
+import qualified Palindrom
+
 isPalindrom :: String -> Bool
 isPalindrom text = text == reverse text
 
