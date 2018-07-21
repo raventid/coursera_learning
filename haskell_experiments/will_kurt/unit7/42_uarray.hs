@@ -1,4 +1,5 @@
 import Data.Array.Unboxed
+import Data.STRef
 import Data.Array.ST
 import Control.Monad
 import Control.Monad.ST
@@ -32,3 +33,13 @@ listToSTUArray vals = do
 
 listToUArray :: [Int] -> UArray Int Int
 listToUArray vals = runSTUArray $ listToSTUArray vals
+
+swapST :: (Int,Int) -> (Int,Int)
+swapST (x,y) = runST $ do
+   x' <- newSTRef x
+   y' <- newSTRef y
+   writeSTRef x' y
+   writeSTRef y' x
+   xfinal <- readSTRef x'
+   yfinal <- readSTRef y'
+   return (xfinal,yfinal)
