@@ -35,14 +35,14 @@ listToUArray :: [Int] -> UArray Int Int
 listToUArray vals = runSTUArray $ listToSTUArray vals
 
 swapST :: (Int,Int) -> (Int,Int)
-swapST (x,y) = runST $ do
+swapST (x, y) = runST $ do
    x' <- newSTRef x
    y' <- newSTRef y
    writeSTRef x' y
    writeSTRef y' x
    xfinal <- readSTRef x'
    yfinal <- readSTRef y'
-   return (xfinal,yfinal)
+   return (xfinal, yfinal)
 
 -- Highest form of Haskell
 -- Buble sort on stateful array
@@ -62,3 +62,21 @@ bubbleSort myArray = runSTUArray $ do
         writeArray stArray j nextVal
         writeArray stArray (j+1) val
   return stArray
+
+dataForCrossover :: (UArray Int Int, UArray Int Int)
+dataForCrossover = (listToUArray [1,1,1,1,1], listToUArray [0,0,0,0,0])
+
+crossover :: (UArray Int Int, UArray Int Int) -> Int -> UArray Int Int
+crossover (l, r) pivot = runSTUArray $ do
+  firstArray <- thaw l
+  secondArray <- thaw r -- TODO: type error I cannot understand, so much left to learn!
+
+  let end = (snd . bounds) r -- but could be l, does not matter
+  forM_ [0 .. (end-1)] $ \i -> do
+    valR <- readArray firstArray i
+    valL <- readArray secondArray i
+
+    let takeFirst = i <= pivot
+    if takeFirst then writeArray firstArray i valR else writeArray firstArray i valL
+
+  return firstArray
