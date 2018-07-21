@@ -66,17 +66,25 @@ bubbleSort myArray = runSTUArray $ do
 dataForCrossover :: (UArray Int Int, UArray Int Int)
 dataForCrossover = (listToUArray [1,1,1,1,1], listToUArray [0,0,0,0,0])
 
-crossover :: (UArray Int Int, UArray Int Int) -> Int -> UArray Int Int
-crossover (l, r) pivot = runSTUArray $ do
-  firstArray <- thaw l
-  secondArray <- thaw r -- TODO: type error I cannot understand, so much left to learn!
+-- crossover :: (UArray Int Int, UArray Int Int) -> Int -> UArray Int Int
+-- crossover (l, r) pivot = runSTUArray $ do
+--   firstArray <- thaw l
+--   secondArray <- thaw r -- TODO: type error I cannot understand, so much left to learn!
 
-  let end = (snd . bounds) r -- but could be l, does not matter
-  forM_ [0 .. (end-1)] $ \i -> do
-    valR <- readArray firstArray i
-    valL <- readArray secondArray i
+--   let end = (snd . bounds) r -- but could be l, does not matter
+--   forM_ [0 .. (end-1)] $ \i -> do
+--     valR <- readArray firstArray i
+--     valL <- readArray secondArray i
 
-    let takeFirst = i <= pivot
-    if takeFirst then writeArray firstArray i valR else writeArray firstArray i valL
+--     let takeFirst = i <= pivot
+--     if takeFirst then writeArray firstArray i valR else writeArray firstArray i valL
 
-  return firstArray
+--   return firstArray
+
+crossover :: (UArray Int Int ,UArray Int Int) -> Int -> UArray Int Int
+crossover (l,r) pivot = runSTUArray $ do
+  arr <- thaw l
+  let end = (snd . bounds) l
+  forM_ [pivot .. end] $ \i -> do
+    writeArray arr i $ r ! i
+  return arr
