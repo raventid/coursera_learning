@@ -17,5 +17,5 @@ impl<T> Queue<T> {
     }
 }
 
-// Use `turbofish` when you need to create simple variable (can't infer type here)
+// Use `turbofish` when you can't infer type here
 let mut q = Queue::<char>::new();
