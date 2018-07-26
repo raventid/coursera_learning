@@ -13,7 +13,7 @@ impl<T> Queue<T> {
     }
 
     pub fn is_empty(&self) -> bool {
-        self.younger.is_empty() == self.older.is_empty()
+        self.younger.is_empty() && self.older.is_empty()
     }
 }
 
