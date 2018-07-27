@@ -19,5 +19,5 @@ impl<T> Queue<T> {
 
 fn main () {
     // Use `turbofish` when you can't infer type here
-    let q = Queue::<char>::new();
+    let _q = Queue::<char>::new();
 }
