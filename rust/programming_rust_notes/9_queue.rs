@@ -17,5 +17,7 @@ impl<T> Queue<T> {
     }
 }
 
-// Use `turbofish` when you can't infer type here
-let mut q = Queue::<char>::new();
+fn main () {
+    // Use `turbofish` when you can't infer type here
+    let q = Queue::<char>::new();
+}
