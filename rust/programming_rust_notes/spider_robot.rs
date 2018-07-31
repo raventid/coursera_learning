@@ -18,3 +18,7 @@ impl SpiderRobot {
         self.hardware_error_count.get() > 0
     }
 }
+
+fn main() {
+    SpiderRobot { species, web_enabled, leg_devices, hardware_error_count }
+}
