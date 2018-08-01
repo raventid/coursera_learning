@@ -1,5 +1,9 @@
 use std::cell::Cell;
 
+
+// I think I can think of Cell as getter/setter pair
+// You can not get the ref value from Cell. It gives you copy of value
+// you mutate this value somewhere in your program and set it back with setter.
 pub struct SpiderRobot {
     species: String,
     web_enabled: bool,
