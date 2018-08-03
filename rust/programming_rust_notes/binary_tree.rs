@@ -29,5 +29,11 @@ impl<T: Ord> BinaryTree<T> {
 }
 
 fn main() {
+    use self::BinaryTree::*;
 
+    let jupyter_tree = NonEmpty(Box::new(TreeNode {
+        element: "jupiter",
+        left: Empty,
+        right: Empty,
+    }));
 }
