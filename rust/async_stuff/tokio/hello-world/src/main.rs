@@ -19,5 +19,8 @@ fn main() {
         // This forces error handling and helps avoid silent failures.
         // In our example, we are only going to log the error to STDOUT.
         println!("accept error = {:?}", err)
-    })
+    });
+
+    println!("server running on localhost:6142");
+    tokio::run(server);
 }
