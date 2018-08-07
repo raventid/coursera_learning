@@ -67,13 +67,37 @@ impl SpinExecutor {
     pub fn run(&mut self) {
         // Of course, this would not be very efficient.
         // The executor spins in a busy loop and tries to poll all tasks even if the task will just return NotReady again.
-        while let Some(mut task) = self.tasks.pop_front() {
-            match task.poll().unwrap() {
-                Async::Ready(_) => {}
-                Async::NotReady => {
-                    self.tasks.push_back(task);
+
+        // We won't use this naive approach and will implement something more advanced.
+        //
+        // while let Some(mut task) = self.tasks.pop_front() {
+        //     match task.poll().unwrap() {
+        //         Async::Ready(_) => {}
+        //         Async::NotReady => {
+        //             self.tasks.push_back(task);
+        //         }
+        //     }
+        // }
+
+
+        // So, to avoid busy loop here and waiting your CPU time
+        // you just iterate over tasks one time and then go to sleep.
+        // Someone will wake you up later.
+        loop {
+            while let Some(mut task) = self.ready_tasks.pop_front() {
+                match task.poll().unwrap() {
+                    Async::Ready(_) => {}
+                    Async::NotReady => {
+                        self.not_ready_tasks.push_back(task);
+                    }
                 }
             }
+
+            if self.not_ready_tasks.is_empty() {
+                return;
+            }
+
+            self.sleep_until_tasks_are_ready();
         }
     }
 }
