@@ -56,6 +56,7 @@ int main(void)
      // Here we could watch not one, but many files.
      // And handle each event separatly. One by one.
      nev = kevent(kq, &change, 1, &event, 1, NULL);
+
      if (nev == -1)
        perror("kevent");
      else if (nev > 0)
