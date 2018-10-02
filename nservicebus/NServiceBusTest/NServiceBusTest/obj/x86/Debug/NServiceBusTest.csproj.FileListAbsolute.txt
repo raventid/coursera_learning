@@ -1,0 +1,6 @@
+/Users/juliankulesh/Experiments/coursera_learning/nservicebus/NServiceBusTest/NServiceBusTest/bin/Debug/NServiceBusTest.exe
+/Users/juliankulesh/Experiments/coursera_learning/nservicebus/NServiceBusTest/NServiceBusTest/bin/Debug/NServiceBusTest.pdb
+/Users/juliankulesh/Experiments/coursera_learning/nservicebus/NServiceBusTest/NServiceBusTest/obj/x86/Debug/NServiceBusTest.csprojAssemblyReference.cache
+/Users/juliankulesh/Experiments/coursera_learning/nservicebus/NServiceBusTest/NServiceBusTest/obj/x86/Debug/NServiceBusTest.csproj.CoreCompileInputs.cache
+/Users/juliankulesh/Experiments/coursera_learning/nservicebus/NServiceBusTest/NServiceBusTest/obj/x86/Debug/NServiceBusTest.exe
+/Users/juliankulesh/Experiments/coursera_learning/nservicebus/NServiceBusTest/NServiceBusTest/obj/x86/Debug/NServiceBusTest.pdb

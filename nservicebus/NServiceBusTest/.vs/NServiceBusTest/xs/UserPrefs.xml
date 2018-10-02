@@ -1,0 +1,14 @@
+﻿<Properties StartupConfiguration="{B67997CA-37A8-4443-B8C4-CF2035503250}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="NServiceBusTest/Program.cs">
+    <Files>
+      <File FileName="NServiceBusTest/Program.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.NServiceBusTest PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>
