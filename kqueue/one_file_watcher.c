@@ -36,10 +36,12 @@ int main(void)
    struct kevent event;
 
    kq = kqueue();
+
    if (kq == -1)
        perror("kqueue");
 
    f = open("./foo", O_RDONLY | O_CREAT);
+
    if (f == -1)
    {
        perror("open");
