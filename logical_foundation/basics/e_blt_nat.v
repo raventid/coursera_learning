@@ -14,10 +14,6 @@ Example test_leb3: (leb 4 2) = true.
 
 
 Definition blt_nat (n m : nat) : bool := leb n m.
-  (* match n with *)
-  (* | O => true *)
-  (* | S n' => false *)
-  (* end. *)
 
 Example test_blt_nat1: (blt_nat 2 2) = false.
 Example test_blt_nat2: (blt_nat 2 4) = true.
