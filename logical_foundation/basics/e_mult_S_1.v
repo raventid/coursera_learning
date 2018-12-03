@@ -19,7 +19,7 @@ Proof.
 
   (* if I put this visa versa I get not *)
   (* (0 + S n) * (1 + n) = S n * S n *)
-  rewrite <- mult_0_plus.
+  rewrite <- mult_0_plus. (* S n * (1 + n) = S n * S n <- (0 + n) * m = n * m *)
   (* but error *)
   
   (* когда мы пишем rewrite <- mult_0_plus, *)
