@@ -29,3 +29,14 @@ Proof.
   (* чтобы найти любое произведение (?x * ?y), *)
   (* то ?x унифицируется с S n, а ?y с (1 + n) *)
   reflexivity. Qed.
+
+Theorem mult_S_1' : forall n m : nat,
+    m = S n ->
+    m * (1 + n) = m * m.
+Proof.
+  intros n m.
+  intros H.
+  simpl. (* Simplification here will print *)
+  rewrite -> H. (* (m * S n = m * m) -> (m = S n)  =>  (S n * S n = S n * S n) *)
+  rewrite <- H. (* (S n * S n = S n * S n) <- (m = S n) =>  (m * m = m * m) *)
+  reflexivity. Qed.
