@@ -1,8 +1,15 @@
 extern crate libc;
 
+use std::net::UdpSocket;
+
 use libc::{fd_set, select, timeval, FD_ISSET, FD_SET, FD_ZERO};
 
 fn main() {
+    let sock = UdpSocket::bind("0.0.0.0:5546").expect("Failed to bind socket");
+    sock.set_nonblocking(true).expect("Failed to enter non-blocking mode");
+
+    // Here's your udp_socket, it should be polled with select syscall (bad wording, yeah).
+
     loop {
         // Timeout before next even loop iteration.
         let mut timeval = timeval {
