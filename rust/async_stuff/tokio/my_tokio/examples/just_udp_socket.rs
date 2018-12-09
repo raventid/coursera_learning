@@ -7,7 +7,6 @@
 use std::net::UdpSocket;
 use std::time::{Duration, Instant};
 use std::io::ErrorKind;
-use std::str;
 use std::thread;
 
 fn main() {
