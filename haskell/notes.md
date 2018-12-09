@@ -48,6 +48,8 @@ Applicative: <*> == app(just a name, you can't call it like this)
 
 # Stack
 
+## Some stack commands
+
 Generate absolutely new project
 $ stack new project-name
 
@@ -60,8 +62,30 @@ $ stack exec which file-name
 Do not load implicit prelude in my session
 $ stack ghci --ghci-options -XNoImplicitPrelude
 
+## My stack setup for Spacemacs
+I add this to `dotspacemacs/user-confi ()`:
+
+```
+(setq
+    ghc-ghc-options '("-fno-warn-missing-signatures")
+    haskell-compile-cabal-build-command "cd %s && stack build"
+    haskell-process-type 'stack-ghci
+    haskell-interactive-popup-errors nil
+    haskell-process-args-stack-ghci '("--ghc-options=-ferror-spans" "--with-ghc=ghci")
+    haskell-process-path-ghci "stack")
+  )
+```
+
+But I definitely should read more about options I can tweak in HaskellMode.
+
 
 # GHCI
+
+`:t` (`:type`) - information about types, like `:t 'a'` --> `'a' :: Char`
+
+`:i` (`:info`) - information about element, like `:i map` --> `map :: (a -> b) -> [a] -> [b] 	-- Defined in ‘GHC.Base’
+`
+
 `:r` - reload all modules without recompiling project
 
 `:set +s`
