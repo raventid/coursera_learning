@@ -7,6 +7,7 @@
 use std::net::UdpSocket;
 use std::time::{Duration, Instant};
 use std::io::ErrorKind;
+use std::str;
 use std::thread;
 
 fn main() {
@@ -23,7 +24,9 @@ fn main() {
         match result {
             // If `recv` was successfull, print the number of bytes received.
             // The received data is stored in `buf`.
-            Ok(num_bytes) => println!("I received {} bytes!", num_bytes),
+            Ok(num_bytes) => {
+                println!("I received {} bytes! Message is {}", num_bytes, String::from_utf8_lossy(&buf[0..num_bytes]));
+            }
             // If we get an error other than "would block", print the error.
             Err(ref err) if err.kind() != ErrorKind::WouldBlock => {
             // Do nothing otherwise.
