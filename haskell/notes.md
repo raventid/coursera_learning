@@ -80,6 +80,7 @@ But I definitely should read more about options I can tweak in HaskellMode.
 
 
 # GHCI
+`:l` - loads file into repl
 
 `:t` (`:type`) - information about types, like `:t 'a'` --> `'a' :: Char`
 
