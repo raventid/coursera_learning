@@ -89,9 +89,7 @@ But I definitely should read more about options I can tweak in HaskellMode.
 
 `:r` - reload all modules without recompiling project
 
-`:set +s`
-
-Very simple timer to measure performance of function built in GHCI.
+`:set +s` - Very simple timer to measure performance of function built in GHCi. After execturion of function it shows how much time did it take.
 
 
 # Questions I have
