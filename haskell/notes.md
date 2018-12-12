@@ -89,8 +89,9 @@ But I definitely should read more about options I can tweak in HaskellMode.
 
 `:r` - reload all modules without recompiling project
 
-`:set +s` - Very simple timer to measure performance of function built in GHCi. After execturion of function it shows how much time did it take.
+`:set +s` - very simple timer to measure performance of function built in GHCi. After execturion of function it shows how much time did it take.
 
+`:set prompt "mighty raventid λ>"` - set custom prompt (there is a bug with colors haskell-mode I guess, at least my emacs-26 does not support proper colors)
 
 # Questions I have
 - Not sure I completely understand the way spine works in terms of strictness and nonstrictness. To note it's pages 358-359 of Programming Haskell. So I'm waiting for chapter on strictness and nonstrictness to make it clear.
