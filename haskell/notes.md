@@ -16,6 +16,8 @@ Int instead of Num a, wich I would personally prefer (I enjoy polymorphism :D )
 
 `Partial` function: 
 
+A partial function is one that doesn’t handle all the possible cases, so there are possible scenarios in which we haven’t defined any way for the code to evaluate. I.e. -->
+
 Prelude> read "1234567" :: Integer
 1234567
 Prelude> read "BLAH" :: Integer
@@ -36,6 +38,34 @@ To construct mixed combos in typeclasses I used this:
 
 If you would like to derive typeclass from parent you have to use this pragma, it tells GHC to reuse pragma for wrapped type. It works only for newtype declaration, because only newtype always have just one wrapped type. (Like you can write derive (YourClass), instead of implementing it by hand for every newtype you create) 
 {-# GeneralizedNewtypeDeriving #-} 
+
+#### Bottom note:
+`⊥` or bottom is a term used in Haskell to refer to computations that do not successfully result in a value. The two main varieties of bottom are computations that failed with an error or those that failed to terminate i.e.
+```haskell
+Prelude> x = x in x
+*** Exception: <<loop>>
+```
+Here GHCi detected that let x = x in x was never going to return and short-circuited the never-ending computation.
+
+Another one is throughing the error
+```haskell
+f :: Bool -> Int
+f True = error "blah" 
+f False = 0
+```
+
+```
+Prelude> f False
+0
+Prelude> f True
+*** Exception: blah
+```
+
+And one more is partial function (we have no mathcer for `True` here)
+```haskell
+f :: Bool -> Int 
+f False = 0
+```
 
 imports:
 qualified to use alias name.
@@ -89,6 +119,8 @@ But I definitely should read more about options I can tweak in HaskellMode.
 `:set +s` - very simple timer to measure performance of function built in GHCi. After execturion of function it shows how much time did it take.
 
 `:set prompt "mighty raventid λ>"` - set custom prompt (there is a bug with colors haskell-mode I guess, at least my emacs-26 does not support proper colors)
+
+`:set -Wall` - set compiler to show all warnings. Why it's not enabled by default?!
 
 # Questions I have
 - Not sure I completely understand the way spine works in terms of strictness and nonstrictness. To note it's pages 358-359 of Programming Haskell. So I'm waiting for chapter on strictness and nonstrictness to make it clear.
