@@ -3,12 +3,9 @@
 
 Here I'm making some notes about Haskell quirks I find difficult to remember or just complex stuff I hardly ever use.
 
-
-
 Parametric polymorphism - parameters wich are fully polymorphic (a -> a)
 
-Constrained(ad-hoc) polymorphism - parameters constrained by typeclasses ((Num a) => a -> a)
-
+Constrained (ad-hoc, bounded) polymorphism - parameters constrained by typeclasses ((Num a) => a -> a)
 
 To avoid monomorphising types we can include this extension:
 {-# LANGUAGE NoMonomorphismRestriction #-}
