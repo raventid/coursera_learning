@@ -76,9 +76,15 @@ Here the type constructor `Trivial` is like a constant value but at the type lev
 
 The data constructor `Trivial'` is also like a constant value, but it exists in `value`, `term`, or `runtime` space. These are not three different things, but three different words for the same space that types serve to describe.
 
+In fact `constant` might be used for data constructors too. `Trivial'` is constant, because it uses.
+
+
+#### Imports
 imports:
 qualified to use alias name.
 
+
+#### Monoid, Functor, Applicative, Monad
 Functor: <$> == fmap
 Applicative: <*> == app(just a name, you can't call it like this)
 
