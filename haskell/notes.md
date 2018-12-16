@@ -67,6 +67,15 @@ f :: Bool -> Int
 f False = 0
 ```
 
+#### Type-level and runtime level spaces
+```haskell
+data Trivial = Trivial'
+```
+
+Here the type constructor `Trivial` is like a constant value but at the type level. It takes no arguments and is thus `nullary`. The Haskell Report calls these `type constants` to distinguish them from type constructors that take arguments.
+
+The data constructor `Trivial'` is also like a constant value, but it exists in `value`, `term`, or `runtime` space. These are not three different things, but three different words for the same space that types serve to describe.
+
 imports:
 qualified to use alias name.
 
