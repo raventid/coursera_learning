@@ -78,6 +78,7 @@ The data constructor `Trivial'` is also like a constant value, but it exists in 
 
 In fact `constant` might be used for data constructors too. `Trivial'` is constant, because it uses.
 
+Function type is exponential: Given: `a -> b`, the function type b^a.
 
 #### Imports
 imports:
