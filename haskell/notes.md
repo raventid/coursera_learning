@@ -80,6 +80,11 @@ In fact `constant` might be used for data constructors too. `Trivial'` is consta
 
 Function type is exponential: Given: `a -> b`, the function type b^a.
 
+#### Lifted and unlifted types
+To be precise, kind `*` is the kind of all standard lifted types, while types that have the kind `#` are unlifted. A lifted type, which includes any datatype you could define yourself, is any that can be inhabited by bottom. Lifted types are represented by a pointer and include most of the datatypes we’ve seen and most that you’re likely to encounter and use. Unlifted types are any type which cannot be inhabited by bottom. Types of kind `#` are often native machine types and raw pointers. *Newtypes are a special case in that they are kind `*`, but are unlifted because their representation is identical to that of the type they contain*, so the newtype itself is not creating any new pointer beyond that of the type it contains. That fact means that the newtype itself cannot be inhabited by bottom, only the thing it contains can be, so newtypes are unlifted. The default kind of concrete, fully-applied datatypes in GHC is kind `*`.
+
+This text is a bit out of date, due to TypeInType in modern Haskell versions. I love progress!
+
 #### Imports
 imports:
 qualified to use alias name.
