@@ -85,6 +85,9 @@ To be precise, kind `*` is the kind of all standard lifted types, while types th
 
 This text is a bit out of date, due to TypeInType in modern Haskell versions. I love progress!
 
+#### Morphisms
+If folds, or *catamorphisms*, let us break data structures down then unfolds let us build them up. There are, as with folds, a few different ways to unfold a data structure. Unfolding is called *anamorphism*.
+
 #### Imports
 imports:
 qualified to use alias name.
