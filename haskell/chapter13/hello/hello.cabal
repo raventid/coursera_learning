@@ -5,9 +5,9 @@ description:         Please see README.md
 homepage:            https://github.com/raventid
 license:             BSD3
 license-file:        LICENSE
-author:              Julian Kulesh
+author:              Julian Pokrovsky
 maintainer:          example@email.com
-copyright:           2016, Julian Kulesh
+copyright:           2016, Julian Pokrovsky
 category:            Web
 build-type:          Simple
 cabal-version:       >=1.10
