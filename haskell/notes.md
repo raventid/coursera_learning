@@ -102,16 +102,19 @@ Applicative: <*> == app(just a name, you can't call it like this)
 ## Some stack commands
 
 Generate absolutely new project
-$ stack new project-name
+`$ stack new project-name`
 
 Build the project:
-$ stack build
+`$ stack build`
+
+Exec project:
+`$ stack exec -- project_name`
 
 Look for exe file path:
-$ stack exec which file-name
+`$ stack exec which file-name`
 
 Do not load implicit prelude in my session
-$ stack ghci --ghci-options -XNoImplicitPrelude
+`$ stack ghci --ghci-options -XNoImplicitPrelude`
 
 ## My stack setup for Spacemacs
 I add this to `dotspacemacs/user-confi ()`:
