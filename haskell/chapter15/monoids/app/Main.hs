@@ -47,6 +47,8 @@ instance Monoid Bull where
   mempty = Fools
   mappend _ _ = Fools
 
+-- This is Monoid -> Monoid -> Monoid -> Bool
+-- I will use this to make monoidAssoc type specialised.
 type BullMappend = Bull -> Bull -> Bull -> Bool
 
 runBullTests :: IO ()
