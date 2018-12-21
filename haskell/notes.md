@@ -94,8 +94,16 @@ qualified to use alias name.
 
 
 #### Monoid, Functor, Applicative, Monad
-Functor: <$> == fmap
-Applicative: <*> == app(just a name, you can't call it like this)
+Monoid follows associativity and identity laws.
+
+```haskell
+mappend x mempty = x
+mappend mempty x = x
+```
+
+Functor: `<$> == fmap`
+
+Applicative: `<*> == app` (`app` is just a name, you can't call it like this)
 
 # Stack
 
