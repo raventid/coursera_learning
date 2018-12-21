@@ -94,16 +94,45 @@ qualified to use alias name.
 
 
 #### Monoid, Functor, Applicative, Monad
-Monoid follows associativity and identity laws.
+Monoid laws.
 
+- left identity
+```haskell
+mappend mempty x = x 
+```
+
+- right identity
 ```haskell
 mappend x mempty = x
-mappend mempty x = x
 ```
+
+- associativity
+```haskell
+mappend x (mappend y z) = mappend (mappend x y) z
+```
+
+
+Commutative means:
+We do not have a proof this is correct, but we have evidence,
+```haskell
+(+) 76 67 == (flip (+)) 76 67
+```
+With these values it's equal to 143.
+
+We have a proff it's wrong because we have one contrexample, which shows it's wrong
+```haskell
+(++) "Hello " "world!" /= (flip (++)) "Hello " "world!"
+```
+first one is `"Hello world!"` and second one is `"world!Hello "`.
 
 Functor: `<$> == fmap`
 
 Applicative: `<*> == app` (`app` is just a name, you can't call it like this)
+
+# Orphan instances
+1. You defined the type but not the type class? Put the instance in the same module as the type so that the type cannot be imported without its instances.
+2. You defined the type class but not the type? Put the instance in the same module as the type class definition so that the type class cannot be imported without its instances.
+3. Neither the type nor the type class are yours? Define your own newtype wrapping the original type and now you’ve got a type that “belongs” to you for which you can rightly define type class instances. There are means of making this less annoying which we’ll discuss later.
 
 # Stack
 
