@@ -1,5 +1,6 @@
 module Main where
 
+
 import Data.Monoid
 import Test.QuickCheck
 
@@ -43,6 +44,8 @@ instance Arbitrary Bull where
   arbitrary = frequency [ (1, return Fools)
                         , (1, return Twoo) ]
 
+-- This is definitely a wrong Monoid instance.
+-- It returns Fools everywhere without counting on mempty or variable values.
 instance Monoid Bull where
   mempty = Fools
   mappend _ _ = Fools
