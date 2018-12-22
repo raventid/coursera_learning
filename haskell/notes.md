@@ -94,6 +94,14 @@ qualified to use alias name.
 
 
 #### Monoid, Functor, Applicative, Monad
+Semigroup.
+Semigroup is the same as Monoid, except it does not provide identity.
+
+```haskell
+class Semigroup a where
+(<>) :: a -> a -> a
+```
+
 Monoid laws.
 
 - left identity
