@@ -122,7 +122,7 @@ mappend x (mappend y z) = mappend (mappend x y) z
 The most obvious way to see that a Monoid's `algebra` is `stronger` than a Semigroup is to observe that it has a strict superset of the operations and laws that Semigroup provides. Anything which is a Monoid is by definition also a Semigroup.
 
 
-Commutative means:
+`Commutative` means:
 We do not have a proof this is correct, but we have evidence,
 ```haskell
 (+) 76 67 == (flip (+)) 76 67
