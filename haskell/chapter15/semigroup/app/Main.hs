@@ -18,7 +18,7 @@ data Q =
 -- Let's start exercises part:
 
 -- Our semigroup rule we will use for every proof:
-semigroupAssoc :: (Eq m, Semigroup m) => m -> m -> m -> Bool
+semigroupAssoc :: (Eq s, Semigroup s) => s -> s -> s -> Bool
 semigroupAssoc a b c =
  (a <> (b <> c)) == ((a <> b) <> c)
 
@@ -114,6 +114,9 @@ instance (Arbitrary a, Arbitrary b, Arbitrary c, Arbitrary d) => Arbitrary(Four 
     w <- arbitrary
     return (Four x y z w)
 
+-- Never though about this, but if I would've used other parameters here, like
+-- (Four String String String String) would this action increase, decrease or would not change
+-- test coverage. I guess that it will not change anything.
 type FourAssoc =
   Four String (Sum Int) (Product Int) String
   -> Four String (Sum Int) (Product Int) String
