@@ -1,7 +1,8 @@
 module Main where
 
 
-import Data.Monoid
+import Data.Monoid hiding ((<>))
+import Data.Semigroup
 import Test.QuickCheck
 
 -- λ> verboseCheck monoidAssoc
@@ -14,7 +15,7 @@ import Test.QuickCheck
 --
 -- This is how it works by default and this is a problem, we do not check anything actually.
 
-monoidAssoc :: (Eq m, Monoid m) => m -> m -> m -> Bool
+monoidAssoc :: (Eq m, Semigroup m, Monoid m) => m -> m -> m -> Bool
 monoidAssoc a b c = (a <> (b <> c)) == ((a <> b) <> c)
 
 -- We can run this in REPL and verify that monoid works! Awesome!
@@ -28,10 +29,10 @@ monoidAssoc a b c = (a <> (b <> c)) == ((a <> b) <> c)
 -- GHC will use `()` in the first case and we won't get any randomization (see above ^^^)
 -- So we specialise function type by hand (it's possible and it's awesome)
 
-monoidLeftIdentity :: (Eq m, Monoid m) => m -> Bool
+monoidLeftIdentity :: (Eq m, Semigroup m, Monoid m) => m -> Bool
 monoidLeftIdentity a = (mempty <> a) == a
 
-monoidRightIdentity :: (Eq m, Monoid m) => m -> Bool
+monoidRightIdentity :: (Eq m, Semigroup m, Monoid m) => m -> Bool
 monoidRightIdentity a = (a <> mempty) == a
 
 -- Let's run tests against our Bull type
@@ -44,11 +45,14 @@ instance Arbitrary Bull where
   arbitrary = frequency [ (1, return Fools)
                         , (1, return Twoo) ]
 
+instance Semigroup Bull where
+  _ <> _ = Fools
+
 -- This is definitely a wrong Monoid instance.
 -- It returns Fools everywhere without counting on mempty or variable values.
 instance Monoid Bull where
   mempty = Fools
-  mappend _ _ = Fools
+  mappend = (<>)
 
 -- This is Monoid -> Monoid -> Monoid -> Bool
 -- I will use this to make monoidAssoc type specialised.
@@ -70,13 +74,13 @@ data Optional a =
   | Only a
   deriving (Eq, Show)
 
-instance Monoid a => Monoid(Optional a) where
+instance (Semigroup a, Monoid a) => Monoid(Optional a) where
   mempty = Nada
 
   -- mappend
-  mappend (Only x) (Only y) = Only (mappend x y)
-  mappend (Only x) _ = Only (mappend x mempty)
-  mappend _ (Only y) = Only (mappend mempty y)
+  mappend (Only x) (Only y) = Only ((<>) x y)
+  mappend (Only x) _ = Only ((<>) x mempty)
+  mappend _ (Only y) = Only ((<>) mempty y)
   mappend Nada Nada = mempty
 
 -- Crap, had to write Arbitrary for my own Optional. I'm suffering :)
@@ -92,14 +96,17 @@ instance Arbitrary a => Arbitrary (Optional a) where
 
 
 -- Exercise Maybe Another Monoid
--- I modified signature and made a ad-hoc polymorphic and not fully, I want this garanty.
+-- I modified signature and made an ad-hoc polymorphic and not fully, I want this guaranty.
 newtype First' a =
   First' { getFirst' :: Optional a }
   deriving (Eq, Show)
 
-instance (Monoid a) => Monoid (First' a) where
+instance (Semigroup a) => Semigroup (First' a) where
+  (<>) (First' { getFirst' =  x }) (First' { getFirst' = y }) = First' { getFirst' = Only ((<>) x  y) }
+
+instance (Semigroup a) => Monoid (First' a) where
   mempty =  First' { getFirst' = Nada }
-  mappend (First' { getFirst' =  x }) (First' { getFirst' = y }) = First' { getFirst' = mappend x y }
+  mappend (First' { getFirst' =  x }) (First' { getFirst' = y }) = First' { getFirst' = ((<>) x  y) }
 
 firstMappend :: (Monoid a) => First' a -> First' a -> First' a
 firstMappend = mappend
@@ -130,9 +137,17 @@ runMaybeAnotherMonoidTest = do
   quickCheck (monoidRightIdentity :: FstId)
 
 
+newtype Combine a b = Combine { unCombine :: a -> b }
+
+instance Semigroup b => Semigroup (Combine a b) where
+  Combine f <> Combine g = Combine (f <> g)
+-- Data.Semigroup.<>
 -- Monoid exercises
 -- Monoid exercises are duplicating Semigroup exercises a bit. Hope it's not terrible.
 data Trivial = Trivial deriving (Eq, Show)
+
+instance Semigroup Trivial where
+  _ <> _ = Trivial
 
 instance Monoid Trivial where
   mempty = undefined
