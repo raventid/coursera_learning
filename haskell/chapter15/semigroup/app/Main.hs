@@ -7,6 +7,11 @@ import Test.QuickCheck
 
 -- We can create custom symbolic constructors!
 -- But this symbolic constructor cannot be prefix, only infix :(
+
+-- How cool is that? I think it's the coolest things I've ever seen. (perhaps, no)
+-- λ> 10 :!!: "Raventid"
+-- 10 :!!: "Raventid" :: Q
+
 data Q =
   Int :!!: String
 
