@@ -213,6 +213,19 @@ instance (CoArbitrary a, Arbitrary b) => Arbitrary (Combine a b) where
 
 -- 10.
 -- TODO
+newtype Comp a = Comp { unComp :: (a -> a) }
+
+instance Semigroup a => Semigroup (Comp a) where
+  Comp f <> Comp g = Comp (f <> g)
+
+-- After getting back to this exercise I have this idea about the concept.
+
+-- To create Comp with `id` function backed in all I have to do is this:
+-- compareStructure = Comp { unComp=id }
+
+-- To get my `id` function back all I have to do is to write this:
+-- unComp compareStructure
+
 
 -- 11.
 data Validation a b =
