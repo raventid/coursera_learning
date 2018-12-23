@@ -17,6 +17,7 @@ data Q =
 
 -- Let's start exercises part:
 
+
 -- Our semigroup rule we will use for every proof:
 semigroupAssoc :: (Eq s, Semigroup s) => s -> s -> s -> Bool
 semigroupAssoc a b c =
@@ -193,6 +194,12 @@ newtype Combine a b = Combine { unCombine :: a -> b }
 
 instance Semigroup b => Semigroup (Combine a b) where
   Combine f <> Combine g = Combine (f <> g)
+
+-- Lets follow this closely. We do not concat functions f `<>` g here.
+-- We take `Combine a b` and we say in type signature that b should be the
+-- instance of Semigroup.
+
+
 
 -- genFunc :: (CoArbitrary a, Arbitrary b) => Gen (a -> b)
 -- genFunc = arbitrary
