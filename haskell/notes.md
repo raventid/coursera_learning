@@ -133,6 +133,9 @@ Composition law
 fmap (f . g) = fmap f . fmap g
 ```
 
+
+
+
 `Commutative` means:
 We do not have a proof this is correct, but we have evidence,
 ```haskell
@@ -149,6 +152,9 @@ first one is `"Hello world!"` and second one is `"world!Hello "`.
 Functor: `<$> == fmap`
 
 Applicative: `<*> == app` (`app` is just a name, you can't call it like this)
+
+# Terms
+Eta-reduction of function - rewriting the function without its arguments. Pretty simple.
 
 # Orphan instances
 1. You defined the type but not the type class? Put the instance in the same module as the type so that the type cannot be imported without its instances.
