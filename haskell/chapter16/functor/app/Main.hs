@@ -51,6 +51,8 @@ type FC a = a -> IntToInt -> IntToInt -> Bool -- For composition proof.
 -- proofIdentity :: a -> b
 -- proofIdentity x = functorIdentity :: (IntID x)
 
+-- AFAIK there is no currently any technology to apply this.
+
 -- And the same with composition.
 -- proofComposition
 
