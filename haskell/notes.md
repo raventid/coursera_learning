@@ -94,7 +94,7 @@ qualified to use alias name.
 
 
 #### Monoid, Functor, Applicative, Monad
-Semigroup.
+##### Semigroup.
 Semigroup is the same as Monoid, except it does not provide identity.
 
 ```haskell
@@ -102,7 +102,7 @@ class Semigroup a where
 (<>) :: a -> a -> a
 ```
 
-Monoid laws.
+##### Monoid laws.
 
 - left identity
 ```haskell
@@ -121,6 +121,17 @@ mappend x (mappend y z) = mappend (mappend x y) z
 
 The most obvious way to see that a Monoid's `algebra` is `stronger` than a Semigroup is to observe that it has a strict superset of the operations and laws that Semigroup provides. Anything which is a Monoid is by definition also a Semigroup.
 
+##### Functor
+
+Identity law
+```haskell
+fmap id = id
+```
+
+Composition law
+```haskell
+fmap (f . g) = fmap f . fmap g
+```
 
 `Commutative` means:
 We do not have a proof this is correct, but we have evidence,
