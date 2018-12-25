@@ -196,6 +196,46 @@ runIOF7Spec = do
   quickCheck (functorIdentity :: (ID FourBase'))
   quickCheck (functorCompose' :: (FC FourBase'))
 
+data Possibly a =
+    LolNope
+  | Yep a
+  deriving (Eq, Show)
+
+instance Functor (Possibly) where
+  fmap _ LolNope = LolNope
+  fmap f (Yep a) = Yep (f a)
+
+instance Arbitrary a => Arbitrary (Possibly a) where
+  arbitrary = do
+    a <- arbitrary
+    elements [Yep a, LolNope]
+
+runPossibleSpec :: IO ()
+runPossibleSpec = do
+  -- Just for fun. Let's run 1000 examples instead of 100.
+  quickCheckWith stdArgs {maxSuccess = 1000} (functorIdentity :: (ID (Possibly Int)))
+  quickCheck (functorCompose' :: (FC (Possibly Int)))
+
+data Some a b =
+    First a
+  | Second b
+  deriving (Show, Eq)
+
+instance Functor (Some a) where
+  fmap _ (First a) = First a
+  fmap f (Second b) = Second (f b)
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary(Some a b) where
+  arbitrary = do
+    a <- arbitrary
+    b <- arbitrary
+    elements [First a, Second b]
+
+runSomeSpec :: IO ()
+runSomeSpec = do
+  quickCheckWith stdArgs {maxSuccess = 250} (functorIdentity :: (ID (Some Int Int)))
+  quickCheckWith stdArgs {maxSuccess = 250} (functorCompose' :: (FC (Some Int Int)))
+
 
 -- Main function. Stub, I'm not using.
 main :: IO ()
