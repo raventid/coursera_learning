@@ -26,7 +26,7 @@ data More b a =
   deriving (Eq, Show)
 
 
-instance Functor (More x) where
+instance Functor (More a) where
   fmap f (L a b a') = L (f a) b (f a')
   fmap f (R b a b')= R b (f a) b'
 
