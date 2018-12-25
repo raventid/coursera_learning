@@ -37,7 +37,7 @@ data Quant a b =
   | Bloor b
 
 instance Functor(Quant a) where
-  fmap f (Bloor x) = Bloor (f x)
+  fmap f (Bloor b) = Bloor (f b)
   fmap f (Desk a) = Desk a
   fmap f Finance = Finance
 
@@ -120,7 +120,7 @@ data GoatLord a =
 instance Functor(GoatLord) where
   fmap f NoGoat = NoGoat
   fmap f (OneGoat a) = OneGoat (f a)
-  fmap f (MoreGoats first second last) = MoreGoats (fmap f first) (fmap f second) (fmap f last)
+  fmap f (MoreGoats first second third) = MoreGoats (fmap f first) (fmap f second) (fmap f third)
 
 
 -- 11.
