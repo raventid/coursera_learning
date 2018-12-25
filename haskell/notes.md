@@ -133,8 +133,12 @@ Composition law
 fmap (f . g) = fmap f . fmap g
 ```
 
+Functor: `<$> == fmap`
 
+##### Applicative
+`<*> == app` (`ap` is just a name, you can't call it like this, also called `apply`, `tie fighter`)
 
+`fmap f x = pure f <*> x` - this is kinda law of applicative.
 
 `Commutative` means:
 We do not have a proof this is correct, but we have evidence,
@@ -149,9 +153,7 @@ We have a proff it's wrong because we have one contrexample, which shows it's wr
 ```
 first one is `"Hello world!"` and second one is `"world!Hello "`.
 
-Functor: `<$> == fmap`
 
-Applicative: `<*> == app` (`app` is just a name, you can't call it like this)
 
 # Terms
 Eta-reduction of function - rewriting the function without its arguments. Pretty simple.
