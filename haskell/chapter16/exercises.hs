@@ -131,4 +131,4 @@ data TalkToMe a = Halt
 instance Functor(TalkToMe) where
   fmap f Halt = Halt
   fmap f (Print s a) = Print s (f a)
-  fmap f (Read sa) = Read (f . sa)
+  fmap f (Read sa) = Read (fmap f sa)
