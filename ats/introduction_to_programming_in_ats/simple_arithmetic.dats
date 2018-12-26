@@ -11,5 +11,10 @@ val _ = println! ("-1 = ", x) where {
     val x = ~1
 }
 
+val _ = (
+    println! ("0.123 = ", 0.123);
+    println! ("0.000314 = ", 314E-6);
+)
+
 
 implement main0 () = ()
