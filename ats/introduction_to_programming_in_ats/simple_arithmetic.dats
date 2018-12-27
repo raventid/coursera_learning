@@ -2,6 +2,9 @@
 // strongly recommend to include it everywhere
 // to avoid very long-time debug sessions.
 
+// in `template.dats` file in this `dir` you can also find
+// another template it is as much usefull as the oriiginal one
+
 #include "share/atspre_staload.hats"
 
 
