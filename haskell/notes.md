@@ -140,7 +140,25 @@ Functor: `<$> == fmap`
 
 `fmap f x = pure f <*> x` - this is kinda law of applicative.
 
-`Commutative` means:
+Identity law:
+`pure id <*> v = v`, where v is a functorial structure
+Like in: `(pure id <*> [1..5]) == ([1..5])` 
+
+Composition law:
+`pure (.) <*> u <*> v <*> w = u <*> (v <*> w)`, where v is a functorial structure
+Like in: `(pure (.) <*> Just (+1) <*> Just (+2) <*> Just 1) == (Just (+1) <*> (Just (+2) <*> Just 1))`
+
+We can also consider a homomorphism here, it is a structure-preserving map between two algebraic structures. The effect of applying a function that is embedded in some structure to a value that is embedded in some structure should be the same as applying a function to a value without affecting any outside structure:
+`pure f <*> pure x = pure (f x)`
+That’s the statement of the law. Here’s how it looks in practice: `pure (+1) <*> pure 1`
+`pure ((+1) 1)`
+
+
+##### Monad
+
+
+`Commutative` means: ???
+
 We do not have a proof this is correct, but we have evidence,
 ```haskell
 (+) 76 67 == (flip (+)) 76 67
