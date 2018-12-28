@@ -160,6 +160,8 @@ mkPerson' n a d = Person <$> mkName n <*> mkAddress a <*> mkDog d
 
 fu1 = const <$> Just "Hello" <*> pure "world"
 fu2 = (,,,) <$> Just 90 <*> Just 10 <*> Just "Tierness" <*> pure [1, 2, 3]
+-- ($ 2) applies second argument and waits for function to apply
+trick = pure ($ 2) <*> Just (+ 2)
 
 
 --  List Applicative Exercise
