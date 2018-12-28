@@ -145,8 +145,7 @@ mkPerson n a d =
               Just $ Person n' a' d'
 
 mkPerson' :: String -> String -> String -> Maybe Person
-mkPerson' n a d =
-  Person <$> mkName n <*> mkAddress a <*> mkDog d
+mkPerson' n a d = Person <$> mkName n <*> mkAddress a <*> mkDog d
 
 
 -- Just a reminder
