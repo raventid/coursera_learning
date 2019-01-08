@@ -216,6 +216,14 @@ I add this to `dotspacemacs/user-confi ()`:
 
 But I definitely should read more about options I can tweak in HaskellMode.
 
+```
+stack install hoogle
+stack exec -- hoogle generate
+```
+
+Spacemacs will catch everything and work with those settigns out of the box. So, that enough.
+`SPC m h f` is your best friend since the moment you install this.
+
 
 # GHCI
 `:l` - loads file into repl
