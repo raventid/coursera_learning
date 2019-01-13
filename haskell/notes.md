@@ -7,8 +7,10 @@ Parametric polymorphism - parameters wich are fully polymorphic (a -> a)
 
 Constrained (ad-hoc, bounded) polymorphism - parameters constrained by typeclasses ((Num a) => a -> a)
 
+
+Great and ugly - https://wiki.haskell.org/Monomorphism_restriction. Sometimes GHC infer not the most general, but most concrete type. It has some reasons, related to performance in some rare circumstances. A lot of people think that this restriction should be removed from language. 
 To avoid monomorphising types we can include this extension:
-{-# LANGUAGE NoMonomorphismRestriction #-}
+{-# language nomonomorphismrestriction #-}
 
 It works like that. If you print `example = 1` then without this extension you'll get
 Int instead of Num a, wich I would personally prefer (I enjoy polymorphism :D )
