@@ -29,11 +29,18 @@ fun coin_get
 //
 fun coin_change
   (sum: int): int = let
-  fun aux (sum: int, n: int): int =
-    if sum > 0 then
-     (if n >= 0 then aux (sum, n-1) + aux (sum-coin_get(n), n) else 0)
-    else (if sum < 0 then 0 else 1)
-  // end of [aux]
+  fun aux (sum: int, n: int): int = let
+       val () = print("sum=")
+       val () = print(sum)
+       val () = print(" n=")
+       val () = print(n)
+       val () = print("\n")
+  in 
+      if sum > 0 then
+       (if n >= 0 then aux (sum, n-1) + aux (sum-coin_get(n), n) else 0)
+      else (if sum < 0 then 0 else 1)
+    // end of [aux]
+  end
 in
   aux (sum, 3)
 end // end of [coin_change]
