@@ -59,9 +59,9 @@ puts "Result is correct" if result == :done
 # end
 
 # We run Handler class here.
-# fiber variable we'll point to a Fiber with do ... end block inside
 
 # def call(0)
+#   # instructions_inside_fiber variable we'll point to a Fiber with do ... end block inside
 #   instructions_inside_fiber = ::Fiber.new { yield }
 #   state = 0
 
