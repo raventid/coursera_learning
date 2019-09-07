@@ -45,6 +45,13 @@ cool_stuff_you_can_do_with_transform = transform (* 3) aPoint
 
 data List a = Empty | Cons a (List a) deriving Show
 
+-- mapL (+15) (Cons 10 (Cons 5 Empty))
+
+mapL :: (a -> b) -> List a -> List b
+mapL _ Empty = Empty
+mapL f (Cons x xs) = Cons (f x) (mapL f xs)
+
+
 data Organ = Heart | Brain | Kidney | Spleen deriving (Show, Eq, Ord)
 
 -- The idea is to put organs into labeled lockers (let's create this labels)
