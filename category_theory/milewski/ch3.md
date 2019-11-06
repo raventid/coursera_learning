@@ -12,3 +12,9 @@ Function equality *without specifying the arguments* is described as *point-free
 ```
 mappend s1 s2 = (++) s1 s2
 ```
+
+
+The most interesting note about Monoid is that it's a single object category. In fact the name monoid comes from Greek mono, which means single. Every monoid can be described as a single object category with a set of morphisms that follow appropriate rules of composition.
+
+
+For example if we take `Set` category we might think that one of our objects is `Set of all natural numbers`. `Set of all natural numbers` is just one object in our category. Monoid relates exactly to this one object, so if we pry open it, we'll see that there is enormous amount of morphisms wich follow `Monoid` rules (left id, right id, associativity).
