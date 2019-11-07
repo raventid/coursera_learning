@@ -18,3 +18,10 @@ The most interesting note about Monoid is that it's a single object category. In
 
 
 For example if we take `Set` category we might think that one of our objects is `Set of all natural numbers`. `Set of all natural numbers` is just one object in our category. Monoid relates exactly to this one object, so if we pry open it, we'll see that there is enormous amount of morphisms wich follow `Monoid` rules (left id, right id, associativity).
+
+
+
+
+# Free category
+
+If you just imagine graph with two nodes (`a` and `a'`) and arrow from `a` to `a'` and you will try to build morphism between them and imagine that this is category, than it's called free category (not sure I understand this well enough :) )
