@@ -25,3 +25,18 @@ For example if we take `Set` category we might think that one of our objects is 
 # Free category
 
 If you just imagine graph with two nodes (`a` and `a'`) and arrow from `a` to `a'` and you will try to build morphism between them and imagine that this is category, than it's called free category (not sure I understand this well enough :) )
+
+
+# Kleisli
+
+Cool composition with C++14 lambda deduction.
+
+```c++
+auto const compose = [](auto m1, auto m2) { 
+  return [m1, m2](auto x) {
+    auto p1 = m1(x);
+    auto p2 = m2(p1.first);
+    return make_pair(p2.first, p1.second + p2.second);
+  }; 
+};
+```
