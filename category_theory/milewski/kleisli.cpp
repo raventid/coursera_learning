@@ -1,5 +1,9 @@
 // Chapter 4. Kleisli category.
 
+// To compile this code and execute it you might run:
+// (I use emacs, so I just save it as a command and run with hotkey, you might do it other way)
+// clang++ -std=c++17 kleisli.cpp -o k && ./k
+
 #include <math.h>
 #include <iostream>
 
