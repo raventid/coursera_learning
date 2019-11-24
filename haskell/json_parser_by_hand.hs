@@ -7,6 +7,7 @@ data JsonValue =
   | JString String
   | JArray [JsonValue]
   | JObject [(String, JsonValue)] -- No Map in standard library ;)
+  deriving (Show, Eq)
 
 main :: IO ()
 main = putStrLn "Placeholder"
