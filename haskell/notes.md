@@ -277,3 +277,27 @@ I don't understand GHCI outup.
   λ> cycleSucc 12
   cycleSucc 12 :: (Num a, Ord a, Enum a, Bounded a) => a
   ```
+
+# Compiler errors
+
+If you put extension definition inside the module definition like this:
+
+```
+module Main where
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TemplateHaskell #-}
+```
+
+You will see no error from GHC, but later you will pay for this with the error
+
+```
+Main.hs:53:1: error:
+    Parse error: module header, import declaration
+    or top-level declaration expected.
+   |
+53 | makeLenses ''Inventory
+   | ^^^^^^^^^^^^^^^^^^^^^^
+Failed, no modules loaded.
+```
+
+Yeah, just move extension import higher, above module definition and you'll be fine.
