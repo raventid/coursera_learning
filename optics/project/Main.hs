@@ -87,6 +87,7 @@ alongsideUserId = U.lensProduct id userId
 -- The problem here is that:
 -- view alongsideUserId (set alongsideUserId (newSession, "USER-9999") session) == (newSession, "USER-9999")
 -- I cannot completely agree with this (now), we do not get what we set in session field, but it is not a session lens. It is alongsideUseId lens, so why should it return "USER-9999" if it is not a session lens? Maybe from a formal point of view name of lens does not matter. You set some focus, and if you read this focus with the same lens you should see it (Makes sense!)
+-- UPD: After rereading lens laws one more time, I think I feel alongsideUserId is breaking the lens laws.
 
 main :: IO ()
 main = putStrLn "Stub main"
