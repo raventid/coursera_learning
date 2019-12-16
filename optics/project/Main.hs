@@ -89,5 +89,28 @@ alongsideUserId = U.lensProduct id userId
 -- I cannot completely agree with this (now), we do not get what we set in session field, but it is not a session lens. It is alongsideUseId lens, so why should it return "USER-9999" if it is not a session lens? Maybe from a formal point of view name of lens does not matter. You set some focus, and if you read this focus with the same lens you should see it (Makes sense!)
 -- UPD: After rereading lens laws one more time, I think I feel alongsideUserId is breaking the lens laws.
 
+
+-- To make another example about breaking lens
+-- Imagine this structure:
+data BadLensRec = BadLensRec { _blrVal :: Int } deriving (Show)
+
+getVal :: BadLensRec -> Int
+getVal = _blrVal
+
+setVal :: BadLensRec -> Int -> BadLensRec
+-- Rule number 2 violation:
+-- *Main> set val (view val b) b
+-- BadLensRec {_blrVal = 20}
+
+-- Rule number 3 violation:
+-- *Main> set val 30 (set val 20 b)
+-- BadLensRec {_blrVal = 60}
+
+-- I might easily violate law number 1 too with this lense, I can just add view of whole structure in getter.
+setVal badLensRec newVal = badLensRec{_blrVal = (getVal badLensRec) + newVal}
+
+val :: Lens' BadLensRec Int
+val = lens getVal setVal
+
 main :: IO ()
 main = putStrLn "Stub main"
