@@ -112,5 +112,34 @@ setVal badLensRec newVal = badLensRec{_blrVal = (getVal badLensRec) + newVal}
 val :: Lens' BadLensRec Int
 val = lens getVal setVal
 
+
+
+-- Writing a virtual field.
+
+data Temperature = Temperature {
+  _location :: String
+, _celsius :: Float
+} deriving (Show)
+
+makeLenses ''Temperature
+
+-- Sample: Temperature {_location = "Berlin", _celsius = 13.5}
+
+
+-- But what if we want to read and write temperature in different systems.
+-- I.e. celsius and fahrenheit
+
+celsiusToFahrenheit :: Float -> Float
+celsiusToFahrenheit c = (c * (9/5)) + 32
+
+fahrenheitToCelsius :: Float -> Float
+fahrenheitToCelsius f = (f - 32) * (5/9)
+
+
+-- With these functions we can
+-- `update over celsius (fahrenheitToCelsius . (+18) . celsiusToFahrenheit) temp`
+-- which is not that bad, but not the best thing.
+-- This line of code bumps the temp by 18 degrees Fahrenheit.
+
 main :: IO ()
 main = putStrLn "Stub main"
