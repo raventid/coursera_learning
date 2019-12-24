@@ -301,3 +301,28 @@ Failed, no modules loaded.
 ```
 
 Yeah, just move extension import higher, above module definition and you'll be fine.
+
+
+If you will write the code like this one:
+```
+instance Enum Odd where 
+ toEnum n = Odd n
+ fromEnum (Odd n) = n
+ enumFromThen start(Odd x) then'@(Odd y) = ...
+```
+
+you want see normal error like (Oh, you might've forgot `@` sign after start, I am not sure I understand what your programm should do)
+what you get is:
+
+```
+3.3generators.hs:(10,3)-(15,33): error: …
+    • Couldn't match expected type ‘[Odd]’
+                  with actual type ‘Odd -> [Odd]’
+    • The equation(s) for ‘enumFromThen’ have three arguments,
+      but its type ‘Odd -> Odd -> [Odd]’ has only two
+      In the instance declaration for ‘Enum Odd’
+   |
+Compilation failed.
+```
+
+As far as I understand you get this because haskell reads this as `start`, `(Odd x)`, `then'@(Odd y)` which is not how I read it.
