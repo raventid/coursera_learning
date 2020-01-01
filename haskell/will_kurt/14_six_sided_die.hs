@@ -46,3 +46,10 @@ instance Enum SixSidedDie where
   fromEnum S4 = 3
   fromEnum S5 = 4
   fromEnum S6 = 5
+
+-- Just a custom typeclass
+class Umba a where
+  kek :: a -> String
+
+instance Umba SixSidedDie where
+  kek x = "Umba Umba"
