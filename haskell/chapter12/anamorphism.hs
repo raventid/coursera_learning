@@ -9,6 +9,18 @@ module Anamorphism where
 myIterate :: (a -> a) -> a -> [a]
 myIterate f a = a : myIterate f (f a)
 
+-- The question is how does it know how to finish the list with ` lastElement : []`?
+-- This function is an attempt to answer where do we get `[]`.
+-- λ> myTake 2 $ myIterate id 1
+-- [1,1]
+-- In the example above we take two elements from myIterate generator and then we provide our own `[]`
+-- The answer to question above is we finish the list by hand in myTake function, we don't need []
+-- from iterator.
+myTake :: Int -> [a] -> [a]
+myTake 0 _ = [] -- we construct tail by hand here
+myTake _ [] = [] -- and here
+myTake n (x:xs) = x : myTake (n-1) xs
+
 myUnfoldr :: (b -> Maybe (a, b)) -> b -> [a]
 myUnfoldr f b = case f b of
   Just (a,b) -> a : myUnfoldr f b
