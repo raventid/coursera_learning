@@ -222,7 +222,7 @@ instance (CoArbitrary a, Arbitrary b) => Arbitrary (Combine a b) where
 -- TODO
 newtype Comp a = Comp { unComp :: (a -> a) }
 
-instance Semigroup a => Semigroup (Comp a) where
+instance (Show a, Semigroup a) => Semigroup (Comp a) where
   Comp f <> Comp g = Comp (f <> g)
 
 -- After getting back to this exercise I have this idea about the concept.
