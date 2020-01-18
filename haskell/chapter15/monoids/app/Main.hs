@@ -178,5 +178,86 @@ runExercise1Spec = do
   quickCheck (mli :: Trivial -> Bool)
   quickCheck (mlr :: Trivial -> Bool)
 
+
+-- Comp is pretty self contained
+
+newtype Comp a = Comp {func :: a -> a}
+
+instance Semigroup (Comp a) where
+  -- I first tried to implement it like this:
+  -- Comp f <> Comp g = Comp (f <> g)
+  -- but it does not work for pretty straightforward reason
+  -- monoid for a -> b, requires b to be monoid
+  -- It means that it just glues together two b elements
+  -- after executing functions, what I need is this instead:
+  Comp f <> Comp g = Comp (f . g)
+
+instance Monoid (Comp a) where
+  mempty = Comp id
+  mappend = (<>)
+
+instance Show (Comp a) where
+  show (Comp _) = "__Comp__ cannot display function"
+
+instance (CoArbitrary a, Arbitrary a) => Arbitrary (Comp a) where
+  arbitrary = Comp <$> arbitrary
+
+compAssoc :: Eq a => Comp a -> Comp a -> Comp a -> a -> Bool
+compAssoc f g h a = func (f <> (g <> h)) a == func ((f <> g) <> h) a
+
+compLeftIdentity :: Eq a => Comp a -> a -> Bool
+compLeftIdentity f a = func (mempty <> f) a == func f a
+
+compRightIdentity :: Eq a => Comp a -> a -> Bool
+compRightIdentity f a = func (f <> mempty) a == func f a
+
+runCompSpec :: IO ()
+runCompSpec = do
+  let mli = compLeftIdentity
+  let mlr = compRightIdentity
+  let ma  = compAssoc
+  quickCheck (ma :: Comp Int -> Comp Int -> Comp Int -> Int -> Bool)
+  quickCheck (mli :: Comp Int -> Int -> Bool)
+  quickCheck (mlr :: Comp Int -> Int -> Bool)
+
+
+-- Mem looks like state monad!
+
+newtype Mem s a = Mem { runMem :: s -> (a,s) }
+
+instance Show (Mem s a) where
+  show (Mem _) = "Mem something"
+
+instance Monoid a => Semigroup (Mem s a) where
+  Mem f <> Mem g = Mem $ \arg -> let (a', s') = f arg
+                                     (a'', s'') = g s'
+                                 in
+                                     (a' `mappend` a'', s'')
+
+instance Monoid a => Monoid (Mem s a) where
+  mempty = Mem $ \s -> (mempty, s)
+  mappend = (<>)
+
+instance (CoArbitrary s, Arbitrary s, Arbitrary a) => Arbitrary (Mem s a) where
+  arbitrary = Mem <$> arbitrary -- How to do this without functor?
+
+memAssoc :: (Eq s, Monoid a, Eq a) => Mem s a -> Mem s a -> Mem s a -> s -> Bool
+memAssoc f g h s = runMem (f <> (g <> h)) s == runMem ((f <> g) <> h) s
+
+memLeftIdentity :: (Eq a, Monoid a, Eq s) => Mem s a -> s -> Bool
+memLeftIdentity f s = runMem (mempty <> f) s == runMem f s
+
+memRightIdentity :: (Eq s, Monoid a, Eq a) => Mem s a -> s -> Bool
+memRightIdentity f s = runMem (f <> mempty) s == runMem f s
+
+runMemSpec :: IO ()
+runMemSpec = do
+  let mli = memLeftIdentity
+  let mlr = memRightIdentity
+  let ma  = memAssoc
+  quickCheck (ma :: Mem Int String -> Mem Int String -> Mem Int String  -> Int -> Bool)
+  quickCheck (mli :: Mem Int String -> Int -> Bool)
+  quickCheck (mlr :: Mem Int String -> Int -> Bool)
+
 main :: IO ()
 main = putStrLn "You've hitted main stub. Write your code in main."
