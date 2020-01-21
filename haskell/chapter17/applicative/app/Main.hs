@@ -99,7 +99,10 @@ instance Functor (Validation e) where
 instance Monoid e => Applicative (Validation e) where
   pure a = Success a
 
-  (Success a) <*> (Success a') = Success (a a')
+  -- (<*>) :: Applicative f => f (a -> b) -> f a -> f b
+  -- This is f (a -> b)
+  (Success f) <*> (Success a') = Success $ f a'
+  -- This is just f (e is a part of our structure we should use monoid for)
   (Failure e) <*> (Success a)  = Failure e
   (Success a) <*> (Failure e)  = Failure e
   (Failure e) <*> (Failure e') = Failure (e <> e')
@@ -127,6 +130,15 @@ testApplicativeForValidation = do
   -- TODO: This is ugly. Not sure how to make it looks nice.
   quickBatch (applicative (undefined :: Validation String (String, String, String)))
 
+-- Looks like arrow based Reader monad?
+-- instance Applicative ((->) e) where
+  -- pure ::a->?a
+  -- pure ::a -> (e -> a)
+  -- pure a = \_ -> a
+
+  -- (<*>) :: ? (a -> b) -> ? a -> ? b
+  -- (<*>) :: (e -> (a -> b)) -> (e -> a) -> (e -> b)
+  -- I know what I want to do with Reader monad, what do I want from applicative?
 
 -- Chapter exercises
 -- 1.
