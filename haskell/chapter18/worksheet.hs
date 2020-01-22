@@ -209,3 +209,18 @@ mcomp f g a = join (f <$> (g a))
 
 mcomp'' :: Monad m => (b -> m c) -> (a -> m b) -> a -> m c
 mcomp'' f g a = g a >>= f
+
+
+
+
+
+-- Saw ZipList applicative how to implement it?
+-- ZipList :: [a] -> ZipList a
+-- newtype ZipList' a = ZipList' { getList :: [a] } deriving Show
+
+-- instance Functor ZipList' where
+--   fmap f (ZipList' list) = ZipList' $ fmap f list
+
+-- instance Applicative ZipList' where
+--   pure x = ZipList' [x]
+--   (ZipList' (f:fs)) <*> (ZipList' (a:as)) = ZipList' f <$> a
