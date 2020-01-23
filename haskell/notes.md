@@ -241,7 +241,38 @@ Spacemacs will catch everything and work with those settigns out of the box. So,
 
 `:set prompt "mighty raventid λ>"` - set custom prompt (there is a bug with colors haskell-mode I guess, at least my emacs-26 does not support proper colors)
 
+`:sprint` - print what has been evaled so far.
+
+```
+-- Before evaling lazy collection
+Prelude> blah = enumFromTo 'a' 'z'
+Prelude> :sprint blah
+blah = _
+
+
+-- After taking one element from such collection
+Prelude> take 1 blah
+"a"
+Prelude> :sprint blah
+blah = 'a' : _
+
+
+-- That the individual characters were shown as evaluated and not exclusively the spine 
+-- after getting the length of blah is one of the unfortunate aforementioned quirks
+-- of how GHCi evaluates code.
+Prelude> length blah
+26
+Prelude> :sprint blah
+blah = "abcdefghijklmnopqrstuvwxyz"
+```
+
 `:set -Wall` - set compiler to show all warnings. Why it's not enabled by default?!
+
+
+**** Note on sprint
+We can use a special command in GHCi called sprint to print vari- ables and see what has been evaluated already, with the underscore representing expressions that haven’t been evaluated yet.
+A warning: We always encourage you to experiment and explore for yourself after seeing the examples in this book, but :sprint has some behavioral quirks that can be a bit frustrating.
+GHC Haskell has some opportunistic optimizations which intro- duce strictness to make code faster when it won’t change how your code evaluates. Additionally polymorphism means values like Num a => a are really waiting for a sort of argument which will make it concrete (this will be covered in more detail in a later chapter). To avoid this, you have to assign a more concrete type such as Int or Double, otherwise it stays unevaluated, _, in :sprint’s output. If you can keep these caveats to :sprint’s behavior in mind, it can be useful.
 
 # Questions I have
 - Not sure I completely understand the way spine works in terms of strictness and nonstrictness. To note it's pages 358-359 of Programming Haskell. So I'm waiting for chapter on strictness and nonstrictness to make it clear.
