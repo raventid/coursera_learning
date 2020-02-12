@@ -4,7 +4,7 @@
 
 Randomizing input to spec.
 
-It's trivial to randomize simple variable: _Instead of_ `x = 1`, put `x \in {1,2,3}`
+It's trivial to randomize simple variable: _Instead of_ `x = 1`, put `x \in 1..3`
 
 But what if we want to randomize input represented by a collection?
 
