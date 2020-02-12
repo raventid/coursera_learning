@@ -27,3 +27,18 @@ Product:
 {<<"a", 1>>, <<"a", 2>>, <<"b", 1>>, <<"b", 2>>, <<"c", 1>>, <<"c", 2>>}
 ```
 *Note that \X is not associative.*
+
+
+Generate set of user defined structs:
+```
+>> [a: {"a", "b"}]
+{[a |-> "a"], [a |-> "b"]}
+
+>> [a: {"a", "b"}, b: (1..2)]
+{ [a |-> "a", b |-> 1], [a |-> "a", b |-> 2], [a |-> "b", b |-> 1], [a |->
+"b", b |-> 2] }
+```
+
+Sometimes you want a structure where one key is always a specific value,
+but another key is some value in a set. 
+In that case you can wrap the value in a one-element set, as in [key1: set, key2: {value}]
