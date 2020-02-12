@@ -6,6 +6,9 @@ Randomizing input to spec.
 
 It's trivial to randomize simple variable: _Instead of_ `x = 1`, put `x \in 1..3`
 
+Random note: _Tla+ defines a shorthand BOOLEAN for the set {TRUE, FALSE}_
+
+
 But what if we want to randomize input represented by a collection?
 
 Working with sets:
