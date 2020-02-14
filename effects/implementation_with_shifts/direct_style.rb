@@ -1,3 +1,22 @@
+def evalulate(exp, env)
+  if exp.is_a? Numeric
+    exp
+  elsif exp.is_a? String
+    env[exp]
+  elsif exp[:type] == "add"
+    evalulate(exp[:exp1], env) + evalulate(exp[:exp2], env)
+  elsif exp[:type] == "fun"
+    -> (value) do
+      fun_env = env.merge({ exp[:param] => value })
+      evalulate(exp[:body], fun_env)
+    end
+  elsif exp[:type] == "call"
+    fun_value = evalulate(exp[:fun_exp], env)
+    arg_value = evalulate(exp[:arg_exp], env)
+    fun_value.(arg_value)
+  end
+end
+
 def fun(param, body)
   {type: "fun", param: param, body: body}
 end
@@ -14,4 +33,4 @@ double_fun = fun("x", add("x", "x"))
 
 program = call(double_fun, 10)
 
-puts program
+puts (evalulate program, {})
