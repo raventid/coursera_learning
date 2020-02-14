@@ -1,3 +1,5 @@
+# Direct style interpreter implementation.
+
 def evalulate(exp, env)
   if exp.is_a? Numeric
     exp
