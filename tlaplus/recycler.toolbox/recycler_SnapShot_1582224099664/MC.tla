@@ -2,9 +2,9 @@
 EXTENDS recycler, TLC
 
 \* SPECIFICATION definition @modelBehaviorSpec:0
-spec_15823177484456000 ==
+spec_15822240497782000 ==
 Spec
 ----
 =============================================================================
 \* Modification History
-\* Created Fri Feb 21 23:42:28 MSK 2020 by juliankulesh
+\* Created Thu Feb 20 21:40:49 MSK 2020 by juliankulesh

@@ -34,12 +34,12 @@ variables
        \* capacity.recycle := capacity.recycle - curr.size;
        \* count.recycle := count.recycle + 1;
        add_item("recycle");
-     elsif curr.size < capacity.trash then
+     else
        add_item("trash");
      end if;
    end while;
    
-   assert capacity.trash >= 0 /\ capacity.recycle >= 0;
+   \* assert capacity.trash >= 0 /\ capacity.recycle >= 0;
    assert Len(bins.trash) = count.trash;
    assert Len(bins.recycle) = count.recycle;
 end algorithm; *)
@@ -65,17 +65,11 @@ Lbl_1 == /\ pc = "Lbl_1"
                           THEN /\ bins' = [bins EXCEPT !["recycle"] = Append(bins["recycle"], curr')]
                                /\ capacity' = [capacity EXCEPT !["recycle"] = capacity["recycle"] - curr'.size]
                                /\ count' = [count EXCEPT !["recycle"] = count["recycle"] + 1]
-                          ELSE /\ IF curr'.size < capacity.trash
-                                     THEN /\ bins' = [bins EXCEPT !["trash"] = Append(bins["trash"], curr')]
-                                          /\ capacity' = [capacity EXCEPT !["trash"] = capacity["trash"] - curr'.size]
-                                          /\ count' = [count EXCEPT !["trash"] = count["trash"] + 1]
-                                     ELSE /\ TRUE
-                                          /\ UNCHANGED << capacity, bins, 
-                                                          count >>
+                          ELSE /\ bins' = [bins EXCEPT !["trash"] = Append(bins["trash"], curr')]
+                               /\ capacity' = [capacity EXCEPT !["trash"] = capacity["trash"] - curr'.size]
+                               /\ count' = [count EXCEPT !["trash"] = count["trash"] + 1]
                     /\ pc' = "Lbl_1"
-               ELSE /\ Assert(capacity.trash >= 0 /\ capacity.recycle >= 0, 
-                              "Failure of assertion at line 42, column 4.")
-                    /\ Assert(Len(bins.trash) = count.trash, 
+               ELSE /\ Assert(Len(bins.trash) = count.trash, 
                               "Failure of assertion at line 43, column 4.")
                     /\ Assert(Len(bins.recycle) = count.recycle, 
                               "Failure of assertion at line 44, column 4.")
@@ -96,5 +90,5 @@ Termination == <>(pc = "Done")
 \* END TRANSLATION
 =============================================================================
 \* Modification History
-\* Last modified Fri Feb 21 23:42:23 MSK 2020 by juliankulesh
+\* Last modified Fri Feb 21 23:38:33 MSK 2020 by juliankulesh
 \* Created Wed Feb 12 01:58:37 MSK 2020 by juliankulesh
