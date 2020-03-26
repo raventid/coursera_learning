@@ -3,7 +3,7 @@ Just my Coursera's homeworks and notes. Now it's more then that, I put here a bi
 
 Also it's a monorepo, and I have a chance to evolve it the way I want and to see how to organize multilanguage repo. Where to put .gitignore files, how to structure commit messages and stuff like that.
 
-The repository's content is protected by MIT license, but I have no idea why you might want to use it, or even some part of it :)
+The repository's content is protected by MIT license (or by the license of original material if it was copypasted from book), but I have no idea why you might want to use it, or even some part of it :)
 
 # Note for copywriters
 As I'm using this repository as an exercises notebook I sometimes copy and paste quotes from different books, exercises and etc. 
