@@ -1,4 +1,7 @@
 /* https://twitter.com/ImogenBits/status/1325424621286518784 */
+/* From the same tweet - https://godbolt.org/z/osMjcr */
+
+/* Is it faster or slower than other implementations? You can bench it! */
 
 #include <sys/types.h>
 #include <unistd.h>
