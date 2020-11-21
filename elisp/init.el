@@ -3,7 +3,7 @@
 ;; Copyright (C) 2020 Julian Pokrovsky
 ;;
 ;; Author: Julian Pokrovsky <http://github/raventid>
-;; Maintainer: Julian Pokrovsky <john@doe.com>
+;; Maintainer: Julian Pokrovsky <juliankul@raventid.me>
 ;; Created: October 18, 2020
 ;; Modified: October 18, 2020
 ;; Version: 0.0.1
@@ -61,7 +61,7 @@
 (dolist (mode'(org-mode-hook
 	       term-mode-hook
 	       eshell-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+  (add-hook mode (lambda () (display-line-numbers-mod 0))))
 
 (use-package ivy
   :diminish
@@ -89,3 +89,5 @@
   :ensure t
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
+
+;; NOTE: If you are running Emacs with `-q` than you cannot use Customize
