@@ -1,0 +1,1 @@
+-record (user, {name, lastname, address=hidden}).
