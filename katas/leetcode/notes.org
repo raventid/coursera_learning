@@ -4,7 +4,7 @@
 | 1119 | [[https://leetcode.com/problems/remove-vowels-from-a-string/][Remove Vowels from a String]]                                                     | 90.50% | Easy   |     74.09% |    47.60% |   -50.55% |      1 | 0.495 |        |       1 |      |      |
 |  511 | [[https://leetcode.com/problems/game-play-analysis-i/][Game Play Analysis I]]                                                            | 81.50% | Easy   |     74.01% |    47.60% |   -50.39% |      1 | 0.496 | Sql    |       1 |      |      |
 | 1108 | [[https://leetcode.com/problems/defanging-an-ip-address/][Defanging an IP Address]]                                                         | 88.40% | Easy   |     72.15% |    47.60% |   -46.85% |      1 | 0.532 |        |         | [[file:1108.Defanging_an_IP_Address.rs][L]]    |      |
-|  613 | Shortest Distance in a Line                                                     | 79.80% | Easy   |     70.81% |    47.60% |   -44.29% |      1 | 0.557 | Sql    |       1 |      |      |
+|  613 | [[https://leetcode.com/problems/shortest-distance-in-a-line][Shortest Distance in a Line]]                                                     | 79.80% | Easy   |     70.81% |    47.60% |   -44.29% |      1 | 0.557 | Sql    |       1 |      |      |
 |  760 | Find Anagram Mappings                                                           | 81.90% | Easy   |     70.75% |    47.60% |   -44.19% |      1 | 0.558 |        |       1 |      |      |
 | 1303 | Find the Team Size                                                              | 89.70% | Easy   |     70.59% |    47.60% |   -43.87% |      1 | 0.561 | Sql    |       1 |      |      |
 | 1350 | Students With Invalid Departments                                               | 90.30% | Easy   |     70.50% |    47.60% |   -43.70% |      1 | 0.563 | Sql    |       1 |      |      |
@@ -1802,3 +1802,5 @@
 | 1610 | Maximum Number of Visible Points                                                | 30.20% | Hard   |      6.59% |    30.80% |    34.99% |      3 | 4.050 |        |         |      |      |
 | 1782 | Count Pairs Of Nodes                                                            | 31.60% | Hard   |      5.46% |    30.80% |    36.61% |      3 | 4.098 |        |         |      |      |
 | 1803 | Count Pairs With XOR in a Range                                                 | 27.20% | Hard   |      0.76% |    30.80% |    43.42% |      3 | 4.302 |        |         |      |      |
+
+This table is mostly a copy of [[https://docs.google.com/spreadsheets/d/1je6J87BX5C5fo5Gbok1TJncVK3-UFkiDznHUzhtHbVU/edit#gid=0][original]] from [[https://leetcode.com/discuss/general-discussion/522705/1000-leetcode-problems-within-a-year][this disscussion]]
