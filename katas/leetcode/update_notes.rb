@@ -45,9 +45,9 @@ output = ""
 # xml document
 file.each do |line|
   if line =~ /^\|\s*[0-9]+\s*\|/
-      problem = problems[current_line]
-      current_line += 1
-      output << substitute(line, problem)
+    problem = problems[current_line]
+    current_line += 1
+    output << substitute(line, problem)
   else
     output << line
   end
