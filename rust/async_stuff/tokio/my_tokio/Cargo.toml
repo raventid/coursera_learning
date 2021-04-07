@@ -1,7 +1,0 @@
-[package]
-name = "my_tokio"
-version = "0.1.0"
-authors = ["Julian Pokrovsky <juliankul@gmail.com>"]
-
-[dependencies]
-libc = "0.2"
