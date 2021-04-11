@@ -7,5 +7,5 @@
 | Ctrl-Alt-L    | Lift hole       |                                                                    |
 | Ctrl-Alt-M    | Match           |                                                                    |
 | Ctrl-Alt-R    | Reload          | Spc m r                                                            |
-| Ctrl-Alt-S    | Search          |                                                                    |
+| Ctrl-Alt-S    | Search          | C-c C-a                                                            |
 | Ctrl-Alt-T    | Type-check name | Spc m t (not sure)                                                 |
