@@ -4,7 +4,7 @@
 | Ctrl-Alt-A    | Add definition  | Originally thought it is /C-c C-g/, but looks like it is /Spc m a/ |
 | Ctrl-Alt-C    | Case split      | Spc m c (cursor should be on a variable you want to split)         |
 | Ctrl-Alt-D    | Documentation   | Spc m h                                                            |
-| Ctrl-Alt-L    | Lift hole       |                                                                    |
+| Ctrl-Alt-L    | Lift hole       | C-c C-e                                                            |
 | Ctrl-Alt-M    | Match           |                                                                    |
 | Ctrl-Alt-R    | Reload          | Spc m r                                                            |
 | Ctrl-Alt-S    | Search          | C-c C-a                                                            |
