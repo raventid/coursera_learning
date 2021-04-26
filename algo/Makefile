@@ -6,3 +6,9 @@ w1:
 
 w1h:
 	javac -cp .:./algs4.jar week1/Homework.java && java -cp .:./algs4.jar week1/Homework
+
+w1ip:
+	javac -cp .:./algs4.jar week1/percolation/InteractivePercolationVisualizer.java && java -cp .:./algs4.jar week1/percolation/InteractivePercolationVisualizer
+
+w1p:
+	javac -cp .:./algs4.jar week1/percolation/PercolationVisualizer.java && java -cp .:./algs4.jar week1/percolation/PercolationVisualizer ./week1/percolation/eagle25.txt
