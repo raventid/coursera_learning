@@ -8,7 +8,7 @@ public class Percolation {
     private boolean[][] grid;
     private int size;
     private int numberOfOpen;
-    private int topBorderIndex;
+    private int topVirtualCell;
     private int bottomBorderIndex;
     private WeightedQuickUnionUF unionTracker;
     private WeightedQuickUnionUF backwash;
@@ -21,7 +21,7 @@ public class Percolation {
         this.unionTracker = new WeightedQuickUnionUF(n*n + 2);
         this.backwash = new WeightedQuickUnionUF(n*n + 2);
         this.numberOfOpen = 0;
-        this.topBorderIndex = 0;
+        this.topVirtualCell = 0;
         this.bottomBorderIndex = n * n + 1;
         this.grid = new boolean[n][];
         for (int i = 0; i < n; i++) {
@@ -76,7 +76,7 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        int topRoot = this.backwash.find(this.topBorderIndex);
+        int topRoot = this.backwash.find(this.topVirtualCell);
         int bottomRoot = this.backwash.find(this.bottomBorderIndex);
         return topRoot == bottomRoot;
     }
@@ -87,8 +87,8 @@ public class Percolation {
         // Top line should always be connected to flow source
         // Plus it should be connected to every bottom line
         if (this.shouldConnectToTop(row)) {
-            this.unionTracker.union(index, this.topBorderIndex);
-            this.backwash.union(index, this.topBorderIndex);
+            this.unionTracker.union(index, this.topVirtualCell);
+            this.backwash.union(index, this.topVirtualCell);
         }
 
         // This is a percolation detector we connect all
@@ -124,7 +124,7 @@ public class Percolation {
     }
 
     private boolean _isFull(int row, int col) {
-        int topRoot = unionTracker.find(this.topBorderIndex);
+        int topRoot = unionTracker.find(this.topVirtualCell);
         int current = unionTracker.find(this.getIndex(row, col));
         return topRoot == current;
     }
