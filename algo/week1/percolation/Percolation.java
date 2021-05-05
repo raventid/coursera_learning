@@ -35,8 +35,7 @@ public class Percolation {
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
-        if (row <= 0 || row > this.size) { throw new IllegalArgumentException(); }
-        if (col <= 0 || col > this.size) { throw new IllegalArgumentException(); }
+        assertRange(row, col);
         if (this.isOpen(row, col)) { return; }
 
         row = row - 1;
@@ -52,8 +51,7 @@ public class Percolation {
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        if (row <= 0 || row > this.size) { throw new IllegalArgumentException(); }
-        if (col <= 0 || col > this.size) { throw new IllegalArgumentException(); }
+        assertRange(row, col);
 
         row = row - 1;
         col = col - 1;
@@ -63,8 +61,7 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        if (row <= 0 || row > this.size) { throw new IllegalArgumentException(); }
-        if (col <= 0 || col > this.size) { throw new IllegalArgumentException(); }
+        assertRange(row, col);
 
         return this._isFull(row-1, col-1);
     }
@@ -79,6 +76,12 @@ public class Percolation {
         int topRoot = this.backwash.find(this.topVirtualCell);
         int bottomRoot = this.backwash.find(this.bottomBorderIndex);
         return topRoot == bottomRoot;
+    }
+
+    private void assertRange(int row, int col) {
+        if (row <= 0 || row > this.size || col <= 0 || col > this.size) {
+            throw new IllegalArgumentException();
+        }
     }
 
     private void connect(int row, int col) {
