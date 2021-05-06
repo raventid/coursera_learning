@@ -182,11 +182,11 @@ public class Percolation {
     private int getBottomCell(int row, int col) {
         if (row == this.size - 1) { return -1; }
 
-        row = row + 1;
+        int nextRow = row + 1;
 
-        if (!this.isOpen(row+1, col+1)) { return -1; }
+        if (!this.isOpen(nextRow+1, col+1)) { return -1; }
 
-        return this.getIndex(row, col);
+        return this.getIndex(nextRow, col);
     }
 
     // test client (optional)
