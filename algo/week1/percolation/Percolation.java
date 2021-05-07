@@ -146,6 +146,10 @@ public class Percolation {
     }
 
     private boolean shouldConnectToBottom(int row) {
+        return lastRow(row);
+    }
+
+    private boolean lastRow(int row) {
         return row == this.size - 1;
     }
 
@@ -180,15 +184,11 @@ public class Percolation {
     }
 
     private int getBottomCell(int row, int col) {
-        if (row == this.size - 1) { return -1; }
-
         int nextRow = row + 1;
 
+        if (this.lastRow(row)) { return -1; }
         if (!this.isOpen(nextRow+1, col+1)) { return -1; }
 
         return this.getIndex(nextRow, col);
     }
-
-    // test client (optional)
-    // public static void main(String[] args)
 }
