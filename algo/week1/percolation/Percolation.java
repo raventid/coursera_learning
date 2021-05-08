@@ -174,13 +174,12 @@ public class Percolation {
     }
 
     private int getRightCell(int row, int col) {
+        int nextCol = col + 1;
+
         if (col == this.size - 1) { return -1; }
+        if (!this.isOpen(row+1, nextCol+1)) { return -1; }
 
-        col = col + 1;
-
-        if (!this.isOpen(row+1, col+1)) { return -1; }
-
-        return this.getIndex(row, col);
+        return this.getIndex(row, nextCol);
     }
 
     private int getBottomCell(int row, int col) {
