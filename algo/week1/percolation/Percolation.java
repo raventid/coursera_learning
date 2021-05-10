@@ -9,7 +9,7 @@ public class Percolation {
     private int size;
     private int numberOfOpen;
     private int topVirtualCell;
-    private int bottomBorderIndex;
+    private int bottomVritualCell;
     private WeightedQuickUnionUF unionTracker;
     private WeightedQuickUnionUF backwash;
 
@@ -22,7 +22,7 @@ public class Percolation {
         this.backwash = new WeightedQuickUnionUF(n*n + 2);
         this.numberOfOpen = 0;
         this.topVirtualCell = 0;
-        this.bottomBorderIndex = n * n + 1;
+        this.bottomVritualCell = n * n + 1;
         this.grid = new boolean[n][];
         for (int i = 0; i < n; i++) {
             grid[i] = new boolean[n];
@@ -74,7 +74,7 @@ public class Percolation {
     // does the system percolate?
     public boolean percolates() {
         int topRoot = this.backwash.find(this.topVirtualCell);
-        int bottomRoot = this.backwash.find(this.bottomBorderIndex);
+        int bottomRoot = this.backwash.find(this.bottomVritualCell);
         return topRoot == bottomRoot;
     }
 
@@ -97,7 +97,7 @@ public class Percolation {
         // This is a percolation detector we connect all
         // the bottom nodes to backwash UF.
         if (this.shouldConnectToBottom(row)) {
-            this.backwash.union(index, this.bottomBorderIndex);
+            this.backwash.union(index, this.bottomVritualCell);
         }
 
         int above = this.getAboveCell(row, col);
@@ -154,13 +154,12 @@ public class Percolation {
     }
 
     private int getAboveCell(int row, int col) {
+        int previousRow = row - 1;
+
         if (row == 0) { return -1; }
+        if (!this.isOpen(previousRow+1, col+1)) { return -1; }
 
-        row = row - 1;
-
-        if (!this.isOpen(row+1, col+1)) { return -1; }
-
-        return this.getIndex(row, col);
+        return this.getIndex(previousRow, col);
     }
 
     private int getLeftCell(int row, int col) {
