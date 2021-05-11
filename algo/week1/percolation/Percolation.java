@@ -10,7 +10,7 @@ public class Percolation {
     private int numberOfOpen;
     private int topVirtualCell;
     private int bottomVritualCell;
-    private WeightedQuickUnionUF unionTracker;
+    private WeightedQuickUnionUF waterFilling;
     private WeightedQuickUnionUF backwash;
 
     // creates n-by-n grid, with all sites initially blocked
@@ -18,7 +18,7 @@ public class Percolation {
         if (n <= 0) { throw new IllegalArgumentException(); }
 
         this.size = n;
-        this.unionTracker = new WeightedQuickUnionUF(n*n + 2);
+        this.waterFilling = new WeightedQuickUnionUF(n*n + 2);
         this.backwash = new WeightedQuickUnionUF(n*n + 2);
         this.numberOfOpen = 0;
         this.topVirtualCell = 0;
@@ -90,7 +90,7 @@ public class Percolation {
         // Top line should always be connected to flow source
         // Plus it should be connected to every bottom line
         if (this.shouldConnectToTop(row)) {
-            this.unionTracker.union(index, this.topVirtualCell);
+            this.waterFilling.union(index, this.topVirtualCell);
             this.backwash.union(index, this.topVirtualCell);
         }
 
@@ -102,33 +102,33 @@ public class Percolation {
 
         int above = this.getAboveCell(row, col);
         if (above != -1) {
-            this.unionTracker.union(index, above);
+            this.waterFilling.union(index, above);
             this.backwash.union(index, above);
         }
 
         int left = this.getLeftCell(row, col);
         if (left != -1) {
-            this.unionTracker.union(index, left);
+            this.waterFilling.union(index, left);
             this.backwash.union(index, left);
         }
 
         int right = this.getRightCell(row, col);
         if (right != -1) {
-            this.unionTracker.union(index, right);
+            this.waterFilling.union(index, right);
             this.backwash.union(index, right);
 
         }
 
         int bottom = this.getBottomCell(row, col);
         if (bottom != -1) {
-            this.unionTracker.union(index, bottom);
+            this.waterFilling.union(index, bottom);
             this.backwash.union(index, bottom);
         }
     }
 
     private boolean _isFull(int row, int col) {
-        int topRoot = unionTracker.find(this.topVirtualCell);
-        int current = unionTracker.find(this.getIndex(row, col));
+        int topRoot = waterFilling.find(this.topVirtualCell);
+        int current = waterFilling.find(this.getIndex(row, col));
         return topRoot == current;
     }
 
