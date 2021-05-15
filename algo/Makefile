@@ -12,3 +12,6 @@ w1ip:
 
 w1p:
 	javac -cp .:./algs4.jar week1/percolation/PercolationVisualizer.java && java -cp .:./algs4.jar week1/percolation/PercolationVisualizer ./week1/percolation/eagle25.txt
+
+w2d:
+	javac -cp .:./algs4.jar week2/queues/Deque.java && java -cp .:./algs4.jar week2/queues/Deque

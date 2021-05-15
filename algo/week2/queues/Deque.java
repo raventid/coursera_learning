@@ -1,3 +1,5 @@
+package week2.queues;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -24,7 +26,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     // is the deque empty?
     public boolean isEmpty() {
-        leftGuard.next == rightGuard
+        return leftGuard.next == rightGuard;
     }
 
     // return the number of items on the deque
@@ -54,10 +56,36 @@ public class Deque<Item> implements Iterable<Item> {
         return null;
     }
 
+    public Iterator<Item> iterator() {
+        return new ListIterator();
+    }
+
+    private class ListIterator implements Iterator<Item> {
+        private Node current = leftGuard;
+
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        public Item next()
+        {
+            if (current == null) throw new NoSuchElementException();
+            Item value = current.item;
+            current = current.next;
+            return value;
+        }
+    }
+
     // return an iterator over items in order from front to back
     // public Iterator<Item> iterator() {}
 
     // unit testing (required)
-    public static void main(String[] args)
+    public static void main(String[] args) {
+        var deque = new Deque();
+    }
 
 }
