@@ -36,6 +36,14 @@ public class Deque<Item> implements Iterable<Item> {
 
     // add the item to the front
     public void addFirst(Item item) {
+        Node previousLeader = leftGuard.next;
+        Node newLeader = new Node();
+        newLeader.prev = leftGuard;
+        newLeader.next = previousLeader;
+        newLeader.item = item;
+
+        previousLeader.prev = newLeader;
+        leftGuard.next = newLeader;
         size += 1;
     }
 
@@ -86,6 +94,8 @@ public class Deque<Item> implements Iterable<Item> {
     // unit testing (required)
     public static void main(String[] args) {
         var deque = new Deque<Integer>();
+        deque.addFirst(10);
+
     }
 
 }
