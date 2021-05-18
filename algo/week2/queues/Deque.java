@@ -54,8 +54,16 @@ public class Deque<Item> implements Iterable<Item> {
 
     // remove and return the item from the front
     public Item removeFirst() {
+        if (leftGuard.next == rightGuard) { return null; }
+
+        Node previousLeader = leftGuard.next;
+        Node newLeader = leftGuard.next.next;
+
+        leftGuard.next = newLeader;
+        newLeader.prev = leftGuard;
+
         size -= 1;
-        return null;
+        return previousLeader.item;
     }
 
     // remove and return the item from the back
@@ -95,7 +103,8 @@ public class Deque<Item> implements Iterable<Item> {
     public static void main(String[] args) {
         var deque = new Deque<Integer>();
         deque.addFirst(10);
-
+        var item = deque.removeFirst();
+        System.out.println(item);
     }
 
 }
