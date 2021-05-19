@@ -49,6 +49,15 @@ public class Deque<Item> implements Iterable<Item> {
 
     // add the item to the back
     public void addLast(Item item) {
+        Node previousLast = rightGuard.prev;
+        Node newLast = new Node();
+        newLast.prev = previousLast;
+        newLast.next = rightGuard;
+        newLast.item = item;
+
+        previousLast.next = newLast;
+        rightGuard.prev = newLast;
+
         size += 1;
     }
 
@@ -103,8 +112,12 @@ public class Deque<Item> implements Iterable<Item> {
     public static void main(String[] args) {
         var deque = new Deque<Integer>();
         deque.addFirst(10);
-        var item = deque.removeFirst();
-        System.out.println(item);
+        var first = deque.removeFirst();
+        System.out.println(first);
+
+        deque.addLast(20);
+        var last = deque.removeFirst();
+        System.out.println(last);
     }
 
 }
