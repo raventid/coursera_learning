@@ -77,8 +77,16 @@ public class Deque<Item> implements Iterable<Item> {
 
     // remove and return the item from the back
     public Item removeLast() {
+        if (rightGuard.prev == leftGuard) { return null; }
+
+        Node previousLast = rightGuard.prev;
+        Node newLast = rightGuard.prev.prev;
+
+        newLast.next = rightGuard;
+        rightGuard.prev = newLast;
+
         size -= 1;
-        return null;
+        return previousLast.item;
     }
 
     public Iterator<Item> iterator() {
@@ -118,6 +126,9 @@ public class Deque<Item> implements Iterable<Item> {
         deque.addLast(20);
         var last = deque.removeFirst();
         System.out.println(last);
-    }
 
+        deque.addLast(30);
+        var last1 = deque.removeLast();
+        System.out.println(last1);
+    }
 }
