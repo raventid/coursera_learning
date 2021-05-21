@@ -94,10 +94,10 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     private class ListIterator implements Iterator<Item> {
-        private Node current = leftGuard;
+        private Node current = leftGuard.next;
 
         public boolean hasNext() {
-            return current != null;
+            return current.next != rightGuard;
         }
 
         public void remove() {
@@ -106,15 +106,12 @@ public class Deque<Item> implements Iterable<Item> {
 
         public Item next()
         {
-            if (current == null) throw new NoSuchElementException();
+            if (current == rightGuard) throw new NoSuchElementException();
             Item value = current.item;
             current = current.next;
             return value;
         }
     }
-
-    // return an iterator over items in order from front to back
-    // public Iterator<Item> iterator() {}
 
     // unit testing (required)
     public static void main(String[] args) {
