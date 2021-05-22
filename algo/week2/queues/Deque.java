@@ -97,15 +97,14 @@ public class Deque<Item> implements Iterable<Item> {
         private Node current = leftGuard.next;
 
         public boolean hasNext() {
-            return current.next != rightGuard;
+            return current != rightGuard;
         }
 
         public void remove() {
             throw new UnsupportedOperationException();
         }
 
-        public Item next()
-        {
+        public Item next() {
             if (current == rightGuard) throw new NoSuchElementException();
             Item value = current.item;
             current = current.next;
@@ -127,5 +126,13 @@ public class Deque<Item> implements Iterable<Item> {
         deque.addLast(30);
         var last1 = deque.removeLast();
         System.out.println(last1);
+
+        deque.addFirst(10);
+        deque.addLast(20);
+        deque.addFirst(30);
+
+        for (int i : deque) {
+            System.out.println(i);
+        }
     }
 }
