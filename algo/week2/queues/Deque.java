@@ -71,7 +71,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     // remove and return the item from the front
     public Item removeFirst() {
-        if (leftGuard.next == rightGuard) { return null; }
+        if (this.isEmpty()) { throw new NoSuchElementException(); }
 
         Node previousLeader = leftGuard.next;
         Node newLeader = leftGuard.next.next;
@@ -85,7 +85,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     // remove and return the item from the back
     public Item removeLast() {
-        if (rightGuard.prev == leftGuard) { return null; }
+        if (this.isEmpty()) { throw new NoSuchElementException(); }
 
         Node previousLast = rightGuard.prev;
         Node newLast = rightGuard.prev.prev;
