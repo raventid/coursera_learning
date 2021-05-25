@@ -113,7 +113,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
 
         public Item next() {
-            if (current == rightGuard) throw new NoSuchElementException();
+            if (current == rightGuard) { throw new NoSuchElementException(); }
             Item value = current.item;
             current = current.next;
             return value;
