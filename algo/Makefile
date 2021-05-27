@@ -15,3 +15,6 @@ w1p:
 
 w2d:
 	javac -cp .:./algs4.jar week2/queues/Deque.java && java -cp .:./algs4.jar week2/queues/Deque
+
+w2r:
+	javac -cp .:./algs4.jar week2/queues/RandomizedQueue.java && java -cp .:./algs4.jar week2/queues/RandomizedQueue
