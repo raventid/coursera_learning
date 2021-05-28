@@ -4,11 +4,11 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
-    private int[] storage;
+    private Item[] storage;
 
     // construct an empty randomized queue
     public RandomizedQueue() {
-        this.storage = new int[10];
+        this.storage = (Item[]) new Object[10];
     }
 
     // is the randomized queue empty?
@@ -54,10 +54,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
     }
 
-
     // unit testing (required)
     public static void main(String[] args) {
 
     }
-
 }
