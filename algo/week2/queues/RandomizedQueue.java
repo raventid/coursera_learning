@@ -56,6 +56,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // unit testing (required)
     public static void main(String[] args) {
+        var randQeueu = new RandomizedQueue<Integer>();
+
 
     }
 }
