@@ -2,6 +2,7 @@ package week2.queues;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
     private Item[] storage;
@@ -39,7 +40,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // return a random item (but do not remove it)
     public Item sample() {
-        return null;
+        int index = StdRandom.uniform(this.nextSlot);
+        return this.storage[index];
     }
 
     // return an independent iterator over items in random order
@@ -68,5 +70,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         rq.enqueue(10);
         rq.enqueue(20);
         rq.enqueue(30);
+
+        System.out.println(rq.sample());
+        System.out.println(rq.sample());
+        System.out.println(rq.sample());
     }
 }
