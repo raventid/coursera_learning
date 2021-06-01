@@ -6,14 +6,14 @@ import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
     private Item[] storage;
-    private int nextSlot;
     private int size;
+    private int capacity;
 
     // construct an empty randomized queue
     public RandomizedQueue() {
         this.storage = (Item[]) new Object[10];
-        this.nextSlot = 0;
         this.size = 0;
+        this.capacity = 10;
     }
 
     // is the randomized queue empty?
@@ -28,9 +28,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // add the item
     public void enqueue(Item item) {
-        this.storage[this.nextSlot] = item;
-        this.nextSlot += 1;
-        this.size +=1;
+        this.storage[this.size] = item;
+        this.size += 1;
     }
 
     // remove and return a random item
@@ -40,7 +39,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // return a random item (but do not remove it)
     public Item sample() {
-        int index = StdRandom.uniform(this.nextSlot);
+        int index = StdRandom.uniform(this.size);
         return this.storage[index];
     }
 
