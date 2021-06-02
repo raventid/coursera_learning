@@ -34,7 +34,15 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // remove and return a random item
     public Item dequeue() {
-        return null;
+        int index = StdRandom.uniform(this.size);
+        Item elem = this.storage[index];
+
+        // fill gap with last element and decrease size
+        this.storage[index] = this.storage[this.size];
+        this.storage[this.size] = null;
+        this.size -= 1;
+
+        return elem;
     }
 
     // return a random item (but do not remove it)
@@ -73,5 +81,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         System.out.println(rq.sample());
         System.out.println(rq.sample());
         System.out.println(rq.sample());
+
+        System.out.println(rq.dequeue());
     }
 }
