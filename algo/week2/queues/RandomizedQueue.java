@@ -7,13 +7,11 @@ import edu.princeton.cs.algs4.StdRandom;
 public class RandomizedQueue<Item> implements Iterable<Item> {
     private Item[] storage;
     private int size;
-    private int capacity;
 
     // construct an empty randomized queue
     public RandomizedQueue() {
-        this.storage = (Item[]) new Object[10];
+        this.storage = (Item[]) new Object[1];
         this.size = 0;
-        this.capacity = 10;
     }
 
     // is the randomized queue empty?
@@ -28,27 +26,35 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // add the item
     public void enqueue(Item item) {
-        this.storage[this.size] = item;
-        this.size += 1;
+        if (size == storage.length) {
+            resize(storage.length * 2);
+        }
+
+        storage[size] = item;
+        size += 1;
     }
 
     // remove and return a random item
     public Item dequeue() {
-        int index = StdRandom.uniform(this.size);
-        Item elem = this.storage[index];
+        int index = StdRandom.uniform(size);
+        Item elem = storage[index];
 
         // fill gap with last element and decrease size
-        this.storage[index] = this.storage[this.size];
-        this.storage[this.size] = null;
-        this.size -= 1;
+        storage[index] = storage[size];
+        storage[size] = null;
+        size -= 1;
+
+        if (size > 0 && size == storage.length/4) {
+            resize(storage.length/2);
+        }
 
         return elem;
     }
 
     // return a random item (but do not remove it)
     public Item sample() {
-        int index = StdRandom.uniform(this.size);
-        return this.storage[index];
+        int index = StdRandom.uniform(size);
+        return storage[index];
     }
 
     // return an independent iterator over items in random order
@@ -68,6 +74,15 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         public Item next() {
             return null;
         }
+    }
+
+    private void resize(int capacity) {
+        Item[] copy = (Item[]) new Object[capacity];
+        for (int i = 0; i < size; i++) {
+            copy[i] = storage[i];
+        }
+
+        storage = copy;
     }
 
     // unit testing (required)
