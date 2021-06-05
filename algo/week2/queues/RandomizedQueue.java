@@ -66,8 +66,34 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     private class Iter implements Iterator<Item> {
+        private Item[] iteratee;
+        private int cursor = 0;
+
+        Iter() {
+            // The same logic as in deque and resize combined together
+            int length = storage.length;
+            int size = length;
+            Item[] copy = (Item[]) new Object[length];
+            Item[] iteratee = (Item[]) new Object[length];
+
+            for (int i = 0; i < length; i++) {
+                copy[i] = storage[i];
+            }
+
+            for (int i = 0; i < length; i++) {
+                int index = StdRandom.uniform(size);
+                Item elem = copy[index];
+
+                copy[index] = copy[size];
+                storage[size] = null;
+                size -= 1;
+
+                iteratee[i] = elem;
+            }
+        }
+
         public boolean hasNext() {
-            return false;
+            return cursor < size;
         }
 
         public void remove() {
@@ -75,7 +101,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
 
         public Item next() {
-            return null;
+            if (size <= cursor) { throw new NoSuchElementException(); }
+            Item elem = iteratee[cursor];
+            cursor += 1;
+
+            return elem;
         }
     }
 
