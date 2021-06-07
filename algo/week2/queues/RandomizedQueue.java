@@ -42,8 +42,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Item elem = storage[index];
 
         // fill gap with last element and decrease size
-        storage[index] = storage[size];
-        storage[size] = null;
+        storage[index] = storage[size-1];
+        storage[size-1] = null;
         size -= 1;
 
         if (size > 0 && size == storage.length/4) {
@@ -71,22 +71,23 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         Iter() {
             // The same logic as in deque and resize combined together
-            int length = storage.length;
-            int size = length;
+            int length = size;
+            int copy_size = length;
+
             Item[] copy = (Item[]) new Object[length];
-            Item[] iteratee = (Item[]) new Object[length];
+            iteratee = (Item[]) new Object[length];
 
             for (int i = 0; i < length; i++) {
                 copy[i] = storage[i];
             }
 
             for (int i = 0; i < length; i++) {
-                int index = StdRandom.uniform(size);
+                int index = StdRandom.uniform(copy_size);
                 Item elem = copy[index];
 
-                copy[index] = copy[size];
-                storage[size] = null;
-                size -= 1;
+                copy[index] = copy[copy_size-1];
+                copy[copy_size-1] = null;
+                copy_size -= 1;
 
                 iteratee[i] = elem;
             }
@@ -131,5 +132,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         System.out.println(rq.sample());
 
         System.out.println(rq.dequeue());
+
+        System.out.println("________ITERATOR________");
+        for (int i : rq) {
+           System.out.println(i);
+        }
     }
 }
