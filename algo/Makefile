@@ -18,3 +18,6 @@ w2d:
 
 w2r:
 	javac -cp .:./algs4.jar week2/queues/RandomizedQueue.java && java -cp .:./algs4.jar week2/queues/RandomizedQueue
+
+w2p:
+	javac -cp .:./algs4.jar week2/queues/Permutation.java && java -cp .:./algs4.jar week2/queues/Permutation < ./week2/queues/duplicates.txt
