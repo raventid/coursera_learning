@@ -1,3 +1,5 @@
+// This shit should be inplace. This one is not inplace.
+
 impl Solution {
     pub fn duplicate_zeros(arr: &mut Vec<i32>) {
         let length = arr.len();
