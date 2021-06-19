@@ -21,15 +21,13 @@ impl Solution {
 
 
 // Inplace version
-
 impl Solution {
     pub fn duplicate_zeros(arr: &mut Vec<i32>) {
         let length = arr.len();
-        let mut zeroes = 0;
-
-        for i in arr.iter() {
-            if *i == 0 { zeroes += 1 }
-        }
+        let mut zeroes = arr.iter().fold(
+            0,
+            |zeroes, x| if *x == 0 { zeroes + 1 } else { zeroes }
+        );
 
         for i in (0..length).rev() {
             Self::shift(arr, length, i, zeroes);
@@ -38,11 +36,12 @@ impl Solution {
     }
 
     fn shift(arr: &mut Vec<i32>, length: usize, index: usize, shift: usize) {
+        // move element according to the shift
         if (index + shift < length) {
             arr[index+shift] = arr[index];
         }
 
-        // we should not only copy zero to shifted position, but also duplicate it on -1 position
+        // we should not only copy 0 to shifted position, but also duplicate it on -1 position
         if (index - 1 + shift < length && arr[index] == 0) {
             arr[index+shift-1] = arr[index]
         }
