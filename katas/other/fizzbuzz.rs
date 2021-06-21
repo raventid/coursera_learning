@@ -1,0 +1,15 @@
+// Mathematical approach for the fizzbuzz
+//
+// http://philcrissman.net/posts/eulers-fizzbuzz/
+fn main() {
+    (0..100).for_each(|number: i32| {
+        let value = match number.pow(4) % 15 {
+            0 => "FizzBuzz".to_string(),
+            6 => "Fizz".to_string(),
+            10 => "Buzz".to_string(),
+            _ => number.to_string(),
+        };
+
+        println!("For {} Value is {}", number, value);
+    })
+}
