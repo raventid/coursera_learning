@@ -21,3 +21,6 @@ w2r:
 
 w2p:
 	javac -cp .:./algs4.jar week2/queues/Permutation.java && java -cp .:./algs4.jar week2/queues/Permutation < ./week2/queues/duplicates.txt
+
+w3ms:
+	javac -cp .:./algs4.jar week3/MergeSort.java && java -cp .:./algs4.jar week3/MergeSort
