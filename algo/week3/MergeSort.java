@@ -16,6 +16,7 @@ class MergeSort {
     }
 
     private static void merge(Comparable[] a, int lo, int mid, int hi) {
+        System.out.println("Doing merge from " + lo + " to " +  hi + " with mid " + mid);
         int i = lo, j = mid+1;
 
         for (int k = lo; k <= hi; k++) {
@@ -37,13 +38,18 @@ class MergeSort {
 
     public static void main(String[] args) {
         var vector =  new String[]{ "dog", "cat", "parrot", "julian", "raventid" };
+
         for (var e : vector) {
             System.out.println(e);
         }
+        System.out.println("");
+
         sort(vector);
+
         System.out.println("--------------------");
         System.out.println("After sorting");
         System.out.println("--------------------");
+
         for (var e : vector) {
             System.out.println(e);
         }
