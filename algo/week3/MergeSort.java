@@ -24,10 +24,10 @@ class MergeSort {
         }
 
         for (int k = lo; k <= hi; k++) {
-            if (i > mid)                   { a[k] = aux[j++]; }
-            else if (j > hi)               { a[k] = aux[i++]; }
-            else if (less(aux[j], aux[i])) { a[k] = aux[j++]; }
-            else                           { a[k] = aux[i++]; }
+            if (i > mid)                   { a[k] = aux[j++]; } // left half exhausted, take from the right
+            else if (j > hi)               { a[k] = aux[i++]; } // right half exhausted, take from the left
+            else if (less(aux[j], aux[i])) { a[k] = aux[j++]; } // if key on right less than key on the left, take right one (the smaller)
+            else                           { a[k] = aux[i++]; } // last case, left key is equal or smaller than right one (let's take it (left one))
         }
     }
 
