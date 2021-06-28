@@ -16,7 +16,6 @@ class MergeSort {
     }
 
     private static void merge(Comparable[] a, int lo, int mid, int hi) {
-        System.out.println("Doing merge from " + lo + " to " +  hi + " with mid " + mid);
         int i = lo, j = mid+1;
 
         for (int k = lo; k <= hi; k++) {
