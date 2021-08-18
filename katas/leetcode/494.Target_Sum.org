@@ -1,0 +1,152 @@
+All solutions:[[org:../Education/coursera_learning/katas/leetcode/notes.org]]
+
+
+# Rust
+:PROPERTIES:
+:LEVEL: 0
+:END:
+[[https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=0c9e798b8c09d66810b304f3e96d57c1][Rust Playground]]
+#+BEGIN_SRC rust
+
+
+struct Solution {}
+
+impl Solution {
+    pub fn find_target_sum_ways(nums: Vec<i32>, target: i32) -> i32 {
+        Self::recur(&nums, 0, nums.len()-1, target)
+    }
+
+    fn recur(nums: &[i32], index: usize, last_elem: usize, target: i32) -> i32 {
+        if index == last_elem {
+            let positive = target + nums[index] == 0;
+            let negative = target - nums[index] == 0;
+            if positive && negative {
+                return 2
+            } else if positive || negative {
+                return 1
+            } else {
+                return 0
+            }
+        }
+
+        let last = nums[index];
+
+        let positive = Self::recur(&nums, index + 1, last_elem, target+last);
+        let negative = Self::recur(&nums, index + 1, last_elem, target+(-1 * last));
+
+        positive + negative
+    }
+}
+
+fn main() {
+
+}
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+warning: struct is never constructed: `Solution`
+ --> src/main.rs:4:8
+  |
+4 | struct Solution {}
+  |        ^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: associated function is never used: `find_target_sum_ways`
+ --> src/main.rs:7:12
+  |
+7 |     pub fn find_target_sum_ways(nums: Vec<i32>, target: i32) -> i32 {
+  |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: associated function is never used: `recur`
+  --> src/main.rs:11:8
+   |
+11 |     fn recur(nums: &[i32], index: usize, last_elem: usize, target: i32) -> i32 {
+   |        ^^^^^
+
+warning: 3 warnings emitted
+
+warning: struct is never constructed: `Solution`
+ --> src/main.rs:4:8
+  |
+4 | struct Solution {}
+  |        ^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: associated function is never used: `find_target_sum_ways`
+ --> src/main.rs:7:12
+  |
+7 |     pub fn find_target_sum_ways(nums: Vec<i32>, target: i32) -> i32 {
+  |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: associated function is never used: `recur`
+  --> src/main.rs:11:8
+   |
+11 |     fn recur(nums: &[i32], index: usize, last_elem: usize, target: i32) -> i32 {
+   |        ^^^^^
+
+warning: 3 warnings emitted
+
+#+end_example
+
+## Some notes
+ If you will move from back to first elem think about [0, 1] case.
+ -0+1 //this one work
+ -0-1
+ +0+1 //this one works too, and you might loose one of them if you substract 1 first
+ +0-1
+
+ If you will move from start to an end this about [1,0]
+ -1+0
+ -1-0
+ +1+0 // this one works
+ +1-0 // this one two
+ if you write target + nums[index] == 0 || target - nums[index] == 0 you might
+ loose one of it
+
+
+
+ In this solution we are using memoization but it is not as effective because we have to match index + targetSum for memo key.
+ So we cannot memoize a lot actually.
+
+# Alternative solution with a bit better logic on a last step
+:PROPERTIES:
+:LEVEL: 0
+:END:
+[[https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=0c9e798b8c09d66810b304f3e96d57c1][Rust Playground]]
+#+BEGIN_SRC rust
+
+struct Solution {}
+
+impl Solution {
+    pub fn find_target_sum_ways(nums: Vec<i32>, target: i32) -> i32 {
+        let mut memo = std::collections::HashMap::new();
+        Self::recur(&nums, 0, nums.len(), target, &mut memo)
+    }
+
+    fn recur(nums: &[i32], index: usize, length: usize, target: i32, memo: &mut std::collections::HashMap<(usize, i32), i32>) -> i32 {
+        if index == length && target == 0 { return 1 }
+        if index == length && target != 0 { return 0 }
+
+        let key = (index, target);
+        if memo.contains_key(&key) { return memo[&key] }
+
+        let num = nums[index];
+
+        let positive = Self::recur(&nums, index + 1, length, target + num, memo);
+        let negative = Self::recur(&nums, index + 1, length, target - num, memo);
+
+        memo.insert(key, positive + negative);
+
+        memo[&key]
+    }
+}
+
+fn main() {
+    Solution::find_target_sum_ways([1,2,3].to_vec(), 6);
+}
+#+END_SRC
+
+#+RESULTS:
