@@ -1,6 +1,11 @@
-// Mathematical approach for the fizzbuzz
-//
-// http://philcrissman.net/posts/eulers-fizzbuzz/
+Mathematical approach for the fizzbuzz http://philcrissman.net/posts/eulers-fizzbuzz/
+
+
+:PROPERTIES:
+:LEVEL: 0
+:END:
+#+BEGIN_SRC rust
+
 fn main() {
     (0..100).for_each(|number: i32| {
         let value = match number.pow(4) % 15 {
@@ -13,3 +18,5 @@ fn main() {
         println!("For {} Value is {}", number, value);
     })
 }
+
+#+END_SRC
