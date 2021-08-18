@@ -1,5 +1,11 @@
-// Fibbonacci with Binet's formula. Works only for small numbers. Breaks around 100.
-// https://stackoverflow.com/questions/9645193/calculating-fibonacci-number-accurately-in-c
+Fibbonacci with Binet's formula. Works only for small numbers. Breaks around 100.
+https://stackoverflow.com/questions/9645193/calculating-fibonacci-number-accurately-in-c
+
+:PROPERTIES:
+:LEVEL: 0
+:END:
+#+BEGIN_SRC rust
+
 fn main() {
     (0..100).for_each(|number: u32| {
         let value = binet(number as f64);
@@ -13,3 +19,5 @@ fn binet(number: f64) -> u64 {
     let fib = (phi.powf(number) - (1_f64 - phi).powf(number)) / 5_f64.sqrt();
     fib as u64
 }
+
+#+END_SRC
