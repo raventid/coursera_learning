@@ -1,0 +1,308 @@
+*Rust
+:PROPERTIES:
+:LEVEL: 0
+:END:
+[[https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=0c9e798b8c09d66810b304f3e96d57c1][Rust Playground]]
+#+BEGIN_SRC rust
+
+struct Solution {}
+
+impl Solution {
+    pub fn add_operators(num: String, target: i32) -> Vec<String> {
+        Self::go(&num, 0, vec![], "".to_string(), target as i64)
+    }
+
+    fn go(nums: &str, initial_position: usize, computation_stack: Vec<i64>, computation_path: String, target: i64) -> Vec<String> {
+        if initial_position == nums.len() {
+            // println!("stack={:?}, computation_path={:?}", computation_stack, computation_path);
+
+            if computation_stack.into_iter().sum::<i64>() == target { return vec![computation_path] } else { return vec![] }
+        }
+
+        let mut result = vec![];
+
+        for i in (initial_position+1)..=nums.len() {
+            // println!("i={}, initial_position={} num.len()={}", i, initial_position, nums.len());
+            let stringified_number = &nums[initial_position..i];
+
+            // I now that I'm in ascii, so I can do [0..1]
+            let multidigit_number_with_leading_zero = stringified_number.len() > 1 && stringified_number[0..1] == '0'.to_string();
+            if multidigit_number_with_leading_zero { break }
+
+            let number : i64 = stringified_number.parse().expect("well-formed digit");
+
+            // println!("stringified_number={}, number={}", stringified_number, number);
+
+            if initial_position == 0 {
+                // println!("Starting new computation_stack");
+                result.append(&mut Self::go(nums, i, vec![number], stringified_number.to_string(), target));
+            } else {
+                // println!("Starting plus_computation");
+                let mut plus_computation = computation_stack.clone();
+                plus_computation.push(number);
+                result.append(&mut Self::go(nums, i, plus_computation, computation_path.clone() + "+" + stringified_number, target));
+
+                // println!("Starting minus_computation");
+                let mut minus_computation = computation_stack.clone();
+                minus_computation.push(-number);
+                result.append(&mut Self::go(nums, i, minus_computation, computation_path.clone() + "-" + stringified_number, target));
+
+                // println!("Starting multiply_computation");
+                let mut multiply_computation =  computation_stack.clone();
+                let new_tail = multiply_computation.pop().expect("element should be in stack") * number;
+                multiply_computation.push(new_tail);
+                result.append(&mut Self::go(nums, i, multiply_computation, computation_path.clone() + "*" + stringified_number, target));
+            }
+        }
+
+        result
+    }
+}
+
+fn main() {
+    println!("First test {:?}", Solution::add_operators("123".to_string(), 6));
+    println!("*****************************************************************");
+    println!("*****************************************************************");
+    println!("*****************************************************************");
+    println!("*****************************************************************");
+    println!("*****************************************************************");
+    println!("Second test {:?}", Solution::add_operators("232".to_string(), 8));
+    println!("*****************************************************************");
+    println!("*****************************************************************");
+    println!("*****************************************************************");
+    println!("*****************************************************************");
+    println!("*****************************************************************");
+    println!("Third test {:?}", Solution::add_operators("105".to_string(), 5));
+    println!("*****************************************************************");
+    println!("*****************************************************************");
+    println!("*****************************************************************");
+    println!("*****************************************************************");
+    println!("*****************************************************************");
+    println!("Forth test {:?}", Solution::add_operators("10".to_string(), 10));
+}
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+i=1, initial_position=0 num.len()=3
+stringified_number=1, number=1
+Starting new computation_stack
+i=2, initial_position=1 num.len()=3
+stringified_number=2, number=2
+Starting plus_computation
+i=3, initial_position=2 num.len()=3
+stringified_number=3, number=3
+Starting plus_computation
+stack=[1, 2, 3], computation_path="1+2+3"
+Starting minus_computation
+stack=[1, 2, -3], computation_path="1+2-3"
+Starting multiply_computation
+stack=[1, 6], computation_path="1+2*3"
+Starting minus_computation
+i=3, initial_position=2 num.len()=3
+stringified_number=3, number=3
+Starting plus_computation
+stack=[1, -2, 3], computation_path="1-2+3"
+Starting minus_computation
+stack=[1, -2, -3], computation_path="1-2-3"
+Starting multiply_computation
+stack=[1, -6], computation_path="1-2*3"
+Starting multiply_computation
+i=3, initial_position=2 num.len()=3
+stringified_number=3, number=3
+Starting plus_computation
+stack=[2, 3], computation_path="1*2+3"
+Starting minus_computation
+stack=[2, -3], computation_path="1*2-3"
+Starting multiply_computation
+stack=[6], computation_path="1*2*3"
+i=3, initial_position=1 num.len()=3
+stringified_number=23, number=23
+Starting plus_computation
+stack=[1, 23], computation_path="1+23"
+Starting minus_computation
+stack=[1, -23], computation_path="1-23"
+Starting multiply_computation
+stack=[23], computation_path="1*23"
+i=2, initial_position=0 num.len()=3
+stringified_number=12, number=12
+Starting new computation_stack
+i=3, initial_position=2 num.len()=3
+stringified_number=3, number=3
+Starting plus_computation
+stack=[12, 3], computation_path="12+3"
+Starting minus_computation
+stack=[12, -3], computation_path="12-3"
+Starting multiply_computation
+stack=[36], computation_path="12*3"
+i=3, initial_position=0 num.len()=3
+stringified_number=123, number=123
+Starting new computation_stack
+stack=[123], computation_path="123"
+First test ["1+2+3", "1*2*3"]
+,*****************************************************************
+,*****************************************************************
+,*****************************************************************
+,*****************************************************************
+,*****************************************************************
+i=1, initial_position=0 num.len()=3
+stringified_number=2, number=2
+Starting new computation_stack
+i=2, initial_position=1 num.len()=3
+stringified_number=3, number=3
+Starting plus_computation
+i=3, initial_position=2 num.len()=3
+stringified_number=2, number=2
+Starting plus_computation
+stack=[2, 3, 2], computation_path="2+3+2"
+Starting minus_computation
+stack=[2, 3, -2], computation_path="2+3-2"
+Starting multiply_computation
+stack=[2, 6], computation_path="2+3*2"
+Starting minus_computation
+i=3, initial_position=2 num.len()=3
+stringified_number=2, number=2
+Starting plus_computation
+stack=[2, -3, 2], computation_path="2-3+2"
+Starting minus_computation
+stack=[2, -3, -2], computation_path="2-3-2"
+Starting multiply_computation
+stack=[2, -6], computation_path="2-3*2"
+Starting multiply_computation
+i=3, initial_position=2 num.len()=3
+stringified_number=2, number=2
+Starting plus_computation
+stack=[6, 2], computation_path="2*3+2"
+Starting minus_computation
+stack=[6, -2], computation_path="2*3-2"
+Starting multiply_computation
+stack=[12], computation_path="2*3*2"
+i=3, initial_position=1 num.len()=3
+stringified_number=32, number=32
+Starting plus_computation
+stack=[2, 32], computation_path="2+32"
+Starting minus_computation
+stack=[2, -32], computation_path="2-32"
+Starting multiply_computation
+stack=[64], computation_path="2*32"
+i=2, initial_position=0 num.len()=3
+stringified_number=23, number=23
+Starting new computation_stack
+i=3, initial_position=2 num.len()=3
+stringified_number=2, number=2
+Starting plus_computation
+stack=[23, 2], computation_path="23+2"
+Starting minus_computation
+stack=[23, -2], computation_path="23-2"
+Starting multiply_computation
+stack=[46], computation_path="23*2"
+i=3, initial_position=0 num.len()=3
+stringified_number=232, number=232
+Starting new computation_stack
+stack=[232], computation_path="232"
+Second test ["2+3*2", "2*3+2"]
+,*****************************************************************
+,*****************************************************************
+,*****************************************************************
+,*****************************************************************
+,*****************************************************************
+i=1, initial_position=0 num.len()=3
+stringified_number=1, number=1
+Starting new computation_stack
+i=2, initial_position=1 num.len()=3
+stringified_number=0, number=0
+Starting plus_computation
+i=3, initial_position=2 num.len()=3
+stringified_number=5, number=5
+Starting plus_computation
+stack=[1, 0, 5], computation_path="1+0+5"
+Starting minus_computation
+stack=[1, 0, -5], computation_path="1+0-5"
+Starting multiply_computation
+stack=[1, 0], computation_path="1+0*5"
+Starting minus_computation
+i=3, initial_position=2 num.len()=3
+stringified_number=5, number=5
+Starting plus_computation
+stack=[1, 0, 5], computation_path="1-0+5"
+Starting minus_computation
+stack=[1, 0, -5], computation_path="1-0-5"
+Starting multiply_computation
+stack=[1, 0], computation_path="1-0*5"
+Starting multiply_computation
+i=3, initial_position=2 num.len()=3
+stringified_number=5, number=5
+Starting plus_computation
+stack=[0, 5], computation_path="1*0+5"
+Starting minus_computation
+stack=[0, -5], computation_path="1*0-5"
+Starting multiply_computation
+stack=[0], computation_path="1*0*5"
+i=3, initial_position=1 num.len()=3
+i=2, initial_position=0 num.len()=3
+stringified_number=10, number=10
+Starting new computation_stack
+i=3, initial_position=2 num.len()=3
+stringified_number=5, number=5
+Starting plus_computation
+stack=[10, 5], computation_path="10+5"
+Starting minus_computation
+stack=[10, -5], computation_path="10-5"
+Starting multiply_computation
+stack=[50], computation_path="10*5"
+i=3, initial_position=0 num.len()=3
+stringified_number=105, number=105
+Starting new computation_stack
+stack=[105], computation_path="105"
+Third test ["1*0+5", "10-5"]
+,*****************************************************************
+,*****************************************************************
+,*****************************************************************
+,*****************************************************************
+,*****************************************************************
+i=1, initial_position=0 num.len()=2
+stringified_number=1, number=1
+Starting new computation_stack
+i=2, initial_position=1 num.len()=2
+stringified_number=0, number=0
+Starting plus_computation
+stack=[1, 0], computation_path="1+0"
+Starting minus_computation
+stack=[1, 0], computation_path="1-0"
+Starting multiply_computation
+stack=[0], computation_path="1*0"
+i=2, initial_position=0 num.len()=2
+stringified_number=10, number=10
+Starting new computation_stack
+stack=[10], computation_path="10"
+Forth test ["10"]
+#+end_example
+
+// Alternative version of backtracking with a chance for optimization.
+//
+// impl Solution {
+//     pub fn add_operators(num: String, target: i32) -> Vec<String> {
+//         go(&nums, 0, "".to_string(), 0, 0, target as i64, &mut vec![])
+//     }
+
+//     fn go(nums: &str, initial_position: usize, computation_path: String, last_computed_value: i64, computation_result: i64, target: i64, result: &mut [String]) -> Vec<String> {
+//         if initial_position == nums.len() && computation_result == target { result.push(computation_path) }
+
+//         (initial_position..nums.len()).into_iter().for_each(|i| {
+//             let stringified_number = &nums[initial_position..(i - initial_position + 1)];
+
+//             let multidigit_number_with_leading_zero = stringified_number.len() > 1 && stringified_number[0] == '0';
+//             if multidigit_number_with_leading_zero { return }
+
+//             let number = stringified_number.chars().map(|c| c.to_digit(10).expect("well-formed digit") as i64).collect();
+
+//             if computation_path.empty() {
+//                 go(str, i+1, computation_path + stringified_number, number, number, target);
+//             } else {
+//                 go(str, i+1, String(computation_path + "+" + stringified_number), number, computation_result + number, target);
+//                 go(str, i+1, String(computation_path + "-" + stringified_number), -number, computation_result - number, target);
+//                 go(str, i+1, String(computation_path + "*" + stringified_number), number * last_computed_value, (computation_result - last_computed_value) + (number * last_computed_value) , target);
+//             }
+//         });
+//     }
+// }
