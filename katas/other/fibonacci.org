@@ -1,5 +1,8 @@
+Some interesting ways to do computations of fibonacci.
+
 Fibbonacci with Binet's formula. Works only for small numbers. Breaks around 100.
 https://stackoverflow.com/questions/9645193/calculating-fibonacci-number-accurately-in-c
+
 
 :PROPERTIES:
 :LEVEL: 0
@@ -18,6 +21,35 @@ fn binet(number: f64) -> u64 {
     let phi : f64 = (1_f64 + 5_f64.sqrt()) * 0.5;
     let fib = (phi.powf(number) - (1_f64 - phi).powf(number)) / 5_f64.sqrt();
     fib as u64
+}
+
+#+END_SRC
+
+
+
+
+DP tabulation.
+:PROPERTIES:
+:LEVEL: 0
+:END:
+#+BEGIN_SRC rust
+
+fn fib(n: usize) -> usize {
+    let mut table = vec![0; n+2];
+    table[0] = 0;
+    table[1] = 1;
+
+    for i in 0..n {
+        table[i + 1] += table[i];
+        table[i + 2] += table[i];
+        // in the end of this loop i + 1 will be finished, and we are starting to craft i + 2
+    }
+
+    table[n]
+}
+
+fn main() {
+    println!("{}", fib(6));
 }
 
 #+END_SRC
