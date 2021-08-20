@@ -1,0 +1,69 @@
+#+TITLE: 79 Word_search
+
+# Rust
+:PROPERTIES:
+:LEVEL: 0
+:END:
+#+BEGIN_SRC rust
+struct Solution {}
+
+impl Solution {
+    pub fn exist(board: Vec<Vec<char>>, word: String) -> bool {
+        let mut visited = vec![vec![false; board[0].len()]; board.len()];
+
+        for row in 0..board.len() {
+            for column in 0..board[0].len() {
+                if Self::find_word(&word, &board, row, column, 0, &mut visited) {
+                    return true
+                }
+            }
+        }
+
+        false
+    }
+
+    fn find_word(word: &str, board: &Vec<Vec<char>>, row: usize, column: usize, letter_index: usize, visited: &mut Vec<Vec<bool>>) -> bool {
+        if letter_index == word.len() { return true }
+
+        if let Some(char) = board.get(row).and_then(|row| row.get(column)) {
+            if *char != word.chars().nth(letter_index).expect("to be inside bound") || visited[row][column] {
+                return false
+            }
+        } else {
+            return false
+        }
+
+        visited[row][column] = true;
+
+        let top = Self::find_word(word, board, row+1, column, letter_index+1, visited);
+        let bottom = if row == 0 { false } else {
+            Self::find_word(word, board, row-1, column, letter_index+1, visited)
+        };
+        let right = Self::find_word(word, board, row, column+1, letter_index+1, visited);
+        let left = if column == 0 { false } else {
+            Self::find_word(word, board, row, column-1, letter_index+1, visited)
+        };
+
+
+        visited[row][column] = false;
+
+        return top || bottom || right || left
+    }
+}
+
+fn main() {
+    let board = vec![
+        vec!['A','B','C','E'],
+        vec!['S','F','C','S'],
+        vec!['A','D','E','E']
+    ];
+
+    let target = String::from("ABCCED");
+    println!("{}", Solution::exist(board.clone(), target));
+
+
+    let target1 = String::from("ABCB");
+    println!("{}", Solution::exist(board, target1))
+}
+
+#+END_SRC
