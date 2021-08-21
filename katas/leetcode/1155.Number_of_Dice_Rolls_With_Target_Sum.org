@@ -9,14 +9,43 @@ struct Solution {}
 
 impl Solution {
     pub fn num_rolls_to_target(d: i32, f: i32, target: i32) -> i32 {
-        1
+        let mut memo = std::collections::HashMap::new();
+        Self::go(d, f, target, &mut memo) as i32
+    }
+
+    fn go(d: i32, f: i32, target: i32, memo: &mut std::collections::HashMap<(i32, i32), i64>) -> i64 {
+        if d == 0 && target == 0 { return 1 }
+        if d == 0 { return 0 }
+        if let Some(number_of_combinations) = memo.get(&(d,target)) { return *number_of_combinations }
+
+        let mut number_of_combinations = 0;
+
+        for thrown in 1..=f {
+            number_of_combinations = number_of_combinations + Self::go(d - 1, f, target - thrown, memo)
+        }
+
+        number_of_combinations = number_of_combinations % (10_i64.pow(9) + 7);
+
+        memo.insert((d, target), number_of_combinations);
+
+        return number_of_combinations;
     }
 }
 
 fn main() {
-    let d = 1;
-    let f = 6;
-    let target = 3;
-    println!("{}", Solution::num_rolls_to_target(d,f,target))
+    {
+        let d = 1; let f = 6; let target = 3;
+        println!("{}", Solution::num_rolls_to_target(d,f,target))
+    }
+
+    {
+        let d = 1; let f = 2; let target = 3;
+        println!("{}", Solution::num_rolls_to_target(d,f,target))
+    }
+
+    {
+        let d = 30; let f = 30; let target = 500;
+        println!("{}", Solution::num_rolls_to_target(d,f,target))
+    }
 }
 #+END_SRC
