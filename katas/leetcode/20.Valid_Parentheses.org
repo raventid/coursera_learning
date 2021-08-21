@@ -1,0 +1,64 @@
+#+TITLE: 20 Valid_parentheses
+
+# Rust
+:PROPERTIES:
+:LEVEL: 0
+:END:
+#+BEGIN_SRC rust
+struct Solution {}
+
+impl Solution {
+    pub fn is_valid(s: String) -> bool {
+        let mut stack = vec![];
+        let string_bytes = s.as_bytes();
+
+        for i in 0..s.len() {
+            // It is more correct version for utf-8, but dog slow
+            // we can try to iterate over char instead of i, maybe it will be good enough
+            // match s.chars().nth(i).expect("index is ok") {
+            match string_bytes[i] {
+                b'(' | b'[' | b'{' => stack.push(string_bytes[i]),
+                b']' | b'}' | b')' => {
+                    if let Some(elem) = stack.pop() {
+                        if elem != Self::find_pair(string_bytes[i]) {
+                            return false
+                        }
+                    } else {
+                        return false
+                    }
+                }
+                _ => { todo!() }
+            }
+        }
+
+        stack.is_empty()
+    }
+
+    #[inline]
+    fn find_pair(c: u8) -> u8 {
+        match c {
+            b']' => b'[',
+            b')' => b'(',
+            b'}' => b'{',
+            _ => todo!()
+        }
+    }
+}
+
+fn main() {
+    {
+        let s = "()[]{}";
+        println!("{}", Solution::is_valid(s.to_string()));
+    }
+
+    {
+        let s = "([)]";
+        println!("{}", Solution::is_valid(s.to_string()));
+    }
+
+    {
+        let s = "{[]}";
+        println!("{}", Solution::is_valid(s.to_string()));
+    }
+}
+#+END_SRC
