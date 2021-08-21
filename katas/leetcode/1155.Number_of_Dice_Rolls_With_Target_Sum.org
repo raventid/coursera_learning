@@ -1,0 +1,22 @@
+#+TITLE: 1155 Number_of_dice_rolls_with_target_sum
+
+# Rust
+:PROPERTIES:
+:LEVEL: 0
+:END:
+#+BEGIN_SRC rust
+struct Solution {}
+
+impl Solution {
+    pub fn num_rolls_to_target(d: i32, f: i32, target: i32) -> i32 {
+        1
+    }
+}
+
+fn main() {
+    let d = 1;
+    let f = 6;
+    let target = 3;
+    println!("{}", Solution::num_rolls_to_target(d,f,target))
+}
+#+END_SRC
