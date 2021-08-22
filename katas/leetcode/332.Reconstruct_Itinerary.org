@@ -1,0 +1,65 @@
+#+TITLE: 332 Reconstruct_itinerary
+
+#+BEGIN_SRC rust
+struct Solution {}
+
+impl Solution {
+    pub fn find_itinerary(tickets: Vec<Vec<String>>) -> Vec<Vec<String>> {
+        let visited : std::collections::HashSet<String> = std::collections::HashSet::new();
+        let mut hashmap = std::collections::HashMap::new();
+
+        tickets.iter().for_each(|pair| {
+            let from = pair[0].to_string();
+            let to = pair[1].to_string();
+
+            let mut old_value = hashmap.entry(from).or_insert(vec![]);
+            old_value.push(to);
+        });
+
+        let mut backtracked = Self::backtrack(hashmap.clone(), "JFK".to_string());
+
+        let shortest = backtracked.iter().map(|path| path.len()).min().unwrap();
+        backtracked.retain(|path| path.len() == shortest);
+        vec![backtracked.first().unwrap().to_vec()]
+    }
+
+    fn backtrack(mut hashmap: std::collections::HashMap<String, Vec<String>>, target_airport: String) -> Vec<Vec<String>> {
+        if hashmap.get(&target_airport).unwrap().is_empty() { return vec![vec![target_airport]] }
+
+        let mut possible_ways = hashmap.entry(target_airport.clone()).or_insert(vec![]);
+
+        let paths = possible_ways.clone().into_iter().map(|next_airport| {
+            let mut cloned_map = hashmap.clone();
+
+            let updated_possible_ways = cloned_map.get_mut(&target_airport).unwrap();
+            updated_possible_ways.retain(|airport| *airport != *next_airport);
+
+            Self::backtrack(cloned_map, next_airport.to_string())
+                .into_iter()
+                .map(|path| {
+                    let mut head = vec![target_airport.clone()];
+                    head.extend(path.into_iter());
+                    head
+                })
+                .collect::<Vec<Vec<String>>>()
+        }).flatten().collect();
+
+        paths
+    }
+}
+
+fn main() {
+    {
+        let tickets = vec![
+            vec!["JFK".to_string(), "SFO".to_string()],
+            vec!["JFK".to_string(), "ATL".to_string()],
+            vec!["SFO".to_string(), "ATL".to_string()],
+            vec!["ATL".to_string(), "JFK".to_string()],
+            vec!["ATL".to_string(), "SFO".to_string()]
+        ];
+
+        println!("{:?}", Solution::find_itinerary(tickets));
+    }
+}
+
+#+END_SRC
