@@ -29,3 +29,33 @@ fn main() {
     println!("{}", cansum(300, vec![7,14])); // false
 }
 #+end_src
+
+
+#+begin_src rust
+fn howsum(target: usize, nums: Vec<usize>) -> Vec<usize> {
+    let mut table = vec![None; target+1];
+    table[0] = Some(vec![]);
+
+    for i in 0..=target {
+        if let Some(inner) = table[i].clone() {
+            nums.iter().for_each(|num| {
+                if i + num <= target {
+                    let mut new_path = inner.clone();
+                    new_path.push(*num);
+                    table[i+num] = Some(new_path)
+                }
+            })
+        }
+    }
+
+    table[target].clone().unwrap_or(vec![])
+}
+
+fn main() {
+    println!("{:?}", howsum(7, vec![2,3])); // [3,2,2]
+    println!("{:?}", howsum(7, vec![5,3,4,7])); // [4,3]
+    println!("{:?}", howsum(7, vec![2,4])); // []
+    println!("{:?}", howsum(8, vec![2,3,5])); // [2,2,2,2]
+    println!("{:?}", howsum(300, vec![7,14])); // []
+}
+#+end_src
