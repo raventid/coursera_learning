@@ -1,9 +1,8 @@
 #+TITLE: Cansum
 
-Tabulation approach for finding if can sum possible.
+Tabulation approach for different types of dynamic programming problems
 
 #+begin_src rust
-
 fn cansum(target: usize, nums: Vec<usize>) -> bool {
     let mut table = vec![false; target+1];
     table[0] = true;
@@ -36,11 +35,11 @@ fn howsum(target: usize, nums: Vec<usize>) -> Vec<usize> {
     let mut table = vec![None; target+1];
     table[0] = Some(vec![]);
 
-    for i in 0..=target {
+    for i in 0..=target { // m iterations in this loop
         if let Some(inner) = table[i].clone() {
-            nums.iter().for_each(|num| {
+            nums.iter().for_each(|num| { // n iterations in this loop
                 if i + num <= target {
-                    let mut new_path = inner.clone();
+                    let mut new_path = inner.clone(); // problem - I'm also cloning array here in a linear fasion
                     new_path.push(*num);
                     table[i+num] = Some(new_path)
                 }
@@ -57,5 +56,41 @@ fn main() {
     println!("{:?}", howsum(7, vec![2,4])); // []
     println!("{:?}", howsum(8, vec![2,3,5])); // [2,2,2,2]
     println!("{:?}", howsum(300, vec![7,14])); // []
+}
+#+end_src
+
+#+begin_src rust
+fn bestsum(target: usize, nums: Vec<usize>) -> Vec<usize> {
+    let mut table = vec![None; target+1];
+    table[0] = Some(vec![]);
+
+    for i in 0..=target { // m iterations in this loop
+        if let Some(inner) = table[i].clone() {
+            nums.iter().for_each(|num| { // n iterations in this loop
+                if i + num <= target {
+                    let mut new_combination = inner.clone(); // problem - I'm also cloning array here in a linear fasion
+                    new_combination.push(*num);
+
+                    if let Some(current_combination) = table[i+num].clone() {
+                        if new_combination.len() < current_combination.len() {
+                            table[i+num] = Some(new_combination)
+                        }
+                    } else {
+                        table[i+num] = Some(new_combination)
+                    }
+                }
+            })
+        }
+    }
+
+    table[target].clone().unwrap_or(vec![])
+}
+
+fn main() {
+    println!("{:?}", bestsum(7, vec![2,3])); // [2,2,3]
+    println!("{:?}", bestsum(7, vec![5,3,4,7])); // [7]
+    println!("{:?}", bestsum(7, vec![2,4])); // []
+    println!("{:?}", bestsum(8, vec![2,3,5])); // [3,5]
+    println!("{:?}", bestsum(300, vec![7,14])); // []
 }
 #+end_src
