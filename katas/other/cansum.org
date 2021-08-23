@@ -1,0 +1,31 @@
+#+TITLE: Cansum
+
+Tabulation approach for finding if can sum possible.
+
+#+begin_src rust
+
+fn cansum(target: usize, nums: Vec<usize>) -> bool {
+    let mut table = vec![false; target+1];
+    table[0] = true;
+
+    for i in 0..table.len() {
+        if table[i] {
+            nums.iter().for_each(|num| {
+                if i+num <= target {
+                    table[i+num] = true
+                }
+            })
+        }
+    }
+
+    table[target]
+}
+
+fn main() {
+    println!("{}", cansum(7, vec![2,3])); // true
+    println!("{}", cansum(7, vec![5,3,4,7])); // true
+    println!("{}", cansum(7, vec![2,4])); // false
+    println!("{}", cansum(8, vec![2,3,5])); // true
+    println!("{}", cansum(300, vec![7,14])); // false
+}
+#+end_src
