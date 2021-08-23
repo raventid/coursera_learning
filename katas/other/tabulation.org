@@ -71,7 +71,7 @@ fn bestsum(target: usize, nums: Vec<usize>) -> Vec<usize> {
                     let mut new_combination = inner.clone(); // problem - I'm also cloning array here in a linear fasion
                     new_combination.push(*num);
 
-                    if let Some(current_combination) = table[i+num].clone() {
+                    if let Some(current_combination) = table[i+num].clone() { // one more small clone
                         if new_combination.len() < current_combination.len() {
                             table[i+num] = Some(new_combination)
                         }
