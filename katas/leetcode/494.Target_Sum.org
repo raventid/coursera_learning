@@ -5,7 +5,6 @@ All solutions:[[org:../Education/coursera_learning/katas/leetcode/notes.org]]
 :PROPERTIES:
 :LEVEL: 0
 :END:
-[[https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=0c9e798b8c09d66810b304f3e96d57c1][Rust Playground]]
 #+BEGIN_SRC rust
 
 

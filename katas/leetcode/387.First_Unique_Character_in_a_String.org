@@ -2,7 +2,7 @@
 https://leetcode.com/problems/first-unique-character-in-a-string/
 
 
-My first idea with two HashSets.
+My first idea with two HashSets. The solution looks very intuitive (to me). The other possible option here is to use HashMap with count.
 
 #+begin_src rust
 struct Solution {}
