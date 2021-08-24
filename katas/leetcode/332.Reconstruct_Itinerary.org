@@ -18,6 +18,8 @@ impl Solution {
 
         let mut backtracked = Self::backtrack(hashmap.clone(), "JFK".to_string());
 
+        println!("{:?}", backtracked);
+        println!("{:?}", hashmap);
         let shortest = backtracked.iter().map(|path| path.len()).min().unwrap();
         backtracked.retain(|path| path.len() == shortest);
         vec![backtracked.first().unwrap().to_vec()]
@@ -63,3 +65,66 @@ fn main() {
 }
 
 #+END_SRC
+
+#+RESULTS:
+#+begin_example
+warning: unused variable: `visited`
+ --> src/main.rs:6:13
+  |
+6 |         let visited : std::collections::HashSet<String> = std::collections::HashSet::new();
+  |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_visited`
+  |
+  = note: `#[warn(unused_variables)]` on by default
+
+warning: variable does not need to be mutable
+  --> src/main.rs:13:17
+   |
+13 |             let mut old_value = hashmap.entry(from).or_insert(vec![]);
+   |                 ----^^^^^^^^^
+   |                 |
+   |                 help: remove this `mut`
+   |
+   = note: `#[warn(unused_mut)]` on by default
+
+warning: variable does not need to be mutable
+  --> src/main.rs:29:13
+   |
+29 |         let mut possible_ways = hashmap.entry(target_airport.clone()).or_insert(vec![]);
+   |             ----^^^^^^^^^^^^^
+   |             |
+   |             help: remove this `mut`
+
+warning: 3 warnings emitted
+
+warning: unused variable: `visited`
+ --> src/main.rs:6:13
+  |
+6 |         let visited : std::collections::HashSet<String> = std::collections::HashSet::new();
+  |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_visited`
+  |
+  = note: `#[warn(unused_variables)]` on by default
+
+warning: variable does not need to be mutable
+  --> src/main.rs:13:17
+   |
+13 |             let mut old_value = hashmap.entry(from).or_insert(vec![]);
+   |                 ----^^^^^^^^^
+   |                 |
+   |                 help: remove this `mut`
+   |
+   = note: `#[warn(unused_mut)]` on by default
+
+warning: variable does not need to be mutable
+  --> src/main.rs:29:13
+   |
+29 |         let mut possible_ways = hashmap.entry(target_airport.clone()).or_insert(vec![]);
+   |             ----^^^^^^^^^^^^^
+   |             |
+   |             help: remove this `mut`
+
+warning: 3 warnings emitted
+
+[["JFK", "SFO", "ATL", "JFK", "ATL", "SFO"], ["JFK", "SFO", "ATL", "SFO"], ["JFK", "ATL", "JFK", "SFO", "ATL", "SFO"], ["JFK", "ATL", "SFO", "ATL", "JFK", "SFO"]]
+{"ATL": ["JFK", "SFO"], "SFO": ["ATL"], "JFK": ["SFO", "ATL"]}
+[["JFK", "SFO", "ATL", "SFO"]]
+#+end_example

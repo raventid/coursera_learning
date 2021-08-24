@@ -1,0 +1,46 @@
+#+TITLE: 387 First_unique_character_in_a_string
+https://leetcode.com/problems/first-unique-character-in-a-string/
+
+
+My first idea with two HashSets.
+
+#+begin_src rust
+struct Solution {}
+
+impl Solution {
+    pub fn first_uniq_char(s: String) -> i32 {
+        let mut seen_multiple_times = std::collections::HashSet::new();
+        let mut meet_the_first_time = std::collections::HashSet::new();
+
+        s.chars().for_each(|c| {
+            if meet_the_first_time.contains(&c) {
+                meet_the_first_time.remove(&c);
+                seen_multiple_times.insert(c);
+            } else {
+                if !seen_multiple_times.contains(&c) {
+                    meet_the_first_time.insert(c);
+                }
+            }
+        });
+
+        s.chars().position(|c| meet_the_first_time.contains(&c)).map(|index| index as i32).unwrap_or(-1)
+    }
+}
+
+fn main() {
+    {
+        let s = "leetcode".to_string();
+        println!("{}", Solution::first_uniq_char(s)) // 0
+    }
+
+    {
+        let s = "loveleetcode".to_string();
+        println!("{}", Solution::first_uniq_char(s)) // 2
+    }
+
+    {
+        let s = "aabb".to_string();
+        println!("{}", Solution::first_uniq_char(s)) // -1
+    }
+}
+#+end_src
