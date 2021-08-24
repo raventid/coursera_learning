@@ -1,0 +1,37 @@
+#+TITLE: 1493 Longest_subarray_of_1_s_after_deleting_one_element
+
+#+begin_src rust
+struct Solution {}
+
+impl Solution {
+    pub fn longest_subarray(nums: Vec<i32>) -> i32 {
+        let mut prev = 0;
+        let mut curr = 0;
+        let mut result = 0;
+        let length = nums.len() as i32;
+
+        nums.into_iter().for_each(|num| {
+            if num == 1 {
+                curr += 1;
+            } else {
+                prev = curr;
+                curr = 0
+            }
+
+            result = std::cmp::max(result, prev + curr)
+        });
+
+        if result == length {
+            result - 1
+        } else {
+            result
+        }
+    }
+}
+
+fn main() {
+    {
+        println!("{}", Solution::longest_subarray(vec![1,1,1,0,1,1,1]))
+    }
+}
+#+end_src
