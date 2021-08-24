@@ -1,7 +1,12 @@
 #+TITLE: 94 Binary_tree_inorder_traversal
 
+Notes: [[org:../Education/coursera_learning/katas/leetcode/notes.org][Notes]]
+Link: https://leetcode.com/problems/binary-tree-inorder-traversal/
+
+This is a Rust version of the solution. Takes a few ugly movements to get to the point, because you have to do a few clones() + use Rc<RefCell>.
 
 #+begin_src rust
+
 // Definition for a binary tree node.
 #[derive(Debug, PartialEq, Eq)]
 pub struct TreeNode {
@@ -53,4 +58,38 @@ fn main() {
         println!("{:?}", Solution::inorder_traversal(Some(Rc::new(RefCell::new(root)))));
     }
 }
+#+end_src
+
+
+A bit ugly Elixir approach. What I do here is I'm concating lists, which is not very efficient and maybe too straighforward, but Rust approach is not much better.
+
+#+begin_src elixir
+
+# Definition for a binary tree node.
+
+defmodule TreeNode do
+  @type t :: %__MODULE__{
+    val: integer,
+    left: TreeNode.t() | nil,
+    right: TreeNode.t() | nil
+  }
+  defstruct val: 0, left: nil, right: nil
+end
+
+defmodule Solution do
+  def inorder_traversal(nil) do
+    []
+  end
+
+  @spec inorder_traversal(root :: TreeNode.t | nil) :: [integer]
+  def inorder_traversal(root) do
+    Solution.inorder_traversal(root.left) ++ [root.val] ++ Solution.inorder_traversal(root.right)
+  end
+end
+
+root = %TreeNode{val: 10, right: %TreeNode{val: 12, right: nil, left: nil}, left: nil}
+IO.inspect Solution.inorder_traversal(root), charlists: :as_lists
+
+root1 = nil
+IO.inspect Solution.inorder_traversal(root1), charlists: :as_lists
 #+end_src
