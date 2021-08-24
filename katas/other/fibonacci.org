@@ -4,9 +4,6 @@ Fibbonacci with Binet's formula. Works only for small numbers. Breaks around 100
 https://stackoverflow.com/questions/9645193/calculating-fibonacci-number-accurately-in-c
 
 
-:PROPERTIES:
-:LEVEL: 0
-:END:
 #+BEGIN_SRC rust
 
 fn main() {
@@ -26,12 +23,8 @@ fn binet(number: f64) -> u64 {
 #+END_SRC
 
 
-
-
 DP tabulation.
-:PROPERTIES:
-:LEVEL: 0
-:END:
+
 #+BEGIN_SRC rust
 
 fn fib(n: usize) -> usize {

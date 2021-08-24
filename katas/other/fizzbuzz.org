@@ -1,9 +1,5 @@
 Mathematical approach for the fizzbuzz http://philcrissman.net/posts/eulers-fizzbuzz/
 
-
-:PROPERTIES:
-:LEVEL: 0
-:END:
 #+BEGIN_SRC rust
 
 fn main() {
