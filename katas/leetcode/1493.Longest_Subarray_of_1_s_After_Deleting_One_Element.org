@@ -35,3 +35,43 @@ fn main() {
     }
 }
 #+end_src
+
+
+
+#+begin_src elixir
+defmodule Solution do
+  @spec longest_subarray(nums :: [integer]) :: integer
+  def longest_subarray(nums) do
+    best = Solution.go(nums, 0, 0, 0)
+
+    if best == length nums do
+      best - 1
+    else
+      best
+    end
+  end
+
+  def go([], previous_strike, current_strike, best) do
+    if previous_strike + current_strike > best do
+        previous_strike + current_strike
+    else
+        best
+    end
+  end
+
+  def go([0 | nums], previous_strike, current_strike, best) do
+    if previous_strike + current_strike > best do
+        go(nums, current_strike, 0, previous_strike + current_strike)
+    else
+        go(nums, current_strike, 0, best)
+    end
+  end
+
+  def go([1 | nums], previous_strike, current_strike, best) do
+    go(nums, previous_strike, current_strike+1, best)
+  end
+end
+
+IO.inspect Solution.longest_subarray([1,1,1,0,1,1,1])
+IO.inspect Solution.longest_subarray([1,1,1])
+#+end_src
