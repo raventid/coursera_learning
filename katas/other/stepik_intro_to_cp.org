@@ -115,22 +115,23 @@ fn main() {
 ** Скомбинировать валидные последовательности скобок.
 
 #+begin_src rust
-const N: usize = 4;
+const N: usize = 3;
 
 fn rec(res: &mut Vec<char>, idx: usize, bal: usize) {
+    println!("bal = {} idx = {} {:?}", bal , idx, res);
+
     // brackets cannot be balanced, not enough space left
     if bal > 2 * N - idx { return }
 
-    if idx >= 2 * N {
+    // reached the end
+    if idx == 2 * N {
         if bal == 0 { println!("{:?}", res.iter().cloned().collect::<String>()) }
         return
     }
 
     res[idx] = '(';
     rec(res, idx + 1, bal + 1);
-    if bal == 0 {
-        return
-    }
+    if bal == 0 { return }
 
     res[idx] = ')';
     rec(res, idx + 1, bal - 1);
@@ -140,7 +141,6 @@ fn main() {
     rec(&mut vec![0 as char; 2 * N], 0, 0);
 }
 #+end_src
-
 
 Можно выразить это и на Haskell
 
