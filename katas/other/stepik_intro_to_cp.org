@@ -1,0 +1,157 @@
+#+TITLE: Stepik intro to competitive programming
+
+** Перестановки с повторениями.
+
+#+begin_src c++
+   #include <fstream>
+   #include <vector>
+
+   using namespace std;
+
+   ifstream cin("input.txt");
+   ofstream cout("output.txt");
+
+   int n, m;
+   vector<int> a;
+
+   void out()
+   {
+           for (int i = 0; i < n; i++)
+          {
+                  if (i)
+                       cout << " ";
+                  cout << a[i];
+           }
+           cout << endl;
+    }
+
+    void rec(int idx)
+    {
+            if (idx == n)
+           {
+                 out();
+                 return;
+            }
+            for (int i = 1; i <= m; i++)
+            {
+                  a[idx] = i;
+                  rec(idx + 1);
+             }
+    }
+
+    int main()
+    {
+          cin >> n >> m;
+          a = vector<int>(n);
+          rec(0);
+
+          return 0;
+    }
+#+end_src
+
+
+#+begin_src rust
+const N: usize = 3;
+const M: usize = 3;
+
+
+fn rec(v: &mut [usize; N], idx: usize) {
+
+    if idx >= N {
+        println!("{:?}", v);
+        return;
+    }
+    for i in 0..M {
+        v[idx] = i;
+        rec(v, idx + 1);
+    }
+
+}
+
+fn main() {
+    rec(&mut [0usize; N], 0);
+}
+#+end_src
+
+
+#+begin_src haskell
+select [] = []
+select (x:xs) = (x, xs) : map (fmap (x:)) (select xs)
+
+perms [] = [[]]
+perms xs = concatMap (\(y, ys) -> map (y:) (perms ys)) (select xs)
+
+main = do
+  n <- read <$> getLine
+  sequence_ $ putStrLn . unwords . map show <$> perms [1 .. n]
+#+end_src
+
+
+** Как посчитать сколько валидных комбинаций скобок такого типа ((())).
+Числа Каталана https://habr.com/ru/post/165295/.
+
+
+** Задумался о том в какой последовательности лучше крутить счетчики
+#+begin_src rust
+fn fib(n : usize) -> Vec<usize> {
+    let mut f1 = 1;
+    let mut f2 = 1;
+
+    (1..=n).map(|i| {
+        let current = f1;
+        let sum = f1 + f2; // it is better to it this way, than to let tmp = f2; f2 = f1 + f2; f1 = tmp. Why it is better? I don't know. I think it describes idea better.
+        f1 = f2;
+        f2 = sum;
+        current // it reads better than if I would write return current above. Because reading flow works this way, I expect to return the last instruction.
+    }).collect()
+}
+
+fn main() {
+    let n = 10;
+    println!("{:?}", fib(n));
+}
+#+end_src
+
+** Скомбинировать валидные последовательности скобок.
+
+#+begin_src rust
+const N: usize = 4;
+
+fn rec(res: &mut Vec<char>, idx: usize, bal: usize) {
+    // brackets cannot be balanced, not enough space left
+    if bal > 2 * N - idx { return }
+
+    if idx >= 2 * N {
+        if bal == 0 { println!("{:?}", res.iter().cloned().collect::<String>()) }
+        return
+    }
+
+    res[idx] = '(';
+    rec(res, idx + 1, bal + 1);
+    if bal == 0 {
+        return
+    }
+
+    res[idx] = ')';
+    rec(res, idx + 1, bal - 1);
+}
+
+fn main() {
+    rec(&mut vec![0 as char; 2 * N], 0, 0);
+}
+#+end_src
+
+
+Можно выразить это и на Haskell
+
+#+begin_src haskell
+parens 0 0 = []
+parens 0 c = [take c $ repeat ')']
+parens o c = map ('(':) (parens (o - 1) c) ++ if c > o then map (')':) (parens o (c - 1)) else []
+
+pars n = parens n n
+
+main = do
+  n <- read <$> getLine
+  sequence_ (map putStrLn $ pars n)
+#+end_src
