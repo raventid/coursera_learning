@@ -946,7 +946,7 @@
 |  548 | 48.10% | Medium |     40.06% |    39.40% | [[https://leetcode.com/problems/split-array-with-equal-sum][Split Array with Equal Sum]]                                                      |    -1.09% |      2 | 1.978 |        |       1 |              |      |         |
 |  731 | 50.80% | Medium |     40.08% |    39.40% | [[https://leetcode.com/problems/my-calendar-ii][My Calendar II]]                                                                  |    -1.12% |      2 | 1.978 |        |         |              |      |         |
 |  291 | 44.30% | Medium |     40.03% |    39.40% | [[https://leetcode.com/problems/word-pattern-ii][Word Pattern II]]                                                                 |    -1.04% |      2 | 1.979 |        |       1 |              |      |         |
-|  300 | 44.30% | Medium |     39.90% |    39.40% | [[https://leetcode.com/problems/longest-increasing-subsequence][Longest Increasing Subsequence]]                                                  |    -0.83% |      2 | 1.983 |        |         |              |      |         |
+|  300 | 44.30% | Medium |     39.90% |    39.40% | [[https://leetcode.com/problems/longest-increasing-subsequence][Longest Increasing Subsequence]]                                                  |    -0.83% |      2 | 1.983 |        |         | [[org:../Education/coursera_learning/katas/leetcode/300.Longest_Increasing_Subsequence.org][L]]            |      |         |
 | 1663 | 64.30% | Medium |     39.91% |    39.40% | [[https://leetcode.com/problems/smallest-string-with-a-given-numeric-value][Smallest String With A Given Numeric Value]]                                      |    -0.84% |      2 | 1.983 |        |         |              |      |         |
 |  718 | 50.40% | Medium |     39.87% |    39.40% | [[https://leetcode.com/problems/maximum-length-of-repeated-subarray][Maximum Length of Repeated Subarray]]                                             |    -0.77% |      2 | 1.985 |        |         |              |      |         |
 | 1209 | 57.60% | Medium |     39.87% |    39.40% | [[https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii][Remove All Adjacent Duplicates in String II]]                                     |    -0.77% |      2 | 1.985 |        |         |              |      |         |
@@ -1808,3 +1808,9 @@
 
 This table is mostly a copy of an [[https://docs.google.com/spreadsheets/d/1je6J87BX5C5fo5Gbok1TJncVK3-UFkiDznHUzhtHbVU/edit#gid=0][original]] from [[https://leetcode.com/discuss/general-discussion/522705/1000-leetcode-problems-within-a-year][this disscussion]]
 Org table has been generate with [[file:update_notes.rb][a script]] from the original described above. (Part of the work was done manually so whole table cannot be reproduced with a script only)
+
+
+Additional list:
+|    # | Title                                            | Solution |
+| 1893 | [[https://leetcode.com/problems/check-if-all-the-integers-in-a-range-are-covered/][Check if All the Integers in a Range Are Covered]] | [[org:../Education/coursera_learning/katas/leetcode/1893.Check_if_All_the_Integers_in_a_Range_Are_Covered.org][L]]        |
+|      |                                                  |          |

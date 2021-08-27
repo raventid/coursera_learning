@@ -1,0 +1,38 @@
+#+TITLE: 1893 Check_if_all_the_integers_in_a_range_are_covered
+
+Link: https://leetcode.com/problems/check-if-all-the-integers-in-a-range-are-covered/
+
+#+begin_src rust
+struct Solution {}
+
+impl Solution {
+    pub fn is_covered(ranges: Vec<Vec<i32>>, left: i32, right: i32) -> bool {
+       for elem in left..=right {
+           let mut elem_included = false;
+           for range in ranges.iter() {
+               if range[0] <= elem && elem <= range[1] { elem_included = true }
+           }
+
+           if !elem_included { return false }
+        };
+
+        true
+    }
+}
+
+fn main() {
+{
+    let ranges = vec![vec![1,2],vec![3,4],vec![5,6]];
+    let left = 2;
+    let right = 5;
+    println!("{}", Solution::is_covered(ranges, left, right)); // true
+}
+{
+    let ranges = vec![vec![1,10],vec![10,20]];
+    let left = 21;
+    let right = 21;
+    println!("{}", Solution::is_covered(ranges, left, right)); // false
+}
+
+}
+#+end_src
