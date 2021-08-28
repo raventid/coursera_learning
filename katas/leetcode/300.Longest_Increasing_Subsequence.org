@@ -1,0 +1,42 @@
+#+TITLE: 300 Longest_increasing_subsequence
+
+Link: https://leetcode.com/problems/longest-increasing-subsequence/
+
+#+begin_src rust
+struct Solution {}
+
+impl Solution {
+    pub fn length_of_lis(nums: Vec<i32>) -> i32 {
+        let mut best = 0;
+
+        for i in 0..nums.len() {
+            let mut increasing_number = 1;
+            let mut previous = nums[i];
+            for j in i+1..nums.len() {
+                if nums[j] > previous {
+                    increasing_number += 1;
+                    previous = nums[j];
+                }
+            };
+            best = std::cmp::max(increasing_number, best);
+        }
+
+        best
+    }
+}
+
+fn main() {
+    {
+        let nums = vec![10,9,2,5,3,7,101,18];
+        println!("{:?}", Solution::length_of_lis(nums)); // 4
+    }
+    {
+        let nums = vec![0,1,0,3,2,3];
+        println!("{:?}", Solution::length_of_lis(nums)); // 4
+    }
+    {
+        let nums = vec![7,7,7,7,7,7,7];
+        println!("{:?}", Solution::length_of_lis(nums)); // 1
+    }
+}
+#+end_src
