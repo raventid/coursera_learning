@@ -1,0 +1,20 @@
+#+TITLE: 509 Fibonacci_number
+
+#+BEGIN_SRC rust
+impl Solution {
+    pub fn fib(n: i32) -> i32 {
+        if n == 0 { return 0; }
+        if n == 1 { return 1; }
+
+        let mut dp = vec![0; (n as usize) + 1];
+        dp[0] = 0;
+        dp[1] = 1;
+
+        for i in 2..=(n as usize) {
+            dp[i] = dp[i-1] + dp[i-2];
+        }
+
+        dp[n as usize]
+    }
+}
+#+END_SRC
