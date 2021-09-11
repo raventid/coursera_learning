@@ -1,6 +1,8 @@
 #+TITLE: 1137 N Th_tribonacci_number
 
 #+BEGIN_SRC rust
+struct Solution {}
+
 impl Solution {
     pub fn tribonacci(n: i32) -> i32 {
         if n == 0 { return 0; }
@@ -18,6 +20,23 @@ impl Solution {
         }
 
         dp[n as usize]
+    }
+}
+
+fn main() {
+    {
+        let n = 0;
+        println!("{}", Solution::tribonacci(n)); // 0
+    }
+
+    {
+        let n = 1;
+        println!("{}", Solution::tribonacci(n)); // 1
+    }
+
+    {
+        let n = 10;
+        println!("{}", Solution::tribonacci(n)); // 149
     }
 }
 #+END_SRC

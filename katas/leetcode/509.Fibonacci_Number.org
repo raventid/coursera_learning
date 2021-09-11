@@ -1,6 +1,8 @@
 #+TITLE: 509 Fibonacci_number
 
 #+BEGIN_SRC rust
+struct Solution {}
+
 impl Solution {
     pub fn fib(n: i32) -> i32 {
         if n == 0 { return 0; }
@@ -15,6 +17,21 @@ impl Solution {
         }
 
         dp[n as usize]
+    }
+}
+
+fn main() {
+    {
+        let n = 0;
+        println!("{}", Solution::fib(n)); // 0
+    }
+    {
+        let n = 1;
+        println!("{}", Solution::fib(n)); // 1
+    }
+    {
+        let n = 10;
+        println!("{}", Solution::fib(n)); // 55
     }
 }
 #+END_SRC
