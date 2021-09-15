@@ -1,0 +1,17 @@
+#+TITLE: Dynamic_traits
+
+This is an experimentation insipred by this article https://habr.com/ru/post/432202/
+
+
+#+BEGIN_SRC rust
+fn main () {
+    let v: &String = &"hello".into();
+    let disp: &dyn std::fmt::Display = v;
+    println!("Pointer to string: {}", std::mem::size_of_val(&v));
+    println!("Fat pointer to trait object: {}", std::mem::size_of_val(&disp));
+}
+#+END_SRC
+
+#+RESULTS:
+: Pointer to string: 8
+: Fat pointer to trait object: 16
