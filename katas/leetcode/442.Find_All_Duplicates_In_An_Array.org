@@ -1,0 +1,93 @@
+#+TITLE: 442 Find All Duplicates In An Array
+
+# Rust
+:PROPERTIES:
+:LEVEL: 0
+:END:
+#+BEGIN_SRC rust
+struct BadSolution {}
+struct Solution {}
+
+// O(n) time, O(n) space
+impl BadSolution {
+    pub fn find_duplicates(nums: Vec<i32>) -> Vec<i32> {
+        let mut set = std::collections::HashSet::new();
+        let mut result = Vec::new();
+
+        for i in nums {
+            if set.contains(&i) {
+                result.push(i)
+            }
+
+            set.insert(i);
+        }
+
+        result
+    }
+}
+
+// O(n) time, O(1) space
+
+// First option is mutable solution:
+// we can use i value as an array index
+// and do arr[i] * -1 to change it's sign
+// next time we hit the similar element in array
+// we will hit array[i] one more time and will notice
+// arr[i] < 0, it means we've already been there.
+
+impl Solution {
+    // BUT WE CHANGE API TO MUTABLE HERE, NOT GREAT
+    pub fn find_duplicates(mut nums: Vec<i32>) -> Vec<i32> {
+        let mut result = vec![];
+
+        for i in 0..nums.len() {
+            let i = nums[i].abs();
+
+            let index = i as usize - 1;
+
+            if nums[index] < 0 {
+                result.push(i);
+            } else {
+                nums[index] *= -1;
+            }
+        }
+
+        result
+    }
+}
+
+// Other options is:
+// Using a bit array to store the information about the elements that have already been seen. This is a simple, efficient way to keep track of the elements in the array without using additional memory.
+// First, you need to create a bit array of the same size as the input array. The bit array can be initialized with all zeros. Then, for each element in the input array, you can set the corresponding bit in the bit array to 1. If the bit is already set to 1, then you know that this element has already been seen.
+// Once the entire array has been processed, the bit array will contain the information of which elements have been seen before. This can then be used to find the duplicates in the array.
+// Still you should be careful about memory size of buffer.
+
+fn main() {
+    {
+        let arr = [1,2,3].to_vec();
+        println!("{:?}", BadSolution::find_duplicates(arr));
+    }
+
+    {
+        let arr = [1,1,2,3].to_vec();
+        println!("{:?}", BadSolution::find_duplicates(arr));
+    }
+
+    {
+        let arr = [1,2,3].to_vec();
+        println!("{:?}", Solution::find_duplicates(arr));
+    }
+
+    {
+        let arr = [1,1,2,3].to_vec();
+        println!("{:?}", Solution::find_duplicates(arr));
+    }
+
+}
+#+END_SRC
+
+#+RESULTS:
+: []
+: [1]
+: []
+: [1]
