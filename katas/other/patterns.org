@@ -1,0 +1,19 @@
+#+TITLE: Patterns
+
+When you are working with algo tasks there are few patterns you should be able to do quickly, but they are a bit tricky to do without mistakes. Here I'm just typing out this patterns and will be reimplementing them multiple times in different styles to undestand what works better for my brain.
+
+** Quickly implement union find? Not easy
+
+** Use priority queue with different ADT?
+
+** Dijkstra with priority queue?
+
+** I usually make a mistake in binary search:
+
+** I have a problem with merge sort and especially the merge function itself (it has a potential for off by one type mistakes).
+
+** It's not easy to do inplace quicksort, too
+
+** Coordinate multiple structure? Not easy. You should have a correct mental model to type this quickly and without errors
+
+** Other usefull patterns for different language I make mistakes in.
