@@ -118,8 +118,6 @@ fn main() {
 const N: usize = 3;
 
 fn rec(res: &mut Vec<char>, idx: usize, bal: usize) {
-    println!("bal = {} idx = {} {:?}", bal , idx, res);
-
     // brackets cannot be balanced, not enough space left
     if bal > 2 * N - idx { return }
 
@@ -131,6 +129,7 @@ fn rec(res: &mut Vec<char>, idx: usize, bal: usize) {
 
     res[idx] = '(';
     rec(res, idx + 1, bal + 1);
+
     if bal == 0 { return }
 
     res[idx] = ')';
@@ -141,6 +140,13 @@ fn main() {
     rec(&mut vec![0 as char; 2 * N], 0, 0);
 }
 #+end_src
+
+#+RESULTS:
+: "((()))"
+: "(()())"
+: "(())()"
+: "()(())"
+: "()()()"
 
 Можно выразить это и на Haskell
 
