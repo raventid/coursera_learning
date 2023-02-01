@@ -1,3 +1,5 @@
+// https://github.com/bluss/indexmap (the alternative implementation might be something like this one)
+
 use std::collections::HashMap;
 
 struct RandomizedSet {
