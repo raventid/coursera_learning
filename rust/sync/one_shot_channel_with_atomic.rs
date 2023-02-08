@@ -14,4 +14,20 @@ impl<T> Channel<T> {
             ready: AtomicBool::new(false),
         }
     }
+
+    // Safety: Only call this once!
+    pub unsafe fn send(&self, message: T) {
+        (*self.message.get()).write(message);
+        self.ready.store(true, Release);
+    }
+
+    pub fn is_ready(&self) -> bool {
+        self.ready.load(Acquire)
+    }
+
+    // Safety: Only call this once,
+    // and only after is_ready() returns true!
+    pub unsafe fn receive(&self) -> T {
+        (*self.message.get()).assume_init_read()
+    }
 }
