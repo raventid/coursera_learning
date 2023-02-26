@@ -1,0 +1,14 @@
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.*
+
+# Unignore all dirs
+!*/
+
+# For MacOS
+*.dSYM/
+
+# Misc
+.DS_Store
