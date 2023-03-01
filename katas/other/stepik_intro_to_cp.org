@@ -16,23 +16,23 @@ vector<int> a;
 
 void out() {
   for (int i = 0; i < n; i++) {
-      if (i) {
-        cout << " ";
-      }
-      cout << a[i];
+    if (i) {
+      cout << " ";
     }
+    cout << a[i];
+  }
   cout << endl;
 }
 
 void rec(int idx) {
   if (idx == n) {
-      out();
-      return;
-    }
+    out();
+    return;
+  }
   for (int i = 1; i <= m; i++) {
-      a[idx] = i;
-      rec(idx + 1);
-    }
+    a[idx] = i;
+    rec(idx + 1);
+  }
 }
 
 int main() {
@@ -49,9 +49,7 @@ int main() {
 const N: usize = 3;
 const M: usize = 3;
 
-
 fn rec(v: &mut [usize; N], idx: usize) {
-
     if idx >= N {
         println!("{:?}", v);
         return;
@@ -60,7 +58,6 @@ fn rec(v: &mut [usize; N], idx: usize) {
         v[idx] = i;
         rec(v, idx + 1);
     }
-
 }
 
 fn main() {
@@ -108,7 +105,6 @@ fn main() {
 #+end_src
 
 ** Скомбинировать валидные последовательности скобок.
-
 #+begin_src rust
 const N: usize = 3;
 
