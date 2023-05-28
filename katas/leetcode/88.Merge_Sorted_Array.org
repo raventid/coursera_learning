@@ -1,0 +1,71 @@
+#+TITLE: 88 Merge_sorted_array
+
+Notes: [[org:../Education/coursera_learning/katas/leetcode/notes.org][Notes]]
+Link: https://leetcode.com/problems/merge-sorted-array
+
+#+begin_src rust
+
+struct Solution {}
+
+impl Solution {
+    pub fn merge(nums1: &mut Vec<i32>, m: i32, nums2: &mut Vec<i32>, n: i32) {
+        let mut cursor1 = m - 1;
+        let mut cursor2 = n - 1;
+        let mut cursor_in_total = m + n - 1;
+
+        while cursor2 >= 0 {
+            if cursor1 >= 0 && nums1[cursor1 as usize] > nums2[cursor2 as usize] {
+                nums1[cursor_in_total as usize] = nums1[cursor1 as usize];
+                cursor_in_total -= 1;
+                cursor1 -= 1;
+            } else {
+                nums1[cursor_in_total as usize] = nums2[cursor2 as usize];
+                cursor_in_total -= 1;
+                cursor2 -= 1;
+            }
+        }
+    }
+}
+
+fn main() {
+    let mut v1 = [1, 2, 3, 0, 0, 0].to_vec();
+    let m = 3;
+    let mut v2 = [2, 5, 6].to_vec();
+    let n = 3;
+
+    Solution::merge(&mut v1, m, &mut v2, n);
+
+    println!("{:?}", v1);
+}
+#+end_src
+
+#+RESULTS:
+#+begin_example
+warning: unnecessary parentheses around `while` condition
+  --> src/main.rs:11:15
+   |
+11 |         while (cursor2 >= 0) {
+   |               ^            ^
+   |
+   = note: `#[warn(unused_parens)]` on by default
+help: remove these parentheses
+   |
+11 -         while (cursor2 >= 0) {
+11 +         while cursor2 >= 0 {
+   |
+
+warning: unnecessary parentheses around `while` condition
+  --> src/main.rs:11:15
+   |
+11 |         while (cursor2 >= 0) {
+   |               ^            ^
+   |
+   = note: `#[warn(unused_parens)]` on by default
+help: remove these parentheses
+   |
+11 -         while (cursor2 >= 0) {
+11 +         while cursor2 >= 0 {
+   |
+
+[1, 2, 2, 3, 5, 6]
+#+end_example
