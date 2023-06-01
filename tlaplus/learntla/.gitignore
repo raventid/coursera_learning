@@ -1,0 +1,4 @@
+*.toolbox/
+!.*/*.toolbox/.gitkeep
+!.*/*.toolbox/.settings/**
+!.*/*.toolbox/.project
