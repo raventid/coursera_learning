@@ -1,3 +1,12 @@
+#+TITLE: 7 Reverse_integer
+
+# Rust
+:PROPERTIES:
+:LEVEL: 0
+:END:
+#+BEGIN_SRC rust
+
+
 impl Solution {
     pub fn reverse(x: i32) -> i32 {
         match x {
@@ -71,3 +80,4 @@ impl Solution {
         true
     }
 }
+#+END_SRC
