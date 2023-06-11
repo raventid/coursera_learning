@@ -5,7 +5,7 @@
 :LEVEL: 0
 :END:
 #+BEGIN_SRC rust
-
+struct Solution {}
 
 impl Solution {
     pub fn reverse(x: i32) -> i32 {
@@ -23,12 +23,12 @@ impl Solution {
                 }
 
                 if numbers.len() == 10 {
-                    if (x < 0) {
-                        if (!Self::no_negative_overflow_check(&numbers)) {
+                    if x < 0 {
+                        if !Self::no_negative_overflow_check(&numbers) {
                             return 0;
                         }
                     } else {
-                        if (!Self::no_positive_overflow_check(&numbers)) {
+                        if !Self::no_positive_overflow_check(&numbers) {
                             return 0;
                         }
                     }
@@ -80,4 +80,12 @@ impl Solution {
         true
     }
 }
+
+fn main() {
+    let reversed = Solution::reverse(123456);
+    println!("Initial number: 123456, Reversed number: {}", reversed);
+}
 #+END_SRC
+
+#+RESULTS:
+: error: Could not compile `cargoWKxkr3`.
