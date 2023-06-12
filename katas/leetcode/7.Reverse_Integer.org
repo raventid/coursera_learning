@@ -12,9 +12,8 @@ impl Solution {
         match x {
             -9..=9 => x,
             _ => {
-                let mut divider = 10;
+                let mut reversed_number;
                 let mut number = x;
-                let mut reversed_number = 0;
                 let mut numbers = Vec::with_capacity(10); // for i32
 
                 while number != 0 {
@@ -88,4 +87,24 @@ fn main() {
 #+END_SRC
 
 #+RESULTS:
-: error: Could not compile `cargoWKxkr3`.
+#+begin_example
+warning: value assigned to `reversed_number` is never read
+  --> src/main.rs:10:25
+   |
+10 |                 let mut reversed_number = 0;
+   |                         ^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_assignments)]` on by default
+   = help: maybe it is overwritten before being read?
+
+warning: value assigned to `reversed_number` is never read
+  --> src/main.rs:10:25
+   |
+10 |                 let mut reversed_number = 0;
+   |                         ^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_assignments)]` on by default
+   = help: maybe it is overwritten before being read?
+
+Initial number: 123456, Reversed number: 654321
+#+end_example
