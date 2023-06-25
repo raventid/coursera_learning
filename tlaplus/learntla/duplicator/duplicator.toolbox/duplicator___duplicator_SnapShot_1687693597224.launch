@@ -1,31 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.lamport.tla.toolbox.tool.tlc.modelCheck">
-    <stringAttribute key="configurationName" value="wire"/>
+    <stringAttribute key="configurationName" value="duplicator_SnapShot_1687693597224"/>
     <intAttribute key="distributedFPSetCount" value="0"/>
     <stringAttribute key="distributedNetworkInterface" value="192.168.0.151"/>
     <intAttribute key="distributedNodesCount" value="1"/>
     <stringAttribute key="distributedTLC" value="off"/>
-    <intAttribute key="fpIndex" value="66"/>
+    <intAttribute key="fpIndex" value="121"/>
     <intAttribute key="maxHeapSize" value="25"/>
     <stringAttribute key="modelBehaviorInit" value=""/>
     <stringAttribute key="modelBehaviorNext" value=""/>
-    <stringAttribute key="modelBehaviorSpec" value="Spec"/>
-    <intAttribute key="modelBehaviorSpecType" value="1"/>
-    <stringAttribute key="modelBehaviorVars" value="acct, amnt, to, from, pc"/>
-    <stringAttribute key="modelComments" value=""/>
+    <stringAttribute key="modelBehaviorSpec" value=""/>
+    <intAttribute key="modelBehaviorSpecType" value="0"/>
+    <stringAttribute key="modelBehaviorVars" value=""/>
+    <stringAttribute key="modelComments" value="duplicator"/>
     <booleanAttribute key="modelCorrectnessCheckDeadlock" value="true"/>
-    <listAttribute key="modelCorrectnessInvariants">
-        <listEntry value="1NoOverdrafts"/>
-    </listAttribute>
-    <listAttribute key="modelCorrectnessProperties">
-        <listEntry value="0Termination"/>
-    </listAttribute>
+    <listAttribute key="modelCorrectnessInvariants"/>
+    <listAttribute key="modelCorrectnessProperties"/>
     <intAttribute key="modelEditorOpenTabs" value="8"/>
     <stringAttribute key="modelExpressionEval" value=""/>
     <listAttribute key="modelParameterConstants"/>
     <intAttribute key="modelVersion" value="20191005"/>
     <intAttribute key="numberOfWorkers" value="4"/>
     <stringAttribute key="result.mail.address" value=""/>
-    <stringAttribute key="specName" value="wire"/>
+    <stringAttribute key="specName" value="duplicator"/>
     <stringAttribute key="tlcResourcesProfile" value="local custom"/>
 </launchConfiguration>

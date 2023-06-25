@@ -1,6 +1,6 @@
 ---- MODULE MC ----
-EXTENDS wire, TLC
+EXTENDS duplicator, TLC
 
 =============================================================================
 \* Modification History
-\* Created Sun Jun 25 23:38:15 HKT 2023 by raventid
+\* Created Sun Jun 25 19:41:05 HKT 2023 by raventid
