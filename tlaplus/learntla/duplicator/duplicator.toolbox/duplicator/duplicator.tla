@@ -1,5 +1,5 @@
 ----------------------------- MODULE duplicator -----------------------------
-EXTENDS Integers, Sequences, TLC
+EXTENDS Integers, Sequences, TLC, FiniteSets
 S == 1..10
 
 
@@ -9,12 +9,16 @@ variable
   index = 1;
   seen = {};
   is_unique = TRUE;
-  
+    
 define
   TypeInvariant ==
     /\ is_unique \in BOOLEAN
     /\ seen \subseteq S
     /\ index \in 1..Len(seq)+1
+    
+  IsUnique(s) == Cardinality(seen) = Len(s)
+    
+  IsCorrect == IF pc = "Done" THEN is_unique = IsUnique(seq) ELSE TRUE
 end define;
 
 begin
@@ -30,7 +34,7 @@ begin
 end algorithm; *)
 
 
-\* BEGIN TRANSLATION (chksum(pcal) = "8ca3bf5a" /\ chksum(tla) = "280f3978")
+\* BEGIN TRANSLATION (chksum(pcal) = "20d46d26" /\ chksum(tla) = "3fe50b6e")
 VARIABLES seq, index, seen, is_unique, pc
 
 (* define statement *)
@@ -38,6 +42,10 @@ TypeInvariant ==
   /\ is_unique \in BOOLEAN
   /\ seen \subseteq S
   /\ index \in 1..Len(seq)+1
+
+IsUnique(s) == Cardinality(seen) = Len(s)
+
+IsCorrect == IF pc = "Done" THEN is_unique = IsUnique(seq) ELSE TRUE
 
 
 vars == << seq, index, seen, is_unique, pc >>
@@ -76,5 +84,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Mon Jun 26 01:46:09 HKT 2023 by raventid
+\* Last modified Mon Jun 26 01:59:55 HKT 2023 by raventid
 \* Created Sun Jun 25 19:37:55 HKT 2023 by raventid
