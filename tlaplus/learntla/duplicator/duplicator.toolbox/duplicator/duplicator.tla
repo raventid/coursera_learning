@@ -1,6 +1,7 @@
 ----------------------------- MODULE duplicator -----------------------------
 EXTENDS Integers, Sequences, TLC, FiniteSets
-S == 1..10
+\*S == 1..10
+CONSTANT S
 
 
 (*--algorithm dup
@@ -88,5 +89,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Fri Jun 30 16:39:20 HKT 2023 by raventid
+\* Last modified Mon Jul 03 01:08:05 HKT 2023 by raventid
 \* Created Sun Jun 25 19:37:55 HKT 2023 by raventid
