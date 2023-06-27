@@ -19,8 +19,7 @@ define
   IsUnique(s) == \A i, j \in 1..Len(s):
     i # j => seq[i] # seq[j]
     
-\*  IsCorrect == IF pc = "Done" THEN is_unique = IsUnique(seq) ELSE TRUE
-  IsCorrect == pc = "Done" => is_unique = IsUnique(seq)
+  IsCorrect == IF pc = "Done" THEN is_unique = IsUnique(seq) ELSE TRUE
 end define;
 
 begin
@@ -36,7 +35,7 @@ begin
 end algorithm; *)
 
 
-\* BEGIN TRANSLATION (chksum(pcal) = "d652728a" /\ chksum(tla) = "cb328acf")
+\* BEGIN TRANSLATION (chksum(pcal) = "68bb0621" /\ chksum(tla) = "5232a5b2")
 VARIABLES seq, index, seen, is_unique, pc
 
 (* define statement *)
@@ -48,8 +47,7 @@ TypeInvariant ==
 IsUnique(s) == \A i, j \in 1..Len(s):
   i # j => seq[i] # seq[j]
 
-
-IsCorrect == pc = "Done" => is_unique = IsUnique(seq)
+IsCorrect == IF pc = "Done" THEN is_unique = IsUnique(seq) ELSE TRUE
 
 
 vars == << seq, index, seen, is_unique, pc >>
@@ -88,5 +86,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Fri Jun 30 16:39:20 HKT 2023 by raventid
+\* Last modified Fri Jun 30 16:31:15 HKT 2023 by raventid
 \* Created Sun Jun 25 19:37:55 HKT 2023 by raventid

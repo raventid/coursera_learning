@@ -5,7 +5,7 @@ S == 1..10
 
 (*--algorithm dup
 variable
-  seq \in S \X S \X S \X S;
+  seq \in S \X S;
   index = 1;
   seen = {};
   is_unique = TRUE;
@@ -19,8 +19,7 @@ define
   IsUnique(s) == \A i, j \in 1..Len(s):
     i # j => seq[i] # seq[j]
     
-\*  IsCorrect == IF pc = "Done" THEN is_unique = IsUnique(seq) ELSE TRUE
-  IsCorrect == pc = "Done" => is_unique = IsUnique(seq)
+  IsCorrect == IF pc = "Done" THEN is_unique = IsUnique(seq) ELSE TRUE
 end define;
 
 begin
@@ -36,7 +35,7 @@ begin
 end algorithm; *)
 
 
-\* BEGIN TRANSLATION (chksum(pcal) = "d652728a" /\ chksum(tla) = "cb328acf")
+\* BEGIN TRANSLATION (chksum(pcal) = "511d8b2d" /\ chksum(tla) = "6b499e39")
 VARIABLES seq, index, seen, is_unique, pc
 
 (* define statement *)
@@ -48,14 +47,13 @@ TypeInvariant ==
 IsUnique(s) == \A i, j \in 1..Len(s):
   i # j => seq[i] # seq[j]
 
-
-IsCorrect == pc = "Done" => is_unique = IsUnique(seq)
+IsCorrect == IF pc = "Done" THEN is_unique = IsUnique(seq) ELSE TRUE
 
 
 vars == << seq, index, seen, is_unique, pc >>
 
 Init == (* Global variables *)
-        /\ seq \in S \X S \X S \X S
+        /\ seq \in S \X S
         /\ index = 1
         /\ seen = {}
         /\ is_unique = TRUE
@@ -88,5 +86,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Fri Jun 30 16:39:20 HKT 2023 by raventid
+\* Last modified Mon Jun 26 02:43:30 HKT 2023 by raventid
 \* Created Sun Jun 25 19:37:55 HKT 2023 by raventid

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.lamport.tla.toolbox.tool.tlc.modelCheck">
-    <stringAttribute key="configurationName" value="duplicator"/>
+    <stringAttribute key="configurationName" value="duplicator_SnapShot_1687718046735"/>
     <intAttribute key="distributedFPSetCount" value="0"/>
     <stringAttribute key="distributedNetworkInterface" value="192.168.0.151"/>
     <intAttribute key="distributedNodesCount" value="1"/>
     <stringAttribute key="distributedTLC" value="off"/>
-    <intAttribute key="fpIndex" value="96"/>
+    <intAttribute key="fpIndex" value="122"/>
     <intAttribute key="maxHeapSize" value="25"/>
     <stringAttribute key="modelBehaviorInit" value=""/>
     <stringAttribute key="modelBehaviorNext" value=""/>
@@ -16,7 +16,7 @@
     <booleanAttribute key="modelCorrectnessCheckDeadlock" value="true"/>
     <listAttribute key="modelCorrectnessInvariants">
         <listEntry value="1TypeInvariant"/>
-        <listEntry value="1IsCorrect"/>
+        <listEntry value="1IsUnique"/>
     </listAttribute>
     <listAttribute key="modelCorrectnessProperties"/>
     <intAttribute key="modelEditorOpenTabs" value="8"/>
