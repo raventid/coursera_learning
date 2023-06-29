@@ -2,8 +2,11 @@
 EXTENDS Integers, Sequences, TLC, FiniteSets
 \*S == 1..10
 
-CONSTANT S
+CONSTANT S, X
+
 ASSUME Cardinality(S) >= 4
+
+
 
 
 (*--algorithm dup
@@ -25,6 +28,7 @@ define
 \*  IsCorrect == IF pc = "Done" THEN is_unique = IsUnique(seq) ELSE TRUE
   IsCorrect == pc = "Done" => is_unique = IsUnique(seq)
 end define;
+
 
 begin
   Iterate:
@@ -91,5 +95,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Mon Jul 03 01:10:14 HKT 2023 by raventid
+\* Last modified Mon Jul 03 01:19:29 HKT 2023 by raventid
 \* Created Sun Jun 25 19:37:55 HKT 2023 by raventid

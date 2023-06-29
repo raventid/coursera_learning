@@ -1,11 +1,17 @@
 ----------------------------- MODULE duplicator -----------------------------
 EXTENDS Integers, Sequences, TLC, FiniteSets
-S == 1..10
+\*S == 1..10
+
+CONSTANT S, X
+
+ASSUME Cardinality(S) >= 4
+
+
 
 
 (*--algorithm dup
 variable
-  seq \in S \X S;
+  seq \in S \X S \X S \X S;
   index = 1;
   seen = {};
   is_unique = TRUE;
@@ -16,10 +22,13 @@ define
     /\ seen \subseteq S
     /\ index \in 1..Len(seq)+1
     
-  IsUnique(s) == Cardinality(seen) = Len(s)
+  IsUnique(s) == \A i, j \in 1..Len(s):
+    i # j => seq[i] # seq[j]
     
-  IsCorrect == IF pc = "Done" THEN is_unique = IsUnique(seq) ELSE TRUE
+\*  IsCorrect == IF pc = "Done" THEN is_unique = IsUnique(seq) ELSE TRUE
+  IsCorrect == pc = "Done" => is_unique = IsUnique(seq)
 end define;
+
 
 begin
   Iterate:
@@ -34,7 +43,7 @@ begin
 end algorithm; *)
 
 
-\* BEGIN TRANSLATION (chksum(pcal) = "20d46d26" /\ chksum(tla) = "3fe50b6e")
+\* BEGIN TRANSLATION (chksum(pcal) = "d652728a" /\ chksum(tla) = "cb328acf")
 VARIABLES seq, index, seen, is_unique, pc
 
 (* define statement *)
@@ -43,15 +52,17 @@ TypeInvariant ==
   /\ seen \subseteq S
   /\ index \in 1..Len(seq)+1
 
-IsUnique(s) == Cardinality(seen) = Len(s)
+IsUnique(s) == \A i, j \in 1..Len(s):
+  i # j => seq[i] # seq[j]
 
-IsCorrect == IF pc = "Done" THEN is_unique = IsUnique(seq) ELSE TRUE
+
+IsCorrect == pc = "Done" => is_unique = IsUnique(seq)
 
 
 vars == << seq, index, seen, is_unique, pc >>
 
 Init == (* Global variables *)
-        /\ seq \in S \X S
+        /\ seq \in S \X S \X S \X S
         /\ index = 1
         /\ seen = {}
         /\ is_unique = TRUE
@@ -84,5 +95,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Mon Jun 26 01:59:55 HKT 2023 by raventid
+\* Last modified Mon Jul 03 01:19:29 HKT 2023 by raventid
 \* Created Sun Jun 25 19:37:55 HKT 2023 by raventid
