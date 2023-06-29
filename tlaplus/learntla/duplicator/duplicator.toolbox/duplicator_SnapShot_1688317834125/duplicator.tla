@@ -1,20 +1,29 @@
 ----------------------------- MODULE duplicator -----------------------------
-EXTENDS Integers, Sequences, TLC
-S == 1..10
+EXTENDS Integers, Sequences, TLC, FiniteSets
+\*S == 1..10
+
+CONSTANT S
+ASSUME Cardinality(S) >= 4
 
 
 (*--algorithm dup
 variable
-  seq \in S \X S;
+  seq \in S \X S \X S \X S;
   index = 1;
   seen = {};
   is_unique = TRUE;
-  
+    
 define
   TypeInvariant ==
     /\ is_unique \in BOOLEAN
     /\ seen \subseteq S
     /\ index \in 1..Len(seq)+1
+    
+  IsUnique(s) == \A i, j \in 1..Len(s):
+    i # j => seq[i] # seq[j]
+    
+\*  IsCorrect == IF pc = "Done" THEN is_unique = IsUnique(seq) ELSE TRUE
+  IsCorrect == pc = "Done" => is_unique = IsUnique(seq)
 end define;
 
 begin
@@ -30,7 +39,7 @@ begin
 end algorithm; *)
 
 
-\* BEGIN TRANSLATION (chksum(pcal) = "8ca3bf5a" /\ chksum(tla) = "280f3978")
+\* BEGIN TRANSLATION (chksum(pcal) = "d652728a" /\ chksum(tla) = "cb328acf")
 VARIABLES seq, index, seen, is_unique, pc
 
 (* define statement *)
@@ -39,11 +48,17 @@ TypeInvariant ==
   /\ seen \subseteq S
   /\ index \in 1..Len(seq)+1
 
+IsUnique(s) == \A i, j \in 1..Len(s):
+  i # j => seq[i] # seq[j]
+
+
+IsCorrect == pc = "Done" => is_unique = IsUnique(seq)
+
 
 vars == << seq, index, seen, is_unique, pc >>
 
 Init == (* Global variables *)
-        /\ seq \in S \X S
+        /\ seq \in S \X S \X S \X S
         /\ index = 1
         /\ seen = {}
         /\ is_unique = TRUE
@@ -76,5 +91,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Mon Jun 26 01:46:09 HKT 2023 by raventid
+\* Last modified Mon Jul 03 01:10:14 HKT 2023 by raventid
 \* Created Sun Jun 25 19:37:55 HKT 2023 by raventid

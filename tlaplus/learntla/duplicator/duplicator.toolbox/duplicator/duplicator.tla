@@ -1,7 +1,9 @@
 ----------------------------- MODULE duplicator -----------------------------
 EXTENDS Integers, Sequences, TLC, FiniteSets
 \*S == 1..10
+
 CONSTANT S
+ASSUME Cardinality(S) >= 4
 
 
 (*--algorithm dup
@@ -89,5 +91,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Mon Jul 03 01:08:05 HKT 2023 by raventid
+\* Last modified Mon Jul 03 01:10:14 HKT 2023 by raventid
 \* Created Sun Jun 25 19:37:55 HKT 2023 by raventid
