@@ -7,8 +7,6 @@ CONSTANT S, X
 ASSUME Cardinality(S) >= 4
 
 
-
-
 (*--algorithm dup
 variable
   seq \in S \X S \X S \X S;
@@ -95,5 +93,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Mon Jul 03 01:19:29 HKT 2023 by raventid
+\* Last modified Mon Jul 03 01:32:16 HKT 2023 by raventid
 \* Created Sun Jun 25 19:37:55 HKT 2023 by raventid
