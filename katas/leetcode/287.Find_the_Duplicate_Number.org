@@ -1,0 +1,38 @@
+#+TITLE: 287 Find_the_duplicate_number
+
+This is an implementation with a Floyd algorithm which might be super unintuitive, but has some good mathematic foundation to it.
+
+#+begin_src c++
+class Solution {
+public:
+    int floyd_first_phase(vector<int>& nums) {
+      int slow = nums[0];
+      int fast = nums[nums[0]];
+
+      while(slow != fast) {
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+      }
+
+      return slow;
+    }
+
+    int floyd_second_phase(vector<int>& nums, int loop_index) {
+      int slow1 = 0;
+      int slow2 = loop_index;
+
+      while(slow1 != slow2) {
+        slow1 = nums[slow1];
+        slow2 = nums[slow2];
+      }
+
+      return slow1;
+    }
+
+    int findDuplicate(vector<int>& nums) {
+        int index = floyd_first_phase(nums);
+
+        return floyd_second_phase(nums, index);
+    }
+};
+#+end_src
