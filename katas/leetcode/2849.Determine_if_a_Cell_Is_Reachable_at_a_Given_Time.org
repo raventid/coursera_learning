@@ -1,0 +1,36 @@
+#+TITLE: 2849 Determine_if_a_cell_is_reachable_at_a_given_time
+
+Initial thought is to reduce the board size to some limited form and use DFS (or bfs) to find the sortests path from X to Y. This solution is far from optimal
+
+The correct logic is indeed twisted for this particular problem.
+
+Why t != 1 ???
+
+The reasoning here is very interesting. We compute Chebyshev distance first (works for us in this case, because we are not drawing straight line, but we are drawing it through diagonal, so on every step we are approaching our goal). The most interesting is this same_coordinate with t == 1 case.
+
+The question is: Can you reach the same position in less than t time?
+
+By default you already in this position? Correct? So, you can reach it in 0 time.
+But if you try to reach it in 1 time? You make a step away first. This is 1. Then you make a step back. This is 2.
+
+This way, if you are staying in the same position you can reach it in
+[0,1) and (1, +infinity) time. So we are excluding 1.
+
+#+begin_src c++
+class Solution {
+public:
+    bool same_coordinate(int required) {
+        return required == 0;
+    }
+
+    bool isReachableAtTime(int sx, int sy, int fx, int fy, int t) {
+        int required = max(abs(sx - fx), abs(sy - fy));
+
+        if(same_coordinate(required)) {
+            return t != 1;
+        } else {
+            return required <= t;
+        }
+    }
+};
+#+end_src
