@@ -1,0 +1,30 @@
+#+TITLE: 28 Find_the_index_of_the_first_occurrence_in_a_string
+
+Initial attemp used another approach where I was trying to optimize match and do not start matching on a wrong input, but it's difficult to debug.
+
+i.e. this input is harder to optimize, so in my second attemp I just start from every possible index and try to iterate over the second array.
+
+#+begin_example
+"mississippi"
+"issip"
+#+end_example
+
+#+begin_src c++
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        for(int haystack_i = 0; haystack_i < haystack.size(); haystack_i++) {
+                int i = 0;
+
+                while(needle[i] == haystack[haystack_i+i]) {
+                    i++;
+                    if(i == needle.size()) {
+                        return haystack_i;
+                    }
+                }
+            }
+
+        return -1;
+    }
+};
+#+end_src
