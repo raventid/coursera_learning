@@ -1,0 +1,10 @@
+#+TITLE: 2769 Find_the_maximum_achievable_number
+
+#+begin_src c++
+class Solution {
+public:
+    int theMaximumAchievableX(int num, int t) {
+        return num + t * 2;
+    }
+};
+#+end_src
