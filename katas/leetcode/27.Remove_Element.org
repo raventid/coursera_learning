@@ -1,0 +1,70 @@
+#+TITLE: Remove Element
+ 27 Tttt
+
+Initial approach
+
+Fails on:
+[3] val 2
+[1] val 1
+
+We can fix it with additional edge case code like:
+
+if(length == 1) {
+  if(arr[0] == val) {
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
+Can we solve it without this thing?
+
+#+begin_src c++
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int swap_position = nums.size() - 1;
+        int i = 0;
+
+        for(i = 0; i < nums.size(); i++) {
+            if(i == swap_position) {
+                break;
+            }
+
+            if(nums[i] == val) {
+                while(nums[swap_position] == val) {
+                    swap_position--;
+                }
+
+                nums[i] = nums[swap_position];
+                nums[swap_position] = val;
+            }
+        }
+
+        return i;
+    }
+};
+#+end_src
+
+Yes! Here we are embedding our edge case with 1 element into the loop condition!
+
+#+begin_src c++
+class Solution {
+public:
+  int removeElement(vector<int>& nums, int val) {
+    int length = nums.size();
+    int index = 0;
+
+    while(index < length) {
+        if(nums[index] == val) {
+            length--;
+            nums[index] = nums[length];
+        } else {
+          index++;
+        }
+    }
+
+    return length;
+  }
+};
+#+end_src
