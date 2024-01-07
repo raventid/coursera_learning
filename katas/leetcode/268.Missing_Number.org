@@ -1,0 +1,21 @@
+#+TITLE: 268 Missing_number
+
+#+begin_src c++
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        int n = nums.size();
+        int xored = 0;
+
+        for(int i = 0; i <= n; i++) {
+            xored = xored ^ i;
+        }
+
+        for(int i = 0; i < n; i++) {
+            xored = xored ^ nums[i];
+        }
+
+        return xored;
+    }
+};
+#+end_src
