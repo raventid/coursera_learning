@@ -1,0 +1,42 @@
+#+TITLE: 26 Remove_duplicates_from_sorted_array
+
+
+#+begin_src c++
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+       int insert_position = 1;
+
+       for(int i = 1; i < nums.size(); i++) {
+           if(nums[i] != nums[i-1]) {
+               nums[insert_position] = nums[i];
+               insert_position++;
+           }
+       }
+
+       return insert_position;
+    }
+};
+#+end_src
+
+#+begin_src rust
+impl Solution {
+    pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
+        let mut current_position = 1;
+        let mut index_to_place_element = 0;
+
+        while current_position < nums.len() {
+            if nums[index_to_place_element] == nums[current_position] {
+                current_position += 1;
+            } else {
+                if nums[index_to_place_element] < nums[current_position] {
+                  index_to_place_element += 1;
+                  nums[index_to_place_element] = nums[current_position];
+              }
+            }
+        }
+
+        index_to_place_element as i32 + 1
+    }
+}
+#+end_src
