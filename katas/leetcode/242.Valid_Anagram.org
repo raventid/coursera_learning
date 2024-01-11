@@ -1,0 +1,30 @@
+#+TITLE: 242 Valid Anagram
+
+#+begin_src c++
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        std::unordered_map<char, int> letter_map;
+
+        for (const auto letter : s) {
+            letter_map[letter]++;
+        }
+        for (const auto letter : t) {
+            letter_map[letter]--;
+        }
+        for (const auto [k,v] : letter_map) {
+            if(v != 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
+#+end_src
+
+Follow up: What if the inputs contain Unicode characters? How would you adapt your solution to such a case?
+
+#+begin_src c++
+// ???
+#+end_src
