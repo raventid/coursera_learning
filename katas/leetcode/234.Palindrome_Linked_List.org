@@ -1,0 +1,122 @@
+#+TITLE: 234 Palindrome_linked_list
+
+Not very efficient, but extremely straightforward implementation of the algorithm
+
+| O(n) memory O(n) time |
+
+#+begin_src c++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    bool check_palindrom(vector<int>& storage) {
+        int len = storage.size();
+        for(int i = 0; i < len / 2; i++) {
+            if (storage[i] != storage[len - i - 1]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool isPalindrome(ListNode* head) {
+        vector<int> storage;
+
+        while(head != nullptr) {
+            storage.push_back(head->val);
+            head = head->next;
+        }
+
+        for (const auto i : storage) {
+            cout << i << " ";
+        }
+        cout << endl;
+
+        return check_palindrom(storage);
+    }
+};
+#+end_src
+
+Also not the most efficient computation. But at least here we do 3 * O(n) in time and O(1) in memory. My approach is to reverse first half of linked list and then just do a simple scan and comparison of two halves of the list.
+
+| O(1) memory O(n) time |
+
+#+begin_src c++
+/**
+ ,* Definition for singly-linked list.
+ ,* struct ListNode {
+ ,*     int val;
+ ,*     ListNode *next;
+ ,*     ListNode() : val(0), next(nullptr) {}
+ ,*     ListNode(int x) : val(x), next(nullptr) {}
+ ,*     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ ,* };
+ ,*/
+
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    bool check_palindrom(ListNode* head_left, ListNode* head_right) {
+        while(head_left != nullptr && head_right != nullptr) {
+            if(head_left->val != head_right->val) {
+                return false;
+            }
+
+            head_left = head_left->next;
+            head_right = head_right->next;
+        }
+
+        return true;
+    }
+
+    bool isPalindrome(ListNode* head) {
+        int len = 0;
+
+        ListNode *tmp_head = head;
+        while(tmp_head != nullptr) {
+            len++;
+            tmp_head = tmp_head->next;
+        }
+
+        if (len == 1) {
+            return true;
+        }
+
+        ListNode *previous = nullptr;
+        ListNode *next = nullptr;
+
+        // revert first half of the list
+        for(int i = 0; i < len / 2; i++) {
+            next = head->next;
+            head->next = previous;
+            previous = head;
+            head = next;
+        }
+
+        if(len % 2 == 0) {
+            // [1,2, ->2,1] (len == 2)
+            return check_palindrom(previous, next);
+        } else {
+            // [1,2,3,->2,1] (len == 5) (do not touch the middle)
+            return check_palindrom(previous, next->next);
+        }
+    }
+};
+#+end_src
