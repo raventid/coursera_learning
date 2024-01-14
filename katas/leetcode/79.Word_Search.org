@@ -65,5 +65,52 @@ fn main() {
     let target1 = String::from("ABCB");
     println!("{}", Solution::exist(board, target1))
 }
-
 #+END_SRC
+
+In my C++ solutions I mutate the target board instead of using additional visited matrix. So this solution is a bit more memory efficient. Also, in my opinion boarder checks here are implemented in a bit more elegant way.
+
+#+begin_src c++
+class Solution {
+public:
+    bool dfs(vector<vector<char>>& board, const string word, int index, int i, int j, int rows, int columns) {
+        if(index == word.size()) {
+            return true;
+        }
+
+        if(i < 0 || i == rows || j < 0 || j == columns || board[i][j] != word[index]) {
+            return false;
+        }
+
+        char current_char = board[i][j];
+        board[i][j] = '#';
+
+        if(
+            dfs(board, word, index + 1, i - 1, j, rows, columns) ||
+            dfs(board, word, index + 1, i, j + 1, rows, columns) ||
+            dfs(board, word, index + 1, i + 1, j, rows, columns) ||
+            dfs(board, word, index + 1, i, j - 1, rows, columns)
+        ) {
+            board[i][j] = current_char;
+            return true;
+        }
+
+        board[i][j] = current_char;
+        return false;
+    }
+
+    bool exist(vector<vector<char>>& board, string word) {
+        int rows = board.size();
+        int columns = board[0].size();
+
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                if(dfs(board, word, 0, i, j, rows, columns)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+};
+#+end_src
