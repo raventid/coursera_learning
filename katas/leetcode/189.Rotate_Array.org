@@ -56,3 +56,21 @@ fn main() {
 #+RESULTS:
 : With O(n) memory [5, 6, 7, 1, 2, 3, 4]
 : With O(n) memory [5, 6, 7, 1, 2, 3, 4]
+
+
+
+Simple C++ solution based on double vector rotation and standard reverse function.
+We can use non-standard reverse function and write it but hand, no problem.
+
+#+begin_src c++
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        int shift = k % nums.size();
+
+        std::reverse(nums.begin(), nums.end());
+        std::reverse(nums.begin(), nums.begin() + shift);
+        std::reverse(nums.begin() + shift, nums.end());
+    }
+};
+#+end_src
