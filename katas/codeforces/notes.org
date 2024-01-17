@@ -1,1 +1,40 @@
 #+TITLE: Notes
+
+* List of the things worth to have under your belt
+** Matrix flattening. How to quickly code transformation from a matrix coordinate to a vector.
+For example if you want to apply union find algorithm to a square field or iterate over a square field in a some fancy way?
+
+(Examples:
+  Percolation task: Leetcode???,
+  Number of islands: https://leetcode.com/problems/number-of-islands
+)
+
+** Two cursors
+How move two cursors over different structures, when is it useful.
+
+** Char to int and back
+How to work with characters. For example if you have a c++ string and you want to make a transformation
+
+** Disjoint Set or Union find
+It's not in a standard library, but very useful to remember how to quickly implement it and use in your program.
+
+** Binary search
+Just remember a good implementation
+
+** Quicksort
+Just remember a good implementation
+
+** Good containers
+int[]
+vector<int>
+queue<int>
+stack<int>
+piority_queue<int>
+dequeue<int>
+map<int, int>
+unordered_map<int, int>
+set<int>
+unordered_set<int>
+
+list???
+bst???

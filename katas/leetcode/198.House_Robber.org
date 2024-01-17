@@ -40,3 +40,30 @@ fn main() {
     }
 }
 #+END_SRC
+
+#+begin_src c++
+class Solution {
+public:
+    unordered_map<int, int> memo;
+
+    int dp(const vector<int>& nums, int index) {
+        if(memo.contains(index)) {
+            return memo[index];
+        }
+        if(index >= nums.size()) {
+            return 0;
+        }
+
+        int one_step = dp(nums, index + 2);
+        int two_steps = dp(nums, index + 3);
+
+        memo[index] = std::max(nums[index] + one_step, nums[index] + two_steps);
+
+        return memo[index];
+    }
+
+    int rob(vector<int>& nums) {
+        return std::max(dp(nums, 0), dp(nums, 1));
+    }
+};
+#+end_src
