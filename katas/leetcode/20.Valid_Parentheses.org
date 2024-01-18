@@ -62,3 +62,44 @@ fn main() {
     }
 }
 #+END_SRC
+
+
+c++ solution
+
+#+begin_src c++
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> tracker;
+
+        for(char c : s) {
+            if(c == '(' || c == '{' || c == '[') {
+                tracker.push(c);
+            } else {
+                if (tracker.empty()) {
+                    return false;
+                }
+
+                auto top = tracker.top();
+                tracker.pop();
+
+                switch(top) {
+                    case '(':
+                        if (c != ')') { return false; }
+                        break;
+                    case '{':
+                        if (c != '}') { return false; }
+                        break;
+                    case '[':
+                        if (c != ']') { return false; }
+                        break;
+                    default:
+                        return false; // unreachable
+                    }
+            }
+        }
+
+        return tracker.empty();
+    }
+};
+#+end_src
