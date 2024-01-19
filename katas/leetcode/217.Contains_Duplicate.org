@@ -28,3 +28,20 @@ fn main() {
 
 #+RESULTS:
 : true
+
+
+#+begin_src c++
+#include <set>
+
+class Solution {
+public:
+    bool containsDuplicate(vector<int>& nums) {
+        set<int> s;
+        for(const auto val : nums) {
+            s.insert(val);
+        }
+
+        return s.size() != nums.size();
+    }
+};
+#+end_src
