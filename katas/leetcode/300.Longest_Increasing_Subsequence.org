@@ -40,3 +40,46 @@ fn main() {
     }
 }
 #+end_src
+
+My C++ solution with multiple DPs running from the main function.
+
+#+begin_src c++
+class Solution {
+public:
+    int compute(const vector<int>& nums, unordered_map<int, int>& memo, int index) {
+        if(memo.contains(index)) {
+            return memo[index];
+        }
+        if(index >= nums.size()) {
+            return 0;
+        }
+
+        int best = 1;
+
+        for(int i = index + 1; i < nums.size(); i++) {
+            int current = 0;
+
+            if(nums[index] < nums[i]) {
+                current = 1 + compute(nums, memo, i);
+            }
+
+            best = std::max(best, current);
+        }
+
+        memo[index] = best;
+
+        return memo[index];
+    }
+
+    int lengthOfLIS(vector<int>& nums) {
+        unordered_map<int, int> memo;
+        int ans = 1;
+
+        for(int i = 0; i < nums.size(); i++) {
+            ans = std::max(ans, compute(nums, memo, i));
+        }
+
+        return ans;
+    }
+};
+#+end_src
