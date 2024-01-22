@@ -1,10 +1,15 @@
 ------------------------------ MODULE scratch ------------------------------
 EXTENDS Integers, TLC, Sequences
 
-TruthTable == [p, q \in BOOLEAN |-> p => q]
+\*TruthTable == [p, q \in BOOLEAN |-> p => q]
 
-Eval == TruthTable
+
+A == {}
+B == {2}
+C == {2}
+
+Eval == A \union B \union C
 
 =============================================================================
 \* Modification History
-\* Last modified Mon Jul 03 03:21:45 HKT 2023 by raventid
+\* Last modified Sun Jul 09 20:17:45 HKT 2023 by raventid
