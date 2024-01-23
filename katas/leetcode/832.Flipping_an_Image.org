@@ -1,0 +1,26 @@
+#+TITLE: 832. Flipping an image
+
+One traversal solution. The equation is the next one:
+
+A[i] is equal to A[len - i - 1]
+
+A[len - i - 1] is equal to A[i]
+
+#+begin_src c++
+class Solution {
+public:
+    vector<vector<int>> flipAndInvertImage(vector<vector<int>>& image) {
+        int columns = image[0].size();
+
+        for(auto& row : image) {
+            for(int i = 0; i < (columns + 1) / 2; i++) {
+                int tmp = row[i] ^ 1;
+                row[i] = row[columns - i - 1] ^ 1;
+                row[columns - 1 - i] = tmp;
+            }
+        }
+
+        return image;
+    }
+};
+#+end_src
