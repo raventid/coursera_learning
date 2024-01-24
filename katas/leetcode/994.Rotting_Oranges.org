@@ -1,0 +1,79 @@
+#+TITLE: 994 Rotting Oranges
+
+I've used BFS without any special tricks here. I'm not using any special tricks, the only things is we might have multiple initial BFS roots, which is OK, in this case I'm just using the same queue for all roots.
+
+Also I use a simple mathematical definition of what does it mean timer increased by one. We should increase our timer only in the case if we are rotting any elemnt at this step.
+
+The other thing, we should always be careful about where to put border checks, before going to the next level or after. After check is easier to write, but sometimes it's difficult to debug it.
+
+#+begin_src c++
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        int rows = grid.size();
+        int columns = grid[0].size();
+
+        int timer = 0;
+
+        queue<pair<int, int>> q;
+
+        // initialize first level of bfs with multiple roots
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                if(grid[i][j] == 2) {
+                    q.push({i, j});
+                }
+            }
+        }
+
+        while(!q.empty()) {
+            // our temporal step is one level of traversal
+            int len = q.size();
+            bool rotening_happened = false;
+
+            for(int t = 0; t < len; t++) {
+                const auto [i,j] = q.front();
+                q.pop();
+
+                vector<pair<int, int>> neighbors = {{i - 1, j}, {i, j + 1}, {i + 1, j}, {i, j - 1}};
+
+                for(const auto candidate : neighbors) {
+                    const auto [x, y] = candidate;
+
+                    // skipping outside of grid elements
+                    if(x < 0 || y < 0 || x >= rows || y >= columns) {
+                        continue;
+                    }
+                    // skipping already rotten or empty cells
+                    if(grid[x][y] == 2 || grid[x][y] == 0) {
+                        continue;
+                    }
+
+                    q.push({x, y});
+                }
+
+                if(grid[i][j] == 1) {
+                    rotening_happened = true;
+                }
+
+                grid[i][j] = 2; // even if it was 2 before it is ok
+            }
+
+            if(rotening_happened) {
+                timer++;
+            }
+        }
+
+        // check the board
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                if(grid[i][j] == 1) {
+                    return -1;
+                }
+            }
+        }
+
+        return timer;
+    }
+};
+#+end_src
