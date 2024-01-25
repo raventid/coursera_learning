@@ -1,0 +1,49 @@
+#+TITLE: 981 Time_based_key_value_store
+
+#+begin_src c++
+class TimeMap {
+public:
+    unordered_map<
+      string,
+      vector<pair<string, int>>
+    > storage;
+
+    TimeMap() {
+       storage = {};
+    }
+
+    void set(string key, string value, int timestamp) {
+        if(!storage.contains(key)) {
+            storage[key] = {};
+        }
+
+        storage[key].push_back({value, timestamp});
+    }
+
+    string get(string key, int timestamp) {
+        if(!storage.contains(key)) {
+            return "";
+        }
+
+        const auto& records = storage[key];
+        string value = "";
+
+        int lo = 0;
+        int hi = records.size() - 1;
+
+        while(lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            const auto& [current_value, current_timestamp] = records[mid];
+
+            if(current_timestamp <= timestamp) {
+                value = current_value;
+                lo = mid + 1;
+            } else {
+                hi = mid - 1;
+            }
+        }
+
+        return value;
+    }
+};
+#+end_src
