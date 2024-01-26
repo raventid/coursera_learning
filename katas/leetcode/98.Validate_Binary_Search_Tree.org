@@ -1,0 +1,86 @@
+#+TITLE: 98 Validate_binary_search_tree
+
+This is my initial implementation of this concept and the main problem here is that we are passing INT_MIN and INT_MAX and our root might be equal to them.
+
+#+begin_src c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool is_valid = true;
+
+    void dfs(TreeNode* root, int min, int max) {
+        if(!root) { return; }
+
+        dfs(root->left, min, root->val);
+        if(!(min < root->val && root->val < max)) {
+            is_valid = false;
+        }
+        dfs(root->right, root->val, max);
+    }
+
+    bool isValidBST(TreeNode* root) {
+        dfs(root, INT_MIN, INT_MAX);
+        return is_valid;
+    }
+};
+#+end_src
+
+
+There are multiple ways to workaround these problem:
+
+- We can store two pointers in the node
+- We can use long long instead of int
+- We can use initializing flag
+- (MY WAY) Use C++17 optional value to represent guard values
+
+#+begin_src c++
+/**
+ ,* Definition for a binary tree node.
+ ,* struct TreeNode {
+ ,*     int val;
+ ,*     TreeNode *left;
+ ,*     TreeNode *right;
+ ,*     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ ,*     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ ,*     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ ,* };
+ ,*/
+class Solution {
+public:
+    bool is_valid = true;
+
+    void dfs(
+        TreeNode* root,
+        std::optional<int> min,
+        std::optional<int> max
+    ) {
+        if(!root) { return; }
+
+        dfs(root->left, min, root->val);
+
+        if(
+           min.has_value() && min.value() >= root->val ||
+           max.has_value() && root->val >= max.value()
+        ) {
+            is_valid = false;
+        }
+
+        dfs(root->right, root->val, max);
+    }
+
+    bool isValidBST(TreeNode* root) {
+        dfs(root, std::nullopt, std::nullopt);
+        return is_valid;
+    }
+};
+#+end_src
