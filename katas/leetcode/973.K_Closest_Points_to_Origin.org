@@ -1,0 +1,28 @@
+#+TITLE: 973 K_closest_points_to_origin
+
+#+begin_src c++
+class Solution {
+public:
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+        std::priority_queue<
+            pair<long long, vector<int>>,
+            vector<pair<long long, vector<int>>>,
+            std::function<bool(pair<long long, vector<int>>, pair<long long, vector<int>>)>
+        > pq([](pair<long long, vector<int>> a, pair<long long, vector<int>> b) {
+            return a.first > b.first;
+        });
+
+        for(const auto pair : points) {
+            pq.push({(pair[0]*pair[0] + pair[1]*pair[1]), pair});
+        }
+
+        vector<vector<int>> result;
+        for(int i = 0; i < k; i++) {
+            result.push_back(pq.top().second);
+            pq.pop();
+        }
+
+        return result;
+    }
+};
+#+end_src
