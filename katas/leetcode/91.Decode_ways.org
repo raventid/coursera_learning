@@ -1,0 +1,45 @@
+#+TITLE: 91 Decode_ways
+
+That was a good brainteaser for me. Was super tough to build a computation tree and find a recurrent rule to implement the problem.
+
+#+begin_src c++
+class Solution {
+public:
+    unordered_map<int, int> memo;
+    unordered_set<char> allowed_as_second = {
+        '0','1','2','3','4','5','6'
+    };
+
+    int dfs(const string& s, int i) {
+        if(memo.contains(i)) {
+            return memo[i];
+        }
+        if(i == s.size()) {
+            return 1;
+        }
+        if(s[i] == '0') {
+            return 0;
+        }
+
+        int res = dfs(s, i + 1);
+
+        if(
+            i + 1 < s.size() &&
+            (
+                s[i] == '1' ||
+                (s[i] == '2' && allowed_as_second.contains(s[i + 1]))
+            )
+        ) {
+            res += dfs(s, i + 2);
+        }
+
+        memo[i] = res;
+
+        return memo[i];
+    }
+
+    int numDecodings(string s) {
+        return dfs(s, 0);
+    }
+};
+#+end_src
