@@ -1,0 +1,77 @@
+#+TITLE: 90. Subsets II
+
+My initial attempt to implement something. On every step I make a decision to either take a value or move to the next value. It didn't work and failed on some of the tests.
+
+The failing test was [4,4,4,1,4]. I completely missed that array might not be sorted, in this case what is going to happen is my next_value_index function will move cursor to number 4 two times, instead of one time, which is not correct for generating unique elements.
+
+#+begin_src c++
+class Solution {
+public:
+    vector<vector<int>> result;
+    vector<int> buffer;
+
+    int next_value_index(const vector<int>& nums, int index) {
+        while(index < nums.size() - 1 && nums[index] == nums[index + 1]) {
+            index++;
+        }
+
+        return index + 1;
+    }
+
+    void dfs(const vector<int>& nums, int index) {
+        if(nums.size() == index) {
+            result.push_back(buffer);
+            return;
+        }
+
+        buffer.push_back(nums[index]);
+        dfs(nums, index + 1);
+
+        buffer.pop_back();
+        dfs(nums, next_value_index(nums, index));
+    }
+
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        dfs(nums, 0);
+        return result;
+    }
+};
+#+end_src
+
+The possible solution for this problem is to introduce sorting to the main function, so we can be sure, next_cursor_function works correctly every time.
+
+#+begin_src c++
+class Solution {
+public:
+    vector<vector<int>> result;
+    vector<int> buffer;
+
+    int next_value_index(const vector<int>& nums, int index) {
+        while(index < nums.size() - 1 && nums[index] == nums[index + 1]) {
+            index++;
+        }
+
+        return index + 1;
+    }
+
+    void dfs(const vector<int>& nums, int index) {
+        if(nums.size() == index) {
+            result.push_back(buffer);
+            return;
+        }
+
+        buffer.push_back(nums[index]);
+        dfs(nums, index + 1);
+
+        buffer.pop_back();
+        dfs(nums, next_value_index(nums, index));
+    }
+
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        // Additional (n * long n), sorry
+        std::sort(nums.begin(), nums.end());
+        dfs(nums, 0);
+        return result;
+    }
+};
+#+end_src
