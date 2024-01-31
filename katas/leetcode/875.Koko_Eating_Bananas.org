@@ -1,0 +1,57 @@
+#+TITLE: 875 Koko_eating_bananas
+
+One of the possible solutions to the koko eating bananas problem. This kinda optimal solution where inside O(log n) loop we are traversing array every time in O(n).
+
+Basically we guess the optimal speed and try to see if this speed is the minimal speed indeed. This solution does not work and fails on:
+
+#+begin_src bash
+Runtime Error
+Line 19: Char 32: runtime error: inf is outside the range of representable values of type 'int' (solution.cpp)
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior prog_joined.cpp:28:32
+#+end_src
+
+#+begin_src bash
+Last Executed Input
+[312884470]
+968709470
+#+end_src
+
+#+begin_src c++
+class Solution {
+public:
+    int minEatingSpeed(vector<int>& piles, int h) {
+        int lo = 0;
+        int hi = INT_MIN;
+        int best = 0;
+
+        for(int i : piles) {
+            hi = std::max(hi, i);
+        }
+
+        while(lo < hi) {
+            int k = (hi + lo) / 2;
+            long long computed_h = 0;
+            // We are approaching zero because available number of hours is huge,
+            // but we only have a small amount of bananas, so even if we eat 0.00000001 banana at the time we are still good.
+            if (k == 0) {
+              return 1;
+            }
+
+            for(int i : piles) {
+                    // You might want to do: computed_h += ceil(i / (float)k);
+                    // This will lead to an accumulated computation error: like piles=1000000000, h=2
+                    computed_h += i / k;
+                    if(i%k != 0) { computed_h++; }
+            }
+
+            if(computed_h <= h) {
+                hi = k;
+            } else {
+                lo = k + 1;
+            }
+        }
+
+        return lo;
+    }
+};
+#+end_src
