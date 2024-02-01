@@ -1,0 +1,46 @@
+#+TITLE: 853 Car Fleet
+
+This solution is a bit controversial to me. It passes all the tests available in checker, but still I'm using float comparisons in a while loop and it creates a high risk of
+getting an inaccurate solution in the end. But if I'm trying to ceil the result of division it leads to a higher inaccuracy at fails some of the tests.
+
+For example if I'm gonna use ceiling and integers with this example input I'll get a very nasty results, but again the approximation I get with floating numbers doesn't seem to be as good as it could be. (Maybe just use increased precision integers or decimals?)
+
+#+begin_src bash
+target = 10
+position = [8, 3, 7, 4, 6, 5]
+speed = [4, 4, 4, 4, 4, 4]
+#+end_src
+
+So, here goes the solution. (btw, I think it's better to use static_cast, not C-style `(float)value` conversion)
+
+#+begin_src c++
+class Solution {
+public:
+    int carFleet(int target, vector<int>& position, vector<int>& speed) {
+        stack<pair<int, float>> tracker;
+        vector<pair<int, float>> merged;
+        merged.resize(position.size());
+
+        for(int i = 0; i < position.size(); i++) {
+            float car_reaches_finish = (float)(target - position[i]) / (float)speed[i];
+            merged[i] = make_pair(position[i], car_reaches_finish);
+        }
+
+        std::sort(merged.begin(), merged.end(), [](const auto& a, const auto& b) {
+        return (a.first < b.first);
+    });
+
+        for(int i = 0; i < merged.size(); i++) {
+            auto [car_position, car_reaches_finish] = merged[i];
+
+            while(!tracker.empty() && tracker.top().second <= car_reaches_finish) {
+                tracker.pop();
+            }
+
+            tracker.push(merged[i]);
+        }
+
+        return tracker.size();
+    }
+};
+#+end_src
