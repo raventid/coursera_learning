@@ -1,0 +1,6 @@
+#+TITLE: 823 Binary_trees_with_factors
+
+
+#+begin_src c++
+
+#+end_src
