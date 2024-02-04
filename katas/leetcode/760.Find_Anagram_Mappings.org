@@ -1,0 +1,21 @@
+#+TITLE: 760 Find_anagram_mappings
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> anagramMappings(vector<int>& nums1, vector<int>& nums2) {
+        vector<int> mapping;
+
+        for(const auto num : nums1) {
+            for(int index = 0; index < nums2.size(); index++) {
+                if(num == nums2[index]) {
+                    mapping.push_back(index);
+                    break;
+                }
+            }
+        }
+
+        return mapping;
+    }
+};
+#+end_src
