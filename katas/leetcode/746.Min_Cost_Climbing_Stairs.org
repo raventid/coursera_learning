@@ -1,0 +1,28 @@
+#+TITLE: 746 Min_cost_climbing_stairs
+
+#+begin_src c++
+class Solution {
+public:
+    unordered_map<int, int> memo;
+
+    int dp(const vector<int>& cost, int position) {
+        if(memo.contains(position)) {
+            return memo[position];
+        }
+        if(position >= cost.size()) {
+            return 0;
+        }
+
+        int one_step_cost = dp(cost, position + 1);
+        int two_step_cost = dp(cost, position + 2);
+
+        memo[position] = std::min(cost[position] + one_step_cost, cost[position] + two_step_cost);
+
+        return memo[position];
+    }
+
+    int minCostClimbingStairs(vector<int>& cost) {
+        return std::min(dp(cost, 0), dp(cost, 1));
+    }
+};
+#+end_src
