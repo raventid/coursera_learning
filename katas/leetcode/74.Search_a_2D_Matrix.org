@@ -1,0 +1,58 @@
+#+TITLE: 74 Search_a_2d_matrix
+
+Initial implementation that uses two binary searches, first binary search is moving through rows while it is not matching the row, where we can possibly find the value, when we match the row, where we can possibly find the target value.
+
+We ruhn bsearch against this line in the matrix.
+
+#+begin_src c++
+class Solution {
+public:
+    int bsearch(vector<int>& vec, int target) {
+        int lo = 0;
+        int hi = vec.size() - 1;
+
+        while(lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            int guess = vec[mid];
+
+            if(guess > target) {
+                hi = mid - 1;
+            } else if(guess < target) {
+                lo = mid + 1;
+            } else {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int lo = 0;
+        int hi = matrix.size() - 1;
+
+        while(lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            vector<int>& guess_line = matrix[mid];
+            int guess_lo = guess_line[0];
+            int guess_hi = guess_line[guess_line.size() - 1];
+
+            if(guess_lo <= target && target <= guess_hi) {
+                return bsearch(guess_line, target);
+            } else if(guess_lo < target) {
+                lo = mid + 1;
+            } else if(guess_lo > target) {
+                hi = mid - 1;
+            }
+        }
+
+        return false;
+    }
+};
+#+end_src
+
+Alternative solution with a super intuition, where we can see the tree behind the Matrix :)
+
+https://leetcode.com/problems/search-a-2d-matrix/solutions/1895837/c-binary-search-tree-explained-with-img/
+,#+begin_src c++
+#+end_src
