@@ -1,0 +1,67 @@
+#+TITLE: 739 Daily Temperatures
+
+Initial implementation is quite straightforward I'm just runninng two loops to find the best candidate from every position.
+This solution is O(n^2) and does not pass the main test suit.
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        int len = temperatures.size();
+        vector<int> results = {};
+
+        for(int i = 0; i < len; i++) {
+            int current_temperature = temperatures[i];
+
+            int start_date_index = i + 1;
+            int found_higher_temperature = false;
+
+            for(int j = start_date_index; j < len; j++) {
+                if(temperatures[j] > current_temperature) {
+                    results.push_back(j - start_date_index + 1);
+                    found_higher_temperature = true;
+                    break;
+                }
+            }
+
+            if(!found_higher_temperature) {
+                results.push_back(0);
+            }
+        }
+
+        return results;
+    }
+};
+#+end_src
+
+More optimal approach is to use additional space, by empoloying the stack
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        stack<pair<int, int>> tracker;
+
+        vector<int> result;
+        result.resize(temperatures.size());
+
+        for(int i = 0; i < temperatures.size(); i++) {
+            int temperature = temperatures[i];
+
+            while(!tracker.empty() && temperature > tracker.top().second) {
+                result[tracker.top().first] = i - tracker.top().first;
+                tracker.pop();
+            }
+
+            tracker.push(make_pair(i, temperature));
+        }
+
+        while(!tracker.empty()) {
+            result[tracker.top().first] = 0;
+            tracker.pop();
+        }
+
+        return result;
+    }
+};
+#+end_src
