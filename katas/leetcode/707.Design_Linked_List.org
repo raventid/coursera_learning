@@ -1,0 +1,150 @@
+#+TITLE: 707 Design Linked List
+
+#+begin_src c++
+class MyLinkedList {
+public:
+    struct Node {
+        int val;
+        Node* next; // Pointer to the next Node
+        Node* prev; // Pointer to the previous Node
+
+        Node(int _val, Node* _next, Node* _prev) {
+            val = _val;
+            next = _next;
+            prev = _prev;
+        }
+    };
+
+    Node front_guard;
+    Node back_guard;
+    int len;
+
+   MyLinkedList() : front_guard(-1, nullptr, nullptr), back_guard(-1, nullptr, &front_guard) {
+      front_guard.next = &back_guard;
+      len = 0;
+   }
+
+   void display() {
+     Node* head = front_guard.next;
+
+     while(head != &back_guard) {
+       cout << head->val << " | ";
+       head = head->next;
+     }
+     cout << endl;
+   }
+
+   int get(int index) {
+      if (index < 0 || index >= len) {
+          return -1; // Index out of bounds
+      }
+
+      Node* head = front_guard.next;
+      int current_position = 0;
+
+      while (head != &back_guard) {
+          if (index == current_position) {
+            return head->val;
+          }
+
+          current_position++;
+          head = head->next;
+      }
+
+      return -1; // just to satisfy compiler
+    }
+
+    void addAtHead(int val) {
+      Node* previous_next = front_guard.next;
+
+      auto new_node = new Node(val, previous_next, &front_guard);
+
+      previous_next->prev = new_node;
+
+      front_guard.next = new_node;
+
+      len++;
+    }
+
+    void addAtTail(int val) {
+      Node* previous_last = back_guard.prev;
+
+      auto new_node = new Node(val, &back_guard, previous_last);
+
+      previous_last->next = new_node;
+
+      back_guard.prev = new_node;
+
+      len++;
+    }
+
+    void addAtIndex(int index, int val) {
+      if (index == 0) {
+        addAtHead(val);
+        return;
+      }
+
+      if (index == len) {
+        addAtTail(val);
+        return;
+      }
+
+      if (index > len) {
+        return;
+      }
+
+      Node* head = front_guard.next;
+      int current_position = 0;
+
+      while(head != &back_guard) {
+        if(index == current_position) {
+          Node* previous = head->prev;
+          auto new_node = new Node(val, head, previous);
+          previous->next = new_node;
+          head->prev = new_node;
+          len++;
+          return; // this one is important
+        }
+
+        current_position++;
+        head = head->next;
+      }
+    }
+
+    void deleteAtIndex(int index) {
+      if (index < 0 || index >= len) {
+          return; // Index out of bounds
+      }
+
+      Node* head = front_guard.next;
+      int current_position = 0;
+
+      while (head != &back_guard) {
+          if (index == current_position) {
+              Node* previous_node = head->prev;
+              Node* next_node = head->next;
+              previous_node->next = next_node;
+              next_node->prev = previous_node;
+              delete head;
+              len--;
+              return;
+          }
+
+          current_position++;
+          head = head->next;
+      }
+    }
+};
+
+
+/**
+ * Your MyLinkedList object will be instantiated and called as such:
+ * MyLinkedList* obj = new MyLinkedList();
+ * int param_1 = obj->get(index);
+ * obj->addAtHead(val);
+ * obj->addAtTail(val);
+ * obj->addAtIndex(index,val);
+ * obj->deleteAtIndex(index);
+ */
+#+end_src
+
