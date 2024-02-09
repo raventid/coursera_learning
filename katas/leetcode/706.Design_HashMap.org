@@ -1,0 +1,37 @@
+#+TITLE: 706 Design_hash Map
+
+Naive implementation with a fixed-size array nailed to the class.
+Would be nice to also have a simple mode based implementation with a linked list or maybe something based on a tree. (or we can implement a simple hash function, why not?)
+
+#+begin_src c++
+class MyHashMap {
+public:
+    int storage[1000001];
+
+    MyHashMap() {
+        for(int i = 0; i < 1000000; i++) {
+            storage[i] = -1;
+        }
+    }
+
+    void put(int key, int value) {
+        storage[key] = value;
+    }
+
+    int get(int key) {
+        return storage[key];
+    }
+
+    void remove(int key) {
+        storage[key] = -1;
+    }
+};
+
+/**
+ * Your MyHashMap object will be instantiated and called as such:
+ * MyHashMap* obj = new MyHashMap();
+ * obj->put(key,value);
+ * int param_2 = obj->get(key);
+ * obj->remove(key);
+ */
+#+end_src
