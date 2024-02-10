@@ -1,0 +1,32 @@
+#+TITLE: 704 Binary_search
+
+The most standard and basic implementation.
+
+Tip: maybe guess and target are not the good names for variables?
+Also when you type quickly you sometimes mix hi and lo instructions. Use imagination better to lead your intution, not only relay on speed-typing and memory.
+
+#+begin_src c++
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int lo = 0;
+        int hi = nums.size() - 1;
+
+        while(lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+
+            int guess = nums[mid];
+
+            if(guess > target) {
+                hi = mid - 1;
+            } else if(guess < target) {
+                lo = mid + 1;
+            } else {
+                return mid;
+            }
+        }
+
+        return -1;
+    }
+};
+#+end_src
