@@ -1,0 +1,32 @@
+#+TITLE: 703 Kth largest element in a stream
+
+Min-heap implementation. The logic here is very simple,
+
+#+begin_src c++
+class KthLargest {
+public:
+    priority_queue<int, vector<int>, greater<int>> pq;
+
+    KthLargest(int k, vector<int>& nums) {
+        for(int i = 0; i < k; i++) {
+            pq.push(INT_MIN);
+        }
+
+        for(auto i : nums) {
+            add(i);
+        }
+    }
+
+    int add(int val) {
+        pq.push(val);
+        pq.pop();
+        return pq.top();
+    }
+};
+
+/**
+ * Your KthLargest object will be instantiated and called as such:
+ * KthLargest* obj = new KthLargest(k, nums);
+ * int param_1 = obj->add(val);
+ */
+#+end_src
