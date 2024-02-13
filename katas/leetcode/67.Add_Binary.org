@@ -1,0 +1,35 @@
+#+TITLE: 67 Add_binary
+
+#+begin_src c++
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        string result;
+
+        int a_cursor = a.size() - 1;
+        int b_cursor = b.size() - 1;
+
+        int carry = 0;
+
+        while(a_cursor >= 0 || b_cursor >= 0 || carry) {
+            if(a_cursor >= 0) {
+                carry += a[a_cursor] - '0';
+                a_cursor--;
+            }
+
+            if(b_cursor >= 0) {
+                carry += b[b_cursor] - '0';
+                b_cursor--;
+            }
+
+            cout << carry << " " << carry / 2 << endl;
+            result += carry % 2 + '0';
+            carry = carry / 2;
+        }
+
+        reverse(result.begin(), result.end());
+
+        return result;
+    }
+};
+#+end_src
