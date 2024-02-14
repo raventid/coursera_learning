@@ -1,0 +1,31 @@
+#+TITLE: 647 Palindromic_substrings
+
+This solution uses a part of intuition from [[file:5.Longest_Palindromic_Substring.org]] we are checking the same solution space. I found this algorithm on a piece of paper and there was one problem with this approach. I didn't provide a mathematic proof that this solution covers all the possible inputs, and it looked good on the paper, but I'm still not sure how to mathematically formalize it.
+
+#+begin_src c++
+class Solution {
+public:
+    int compute(const string& s, int l, int r) {
+        int counter = 0;
+
+        while((l >= 0 && r < s.size()) && (s[l] == s[r])) {
+            l--;
+            r++;
+            counter++;
+        }
+
+        return counter;
+    }
+
+    int countSubstrings(string s) {
+        int total = 0;
+
+        for(int i = 0; i < s.size(); i++) {
+            total += compute(s, i, i);
+            total += compute(s, i, i + 1);
+        }
+
+        return total;
+    }
+};
+#+end_src
