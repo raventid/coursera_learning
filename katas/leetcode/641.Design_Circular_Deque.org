@@ -1,0 +1,337 @@
+#+TITLE: 641 Design_circular_deque
+
+This implementation is NOT based on doubly-linked list, but on a simple circular array (buffer).
+
+We should pay additional attention to different debug prints in this code. The problem with them is that they'll introduce additional time penalty. (As we remember from Solana programming, penalty could lead to our inability to execute solana program)
+
+#+begin_src c++
+class MyCircularDeque {
+private:
+  std::vector<int> arr;
+  int front_cursor;
+  int back_cursor;
+  int k;
+
+public:
+    MyCircularDeque(int _k) {
+      // For the front and back cursors we will use guard values
+      // in the beginning, we can think of any changes to this a bit
+      // later
+      front_cursor = -1;
+      back_cursor = -1;
+      k = _k;
+      arr.resize(k);
+    }
+
+    bool insertFront(int value) {
+      cout << "insertFront: " << value << endl;
+      // Queue is full, we need to run resize to make it alive
+      // and ready to accept new elements
+      if (front_cursor == 0 && back_cursor == k - 1 ||
+          front_cursor == back_cursor + 1) {
+        return false; // cannot insert, because
+      }
+      // initial position
+      else if (front_cursor == -1 && back_cursor == -1) {
+        front_cursor = back_cursor = 0;
+        arr[front_cursor] = value;
+        return true;
+      }
+      // after we inserted the first element our front_cursor is set to
+      // the first element, we should switch it to the last position
+      else if (front_cursor == 0) {
+        // switching front_cursor to point to the last cell
+        front_cursor = k - 1;
+        arr[front_cursor] = value;
+        return true;
+      // in any other case we are free to move cursor to the left
+      } else {
+        front_cursor--;
+        arr[front_cursor] = value;
+        return true;
+      }
+    }
+
+    bool insertLast(int value) {
+      cout << "insertLast: " << value << endl;
+      // Queue is full, just copy from the insert front
+      if (front_cursor == 0 && back_cursor == k - 1 ||
+          front_cursor == back_cursor + 1) {
+        return false; // cannot insert queue is full
+      // also copy of initial state condition
+      } else if (front_cursor == -1 && back_cursor == -1) {
+        front_cursor = back_cursor = 0;
+        arr[back_cursor] = value;
+        return true;
+      // reached the end of array, switching to the front
+      } else if (back_cursor == k - 1) {
+        back_cursor = 0;
+        arr[back_cursor] = value;
+        return true;
+      // moving cursor to the right
+      } else {
+        back_cursor++;
+        arr[back_cursor] = value;
+        return true;
+      }
+    }
+
+    bool deleteFront() {
+      cout << "deleteFront: " << endl;
+      if (front_cursor == -1 && back_cursor == -1) {
+        return false;
+      // we are in 0,0 position, so it is one element in the queue
+      // getting back to the default position
+      } else if (front_cursor == back_cursor) {
+        front_cursor = back_cursor = -1;
+        return true;
+      } else if (front_cursor == k - 1) {
+        front_cursor = 0;
+        return true;
+      } else {
+        front_cursor++;
+        return true;
+      }
+    }
+
+    bool deleteLast() {
+      cout << "deleteLast: " << endl;
+      if (front_cursor == -1 && back_cursor == -1) {
+        return false;
+      // we are in 0,0 position, so it is one element in the queue
+      // getting back to the default position
+      } else if (front_cursor == back_cursor) {
+        front_cursor = back_cursor = -1;
+        return true;
+      } else if (back_cursor == 0) {
+        back_cursor == k - 1;
+        return true;
+      } else {
+        back_cursor--;
+        return true;
+      }
+    }
+
+    int getFront() {
+      cout << "getFront: " << endl;
+      // empty
+      if (front_cursor == -1 && back_cursor == -1) {
+        return -1;
+      }
+
+      return arr[front_cursor];
+    }
+
+    int getRear() {
+      cout << "deleteRear: " << endl;
+      // empty
+      if (front_cursor == -1 && back_cursor == -1) {
+        return -1;
+      }
+
+      return arr[back_cursor];
+    }
+
+    bool isEmpty() {
+      return front_cursor == -1 && back_cursor == -1;
+    }
+
+    bool isFull() {
+      return front_cursor == 0 && back_cursor == k - 1 ||
+          front_cursor == back_cursor + 1;
+    }
+};
+#+end_src
+
+As an additional exercise I would definitely try to reimplement this deque to add a couple of things to it. First one: access to i-th element. Second one: realloc for an array. (Use array instead of std::vector?)
+
+#+begin_src c++
+class MyCircularDeque {
+private:
+  std::vector<int> arr;
+  int front_cursor;
+  int back_cursor;
+  int k;
+
+public:
+    MyCircularDeque(int _k) {
+      // For the front and back cursors we will use guard values
+      // in the beginning, we can think of any changes to this a bit
+      // later
+      front_cursor = -1;
+      back_cursor = -1;
+      k = _k;
+      arr.resize(k);
+    }
+
+    bool insertFront(int value) {
+      cout << "insertFront: " << value << endl;
+      // Queue is full, we need to run resize to make it alive
+      // and ready to accept new elements
+      if (front_cursor == 0 && back_cursor == k - 1 ||
+          front_cursor == back_cursor + 1) {
+        return false; // cannot insert, because
+      }
+      // initial position
+      else if (front_cursor == -1 && back_cursor == -1) {
+        front_cursor = back_cursor = 0;
+        arr[front_cursor] = value;
+        return true;
+      }
+      // after we inserted the first element our front_cursor is set to
+      // the first element, we should switch it to the last position
+      else if (front_cursor == 0) {
+        // switching front_cursor to point to the last cell
+        front_cursor = k - 1;
+        arr[front_cursor] = value;
+        return true;
+      // in any other case we are free to move cursor to the left
+      } else {
+        front_cursor--;
+        arr[front_cursor] = value;
+        return true;
+      }
+    }
+
+    bool insertLast(int value) {
+      cout << "insertLast: " << value << endl;
+      // Queue is full, just copy from the insert front
+      if (front_cursor == 0 && back_cursor == k - 1 ||
+          front_cursor == back_cursor + 1) {
+        return false; // cannot insert queue is full
+      // also copy of initial state condition
+      } else if (front_cursor == -1 && back_cursor == -1) {
+        front_cursor = back_cursor = 0;
+        arr[back_cursor] = value;
+        return true;
+      // reached the end of array, switching to the front
+      } else if (back_cursor == k - 1) {
+        back_cursor = 0;
+        arr[back_cursor] = value;
+        return true;
+      // moving cursor to the right
+      } else {
+        back_cursor++;
+        arr[back_cursor] = value;
+        return true;
+      }
+    }
+
+    bool deleteFront() {
+      cout << "deleteFront: " << endl;
+      if (front_cursor == -1 && back_cursor == -1) {
+        return false;
+      // we are in 0,0 position, so it is one element in the queue
+      // getting back to the default position
+      } else if (front_cursor == back_cursor) {
+        front_cursor = back_cursor = -1;
+        return true;
+      } else if (front_cursor == k - 1) {
+        front_cursor = 0;
+        return true;
+      } else {
+        front_cursor++;
+        return true;
+      }
+    }
+
+    bool deleteLast() {
+      cout << "deleteLast: " << endl;
+      if (front_cursor == -1 && back_cursor == -1) {
+        return false;
+      // we are in 0,0 position, so it is one element in the queue
+      // getting back to the default position
+      } else if (front_cursor == back_cursor) {
+        front_cursor = back_cursor = -1;
+        return true;
+      } else if (back_cursor == 0) {
+        back_cursor == k - 1;
+        return true;
+      } else {
+        back_cursor--;
+        return true;
+      }
+    }
+
+    int getFront() {
+      cout << "getFront: " << endl;
+      // empty
+      if (front_cursor == -1 && back_cursor == -1) {
+        return -1;
+      }
+
+      return arr[front_cursor];
+    }
+
+    int getRear() {
+      cout << "deleteRear: " << endl;
+      // empty
+      if (front_cursor == -1 && back_cursor == -1) {
+        return -1;
+      }
+
+      return arr[back_cursor];
+    }
+
+    bool isEmpty() {
+      return front_cursor == -1 && back_cursor == -1;
+    }
+
+    bool isFull() {
+      return front_cursor == 0 && back_cursor == k - 1 ||
+          front_cursor == back_cursor + 1;
+    }
+
+
+    // Couple of examples on how computation should work with a
+    // circular array implementation.
+
+    //              [4]
+    // [1, *>2,3,4, ->5,6]
+    //  2    3        0 1
+
+    // 0 -> 4
+    // 1 -> 5
+    // 2 -> 0
+    // 3 -> 1
+    // 4 -> 2
+
+    // [1,2,3, *>4,5, ->6]
+
+    // 0 -> 5
+    // 1 -> 0
+    // 2 -> 1
+    // 3 -> 2
+    // 4 -> 3
+    int getAt(int index) {
+      if(front_cursor == -1 && back_cursor == -1) {
+        return -1; // no element, queue is empty, '-1' as a guard value
+      } else if(front_cursor == 0 && back_cursor == k - 1) {
+        return arr[index]; // easy, vector is full and ordering is straight, just index the vector
+      } else {
+        if((index + front_cursor) < k) {
+          return arr[index + front_cursor];
+        } else {
+          int shift = k - front_cursor;
+          int computed_index = back_cursor - shift;
+          if(computed_index < back_cursor) {
+            arr[computed_index];
+          } else {
+            return -1; //element is out of bound
+          }
+        }
+      }
+    }
+
+    bool realloc(int _k) {
+      k = _k * 2;
+
+      // allocating new vector with 2x size
+
+      // starting to copy elements from old vector to the new vector
+
+      // 1. if front_cursor is at the back
+      // 2. if front_cursor is at the front
+    }
+};
+#+end_src
