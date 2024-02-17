@@ -1,0 +1,44 @@
+#+TITLE: 621 Task_scheduler
+
+This solution provides a heavy emulation variant, where I emulate the system and do not apply any gready or mathematical modifications. Usually those solutions require the largest amount of datastructures and mechanical movements, but are easiest to understand and trace step by step.
+
+#+begin_src c++
+class Solution {
+public:
+    int leastInterval(vector<char>& tasks, int n) {
+        priority_queue<int> max_heap;
+        queue<pair<int, int>> task_queue;
+
+        // group individual tasks by frequency
+        map<char, int> groups;
+        for(const auto task : tasks) {
+            groups[task]++;
+        }
+
+        // build max heap from frequencies, ignoring tasks
+        for(const auto [k, v] : groups) {
+            max_heap.push(v);
+        }
+
+        int timer = 0;
+        while(!task_queue.empty() || !max_heap.empty()) {
+            while(!task_queue.empty() && task_queue.front().second < timer) {
+                max_heap.push(task_queue.front().first);
+                task_queue.pop();
+            }
+
+            if(!max_heap.empty()) {
+                if(max_heap.top() != 1) {
+                    task_queue.push({max_heap.top() - 1, timer + n});
+                }
+
+                max_heap.pop();
+            }
+
+            timer++;
+        }
+
+        return timer;
+    }
+};
+#+end_src
