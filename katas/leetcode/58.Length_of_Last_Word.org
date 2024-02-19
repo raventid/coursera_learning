@@ -1,0 +1,28 @@
+#+TITLE: 58 Length_of_last_word
+
+#+begin_src c++
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int len = 0;
+        int start_of_the_first_word_from_end = 0;
+
+        for(int i = s.size() - 1; i >= 0; i--) {
+            if(s[i] != ' ') {
+                start_of_the_first_word_from_end = i;
+                break;
+            }
+        }
+
+        for(int i = start_of_the_first_word_from_end; i >= 0; i--) {
+            if(s[i] == ' ') {
+                break;
+            }
+
+            len++;
+        }
+
+        return len;
+    }
+};
+#+end_src
