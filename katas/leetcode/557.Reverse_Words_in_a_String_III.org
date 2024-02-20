@@ -1,0 +1,35 @@
+#+TITLE: 557 Reverse_words_in_a_string_iii
+
+#+begin_src c++
+class Solution {
+public:
+    void reverse_slice(string& slice, int start, int end) {
+        int middle = (end - start) / 2;
+
+        for(int i = 0; i < middle; i++) {
+            char front = slice[start + i];
+            slice[start + i] = slice[end - i - 1];
+            slice[end - i - 1] = front;
+        }
+    }
+
+    string reverseWords(string s) {
+        int slice_begin = 0;
+        int slice_end = 0;
+
+        for (int i = 0; i < s.size(); i++) {
+            if (s[i] == ' ') {
+                reverse_slice(s, slice_begin, slice_end);
+                slice_begin = i + 1;
+                slice_end = i + 1;
+            } else {
+                slice_end++;
+            }
+        }
+
+        reverse_slice(s, slice_begin, slice_end); // Reverse the last word
+
+        return s;
+    }
+};
+#+end_src
