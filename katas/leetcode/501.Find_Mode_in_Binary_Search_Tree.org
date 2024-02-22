@@ -1,0 +1,249 @@
+#+TITLE: 501 Find_mode_in_binary_search_tree
+
+My initial solution which uses inorder_traversal and hashmap to count elements.
+
+After this we pack elements into the vector based on frequency. But it does not satisfy the interviewer, the follow up question is: can you make this work in constant space.
+
+#+begin_src c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void inorder_traversal(TreeNode* root, unordered_map<int, int>& counter) {
+        if (!root) { return; }
+
+        inorder_traversal(root->left, counter);
+        counter[root->val]++;
+        inorder_traversal(root->right, counter);
+    }
+
+    vector<int> findMode(TreeNode* root) {
+        unordered_map<int, int> counter;
+        vector<int> result;
+        inorder_traversal(root, counter);
+
+        int current_mode = INT_MIN;
+        for(auto const [k, v] : counter) {
+            if(v > current_mode) {
+                current_mode = v;
+                result.clear();
+                result.push_back(k);
+            } else if (v == current_mode) {
+                result.push_back(k);
+            }
+        }
+
+        return result;
+    }
+};
+#+end_src
+
+This is my implementation of the follow-up solution. I don't like it complexity, because we are tracking a lot of state in class variables and probably we can simplify it.
+The idea is that inorder traversal gives us sorted values and we can just implement the stream processing idea of tracking frequencies and react on element changes.
+
+Other thing I don't like too much is the additional check inside the the main findNode function, which check if we have something unchecked left after running the recursion.
+
+For example what we only have [12] <- this tree?
+
+#+begin_src c++
+/**
+ ,* Definition for a binary tree node.
+ ,* struct TreeNode {
+ ,*     int val;
+ ,*     TreeNode *left;
+ ,*     TreeNode *right;
+ ,*     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ ,*     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ ,*     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ ,* };
+ ,*/
+class Solution {
+public:
+    vector<int> result;
+    int max_frequency = 0;
+    int frequency = 0;
+    int previous_element = 0;
+    int last_recorded_element = 0;
+
+    bool initialized_first = false;
+
+    void inorder_traversal(TreeNode* root) {
+        if(!root) { return; }
+
+        inorder_traversal(root->left);
+
+        if (!initialized_first) {
+            initialized_first = true;
+            last_recorded_element = root->val;
+        }
+
+        previous_element = last_recorded_element;
+        last_recorded_element = root->val;
+
+
+        if(previous_element == last_recorded_element) {
+            cout << "1) increment"
+                 << " previous: " << previous_element
+                 << " last_recorded_element" << last_recorded_element
+                 << endl;
+
+            frequency++;
+        } else {
+             cout << "2) fr: " << frequency
+                 << " max fr: " << max_frequency
+                 << " previous(adding to result):" << previous_element
+                 << " current: " << root->val
+                 << endl;
+
+            if(frequency > max_frequency) {
+                max_frequency = frequency;
+                result.clear();
+                result.push_back(previous_element);
+            } else if (frequency == max_frequency) {
+                result.push_back(previous_element);
+            }
+
+            frequency = 1;
+        }
+
+        inorder_traversal(root->right);
+    }
+
+    vector<int> findMode(TreeNode* root) {
+        inorder_traversal(root);
+
+        if(frequency > max_frequency) {
+                result.clear();
+                result.push_back(last_recorded_element);
+        } else if (frequency == max_frequency) {
+                result.push_back(last_recorded_element);
+        }
+
+        return result;
+    }
+};
+#+end_src
+
+State Machine based approach! Not finished this one. failes on
+
+#+begin_comment
+root = [1,null,2]
+
+Output [1,1]
+Expected [2,1]
+#+end_comment
+
+#+begin_src c++
+class StateMachine {
+public:
+  enum class State {
+    Uninitialized,
+    ReadyForNextValue,
+    StreamValueChanged,
+    Final,
+  };
+
+  void record_new_value(int new_value) {
+    switch(current_state) {
+      case State::Uninitialized:
+        previous_value = new_value;
+        current_value = new_value;
+        current_state = State::ReadyForNextValue;
+        break;
+      case State::ReadyForNextValue:
+        previous_value = current_value;
+        current_value = new_value;
+
+        if(previous_value != current_value) {
+          current_state = State::StreamValueChanged;
+        }
+        break;
+      case State::StreamValueChanged:
+        previous_value = current_value;
+        current_value = new_value;
+        break;
+      case State::Final:
+        break;
+    }
+
+    process();
+  }
+
+  vector<int> finalize() {
+    switch(current_state) {
+      case State::Uninitialized:
+        return {};
+      case State::ReadyForNextValue:
+        if(frequency > max_frequency) {
+          result.clear();
+          result.push_back(previous_value);
+        } else if (frequency == max_frequency) {
+          result.push_back(previous_value);
+        }
+
+        current_state = State::Final;
+        return result;
+      case State::Final:
+        return result;
+    }
+  }
+
+private:
+  State current_state;
+  vector<int> result;
+  int previous_value;
+  int current_value;
+  int max_frequency = 0;
+  int frequency = 0;
+
+  void process() {
+    case State::Uninitialized:
+        break;
+    case State::ReadyForNextValue:
+        frequency++;
+        break;
+      case State::StreamValueChanged:
+        if(frequency > max_frequency) {
+          max_frequency = frequency;
+          result.clear();
+          result.push_back(previous_value);
+        } else if (frequency == max_frequency) {
+          result.push_back(previous_value);
+        }
+        frequency = 1;
+        current_state = State::ReadyForNextValue;
+        break;
+      case State::Final:
+        break;
+  }
+
+};
+
+class Solution {
+public:
+    StateMachine current;
+
+    void inorder_traversal(TreeNode* root, StateMachine* processor) {
+        if(!root) { return; }
+
+        inorder_traversal(root->left, processor);
+        processor->record_new_value(root->val);
+        inorder_traversal(root->right, processor);
+    }
+
+    vector<int> findMode(TreeNode* root) {
+        auto processor = StateMachine();
+        inorder_traversal(root, &processor);
+        return processor.finalize();
+    }
+};
+#+end_src
