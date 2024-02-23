@@ -1,0 +1,126 @@
+#+TITLE: 5 Longest_palindromic_substring
+
+#+begin_src rust
+impl Solution {
+    fn is_palindrome(s: &str) -> bool {
+        let mut iterator = s.chars();
+        loop  {
+            let ch = iterator.next();
+            let ch_end = iterator.next_back();
+
+            if ch.is_none() || ch_end.is_none() {
+                break;
+            }
+            if ch.unwrap() != ch_end.unwrap() {
+                return false
+            }
+        }
+        true
+    }
+
+    pub fn longest_palindrome(s: String) -> String {
+        let length = s.len();
+        let mut current_best = &s[0..0];
+
+        for i in (0..length) {
+            for j in (i..length) {
+               if Self::is_palindrome(&s[i..=j]) {
+                   if (&s[i..=j].len()) > &current_best.len() {
+                       current_best = &s[i..=j];
+                   }
+               }
+            }
+        }
+
+        current_best.to_string()
+    }
+}
+#+end_src
+
+This is a very bad solution based on checking every possible substring and finding the longest one that satisfies palindrom quality.
+
+string_view has a terrible API which is super easy to misuse.
+
+#+begin_src c++
+cout << string_view_instance << endl; // this will invalidated string_view
+#+end_src
+
+#+begin_src c++
+auto slice = str.substr(10, 3);
+slice[0] // error;
+
+string_view view(s); // construct string_view from the full string
+auto slice = view.substr(10, 3);
+slice[0] // ok;
+#+end_src
+
+#+begin_src c++
+class Solution {
+public:
+    bool is_valid(const std::string_view str) const {
+      int middle = str.size() / 2;
+
+      for(int i = 0; i < middle; i++) {
+        if(str[i] != str[str.size() - i - 1]) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    string longestPalindrome(string s) {
+      if(s.size() == 1) { return s; }
+
+      string result = "";
+      string_view view(s);
+
+      for(int i = 0; i < s.size(); i++) {
+        for(int j = i + 1; j <= s.size(); j++) {
+          int len = j - i;
+
+          string_view substr = view.substr(i, len);
+          if(is_valid(substr) && len > result.size()) {
+            result = s.substr(i, len);
+          }
+        }
+      }
+
+      return result;
+    }
+};
+#+end_src
+
+
+Now we will try to optimize our solution with a next trick, we can try to reverse our logic for detecting palindroms and instead of starting our algos from left and right side of the barrrier we will instead move cursors from the middle to the outer parts and will try to understand if current palindrom is longer than anything we've seen so far.
+
+#+begin_src c++
+class Solution {
+public:
+    void compute(const string& s, int l, int r, int& max_start, int& max_len) {
+      while ((l >= 0 && r < s.size()) && (s[l] == s[r])) {
+        l--;
+        r++;
+      }
+
+      int current_len = r - l - 1;
+
+      if(current_len > max_len) {
+        max_len = current_len;
+        max_start = l + 1;
+      }
+    }
+
+    string longestPalindrome(string s) {
+        int max_start = 0;
+        int max_len = 1;
+
+        for(int i = 0; i < s.size() - 1; i++) {
+          compute(s, i, i, max_start, max_len);
+          compute(s, i, i + 1, max_start, max_len);
+        }
+
+        return s.substr(max_start, max_len);
+    }
+};
+#+end_src
