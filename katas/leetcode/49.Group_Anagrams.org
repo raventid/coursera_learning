@@ -1,0 +1,94 @@
+#+TITLE: 49 Group_anagrams
+
+Topics: Arrays, Neetcode 150
+
+First naive approach is to use a lot of moving parts.
+In this case I'm using function with O(n) to compare if words are anagrams or not. I'm also using O(n^2) loop inside the anagrams to combine all the strings together, which is also not super efficient thing to do.
+
+#+begin_src c++
+class Solution {
+public:
+    bool is_anagram(string str1, string str2) {
+        map<char, int> letters_map;
+
+        for(const auto letter : str1) {
+            letters_map[letter]++;
+        }
+
+        for(const auto letter : str2) {
+            letters_map[letter]--;
+        }
+
+        for(auto [k, v] : letters_map) {
+            if(v != 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        set<int> handled;
+        vector<vector<string>> result;
+
+        for(int i = 0; i < strs.size(); i++) {
+            auto current_string = strs[i];
+            vector<string> current_anagrams = {current_string};
+
+            if (handled.contains(i)) {
+                continue;
+            }
+
+            for(int j = 0; j < strs.size(); j++) {
+                if (i == j) {
+                    continue;
+                }
+
+                if (handled.contains(j)) {
+                    continue;
+                }
+
+                if(is_anagram(current_string, strs[j])) {
+                    handled.insert(j);
+                    current_anagrams.push_back(strs[j]);
+                }
+            }
+
+            handled.insert(i);
+            result.push_back(current_anagrams);
+        }
+
+        return result;
+    }
+};
+#+end_src
+
+
+This is an attempt to use an approach suggested by chatgpt.
+
+First we use O(n + m), we walk throw the list and first calculate the position in the hashmap for the current value and second we append original string to the vector associated with sorted letters.
+
+After this we just iterate throw the hashmap and push groups into the final vector
+
+#+begin_src c++
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string, vector<string>> groups;
+
+        for(int i = 0; i < strs.size(); i++) {
+          string sortedLetters = strs[i];
+          sort(sortedLetters.begin(), sortedLetters.end());
+          groups[sortedLetters].push_back(strs[i]);
+        }
+
+        vector<vector<string>> result;
+        for(const auto& [_, grouped] : groups) {
+          result.push_back(grouped);
+        }
+
+        return result;
+    }
+};
+#+end_src
