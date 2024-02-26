@@ -1,0 +1,28 @@
+#+TITLE: 46 Permutations
+
+This solution is compact, and for c++ we are using a small swap trick and mutate the original vector.
+
+#+begin_src c++
+class Solution {
+public:
+    vector<vector<int>> result;
+
+    void mutate(vector<int>& nums, int start) {
+        if(start == nums.size()) {
+            result.push_back(nums); // here we are using copy semantic
+            return;
+        }
+
+        for(int i = start; i < nums.size(); i++) {
+            std::swap(nums[start], nums[i]);
+            mutate(nums, start + 1);
+            std::swap(nums[start], nums[i]);
+        }
+    }
+
+    vector<vector<int>> permute(vector<int>& nums) {
+        mutate(nums, 0);
+        return result;
+    }
+};
+#+end_src
