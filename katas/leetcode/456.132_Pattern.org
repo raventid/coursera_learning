@@ -1,0 +1,53 @@
+#+TITLE: 456 132_pattern
+
+Simple and naive implementation that could lead to a limit exceeded.
+
+#+begin_src c++
+class Solution {
+public:
+    bool find132pattern(vector<int>& nums) {
+        if(nums.size() < 3) {
+            return false;
+        }
+
+        for(int i = 0; i < nums.size() - 2; i++) {
+            for(int j = i+1; j < nums.size() - 1; j++) {
+                for(int k = j+1; k < nums.size(); k++) {
+                    if(nums[i] < nums[k] && nums[k] < nums[j] && nums[i] < nums[j]) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+};
+#+end_src
+
+More effective solution with applying monotonic stack. The solution is a bit tricky and needs some additional mental yoga to get it right.
+
+#+begin_src c++
+class Solution {
+public:
+    bool find132pattern(vector<int>& nums) {
+       stack<int> monotonic_stack;
+       int s3 = INT_MIN;
+
+       for(int i = nums.size() - 1; i >= 0; i--) {
+           if(nums[i] < s3) {
+                return true;
+           } else {
+            while(!monotonic_stack.empty() && nums[i] > monotonic_stack.top()) {
+                s3 = monotonic_stack.top();
+                monotonic_stack.pop();
+            }
+
+            monotonic_stack.push(nums[i]);
+           }
+       }
+
+       return false;
+    }
+};
+#+end_src
