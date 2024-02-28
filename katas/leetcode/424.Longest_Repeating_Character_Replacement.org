@@ -1,0 +1,46 @@
+#+TITLE: 424 Longest_repeating_character_replacement
+
+#+begin_src c++
+class Solution {
+public:
+    int get_max(map<char, int>& mapa) {
+        int max = INT_MIN;
+
+        for(auto const [k, v] : mapa) {
+            max = std::max(max, v);
+        }
+
+        return max;
+    }
+
+    int characterReplacement(string s, int k) {
+        map<char, int> schema;
+        schema[s[0]]++;
+
+        int l = 0;
+        int best = 1;
+
+        for(int r = 1; r < s.size(); r++) {
+            char new_char = s[r];
+
+            schema[new_char]++;
+            int best_value = get_max(schema);
+            int window_size = (r - l) + 1;
+            int need_substitutions = window_size - best_value;
+
+            while(k < need_substitutions) {
+                char left_char = s[l];
+                schema[left_char]--;
+                l++;
+                window_size--;
+                best_value = get_max(schema);
+                need_substitutions = window_size - best_value;
+            }
+
+            best = std::max(best, window_size);
+        }
+
+        return best;
+    }
+};
+#+end_src
