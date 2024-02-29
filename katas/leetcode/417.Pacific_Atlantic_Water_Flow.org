@@ -1,0 +1,79 @@
+#+TITLE: 417 Pacific_atlantic_water_flow
+
+My initital approach is to implement and run two dfs search, one to reach pacific side and one to reach atlantic. It works, but it's some repetitive code + it's quite slow. Surely there is a room for improvement here.
+
+#+begin_src c++
+class Solution {
+public:
+    bool pacific_dfs(vector<vector<int>>& heights, int i, int j, int rows, int columns, int comming_from) {
+        if(i < 0 || j < 0) {
+            return true;
+        }
+        if(i >= rows || j >= columns) {
+            return false;
+        }
+        if(comming_from < heights[i][j]) {
+            return false;
+        }
+        if(heights[i][j] == -1) {
+            return false;
+        }
+
+        int current_height = heights[i][j];
+        heights[i][j] = -1; // visited
+
+        bool possible = pacific_dfs(heights, i - 1, j, rows, columns, current_height) ||
+                        pacific_dfs(heights, i, j + 1, rows, columns, current_height) ||
+                        pacific_dfs(heights, i + 1, j, rows, columns, current_height) ||
+                        pacific_dfs(heights, i, j - 1, rows, columns, current_height);
+
+        heights[i][j] = current_height; // unmark visited
+        return possible;
+    }
+
+    bool atlantic_dfs(vector<vector<int>>& heights, int i, int j, int rows, int columns, int comming_from) {
+        if(i >= rows || j >= columns) {
+            return true;
+        }
+        if(i < 0 || j < 0) {
+            return false;
+        }
+        if(comming_from < heights[i][j]) {
+            return false;
+        }
+        if(heights[i][j] == -1) {
+            return false;
+        }
+
+        int current_height = heights[i][j];
+        heights[i][j] = -1; // visited
+
+        bool possible = atlantic_dfs(heights, i - 1, j, rows, columns, current_height) ||
+                        atlantic_dfs(heights, i, j + 1, rows, columns, current_height) ||
+                        atlantic_dfs(heights, i + 1, j, rows, columns, current_height) ||
+                        atlantic_dfs(heights, i, j - 1, rows, columns, current_height);
+
+        heights[i][j] = current_height; // unmark visited
+        return possible;
+    }
+
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+        int rows = heights.size();
+        int columns = heights[0].size();
+        vector<vector<int>> ans;
+
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                if(
+                    pacific_dfs(heights, i, j, rows, columns, heights[i][j]) &&
+                    atlantic_dfs(heights, i, j, rows, columns, heights[i][j])
+                ) {
+                    ans.push_back({i, j});
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+#+end_src
