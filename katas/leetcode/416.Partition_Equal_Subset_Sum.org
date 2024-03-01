@@ -1,0 +1,98 @@
+#+TITLE: 416 Partition_equal_subset_sum
+
+This solution is nice and canonical but fails with time limit excided, maybe I can still use hashmap, just need to play with a key format?
+
+#+begin_src c++
+class Solution {
+public:
+    bool halfSum(
+        const vector<int>& nums,
+        map<pair<int, int>, bool>& memo,
+        int index,
+        int target
+    ) {
+        if(memo.contains({index, target})) {
+            return memo[{index, target}];
+        }
+        if(target == 0) {
+            return true;
+        }
+        if(index >= nums.size() || target < 0) {
+            return false;
+        }
+
+        memo[{index, target}] = halfSum(nums, memo, index + 1, target) || halfSum(nums, memo, index + 1, target - nums[index]);
+
+        return memo[{index, target}];
+    }
+
+    bool canPartition(vector<int>& nums) {
+        int sum = 0;
+        map<pair<int, int>, bool> memo;
+
+        for(int i = 0; i < nums.size(); i++) {
+            sum += nums[i];
+        }
+
+        if(sum % 2 != 0) {
+            return false;
+        }
+
+        return halfSum(nums, memo, 0, sum / 2);
+    }
+};
+#+end_src
+
+This solution works, but I use two ungly moves here.
+1) use int instead of boolean to have default nullable value in my vector
+2) move bounds checker above the memo access to avoid hitting out of bounds index
+
+#+begin_src c++
+class Solution {
+public:
+    int halfSum(
+        const vector<int>& nums,
+        vector<vector<int>>& memo,
+        int index,
+        int target
+    ) {
+        if(index >= nums.size() || target < 0) {
+            return 2; // false
+        }
+        if(memo[index][target]) {
+            return memo[index][target];
+        }
+        if(target == 0) {
+            return 1; // true
+        }
+
+
+        int skip = halfSum(nums, memo, index + 1, target);
+        int take = halfSum(nums, memo, index + 1, target - nums[index]);
+
+        if(skip == 1 || take == 1) {
+            memo[index][target] = 1;
+        } else {
+            memo[index][target] = 2;
+        }
+
+        return memo[index][target];
+    }
+
+    bool canPartition(vector<int>& nums) {
+        int sum = 0;
+
+        for(int i = 0; i < nums.size(); i++) {
+            sum += nums[i];
+        }
+
+        if(sum % 2 != 0) {
+            return false;
+        }
+
+        vector<vector<int>> memo(nums.size(), vector<int>((sum / 2) + 1, 0));
+
+        return 1 == halfSum(nums, memo, 0, sum / 2);
+    }
+};
+#+end_src
