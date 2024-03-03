@@ -1,0 +1,39 @@
+#+TITLE: 39 Combination_sum
+
+Here is a backtracking solution without a need to do extra work and build extra vectors like 2,0,2,0,2,0.
+
+The logic here is very simple, on every step we make a decision, should we take current element or not?
+
+If you draw a tree it would be quite easy to see the solultion tree we build for this problem and this way we can iterate over our problem
+
+#+begin_src c++
+class Solution {
+public:
+    vector<vector<int>> result;
+    vector<int> buffer;
+
+    void dfs(const vector<int>& candidates, const int target, int index, int total) {
+        if(total == target) {
+            result.push_back(buffer);
+            return;
+        }
+        if(total > target) {
+            return;
+        }
+        if(candidates.size() == index) {
+            return;
+        }
+
+        buffer.push_back(candidates[index]);
+        dfs(candidates, target, index, total + candidates[index]);
+
+        buffer.pop_back();
+        dfs(candidates, target, index + 1, total);
+    }
+
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        dfs(candidates, target, 0, 0);
+        return result;
+    }
+};
+#+end_src
