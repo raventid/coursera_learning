@@ -1,0 +1,193 @@
+#+TITLE: 355 Design_twitter
+
+Initial implementation covers all the edge cases, but still fails the test. The reason is that using real millisecond based timestamp leads to the alsmost always the same timestamp for the tweets in checking system, because checker is too fast.
+
+#+begin_src c++
+class Twitter {
+public:
+    struct Tweet {
+    public:
+        int tweetId;
+        int timestamp;
+
+        Tweet(int tweetId, int timestamp) {
+            this->tweetId = tweetId;
+            this->timestamp = timestamp;
+        }
+    };
+
+    unordered_map<int, vector<Tweet>> tweets;
+    unordered_map<int, unordered_set<int>> subscriptions;
+
+    Twitter() {
+
+    }
+
+    void postTweet(int userId, int tweetId) {
+        std::time_t t = std::time(nullptr);
+        int timestamp = static_cast<int>(t);
+
+        auto tweet = Tweet(tweetId, timestamp);
+
+        tweets[userId].push_back(tweet);
+    }
+
+    vector<int> getNewsFeed(int userId) {
+        auto cmp = [](const Tweet& t1, const Tweet& t2) {
+            return t1.timestamp < t2.timestamp;
+        };
+
+        priority_queue<
+            Tweet,
+            vector<Tweet>,
+            std::function<bool(const Tweet&, const Tweet&)>
+        > tweets_pq(cmp);
+
+        unordered_set<int> followers = subscriptions[userId];
+
+        for(auto follower_id : followers) {
+            auto feed = tweets[follower_id];
+
+            for(auto tweet : feed) {
+                tweets_pq.push(tweet);
+            }
+        }
+
+        for(auto tweet : tweets[userId]) {
+            tweets_pq.push(tweet);
+        }
+
+        vector<int> complete_feed;
+
+        for(int i = 0; i < 10; i++) {
+            if (tweets_pq.empty()) { break; }
+
+            Tweet tweet = tweets_pq.top();
+            tweets_pq.pop();
+            complete_feed.push_back(tweet.tweetId);
+        }
+
+        return complete_feed;
+    }
+
+
+    void follow(int followerId, int followeeId) {
+        subscriptions[followerId].insert(followeeId);
+    }
+
+    void unfollow(int followerId, int followeeId) {
+        subscriptions[followerId].erase(followeeId);
+    }
+};
+
+/**
+ * Your Twitter object will be instantiated and called as such:
+ * Twitter* obj = new Twitter();
+ * obj->postTweet(userId,tweetId);
+ * vector<int> param_2 = obj->getNewsFeed(userId);
+ * obj->follow(followerId,followeeId);
+ * obj->unfollow(followerId,followeeId);
+ */
+#+end_src
+
+This second implementation comments out the usage of real timestamps and uses global logical clock, which is just increasing number. This works well because we are getting all the tweets in a glocal logical order.
+
+#+begin_src c++
+class Twitter {
+public:
+    int logical_timestamp = 0;
+
+    struct Tweet {
+    public:
+        int tweetId;
+        int timestamp;
+
+        Tweet(int tweetId, int timestamp) {
+            this->tweetId = tweetId;
+            this->timestamp = timestamp;
+        }
+    };
+
+    unordered_map<int, vector<Tweet>> tweets;
+    unordered_map<int, unordered_set<int>> subscriptions;
+
+    Twitter() {
+
+    }
+
+    void postTweet(int userId, int tweetId) {
+        // In real code (or a bit more real)
+        // we would use a real timestamp, but
+        // in case of this problem we can use
+        // logical time (to simplify ordering)
+
+        // Besides, if we are using real time,
+        // the ordering might be different from what
+        // checking system wants us to do
+
+        // std::time_t t = std::time(nullptr);
+        // int timestamp = static_cast<int>(t);
+
+        auto tweet = Tweet(tweetId, logical_timestamp);
+        logical_timestamp++;
+
+        tweets[userId].push_back(tweet);
+    }
+
+    vector<int> getNewsFeed(int userId) {
+        auto cmp = [](const Tweet& t1, const Tweet& t2) {
+            return t1.timestamp < t2.timestamp;
+        };
+
+        priority_queue<
+            Tweet,
+            vector<Tweet>,
+            std::function<bool(const Tweet&, const Tweet&)>
+        > tweets_pq(cmp);
+
+        unordered_set<int> followers = subscriptions[userId];
+
+        for(auto follower_id : followers) {
+            auto feed = tweets[follower_id];
+
+            for(auto tweet : feed) {
+                tweets_pq.push(tweet);
+            }
+        }
+
+        for(auto tweet : tweets[userId]) {
+            tweets_pq.push(tweet);
+        }
+
+        vector<int> complete_feed;
+
+        for(int i = 0; i < 10; i++) {
+            if (tweets_pq.empty()) { break; }
+
+            Tweet tweet = tweets_pq.top();
+            tweets_pq.pop();
+            complete_feed.push_back(tweet.tweetId);
+        }
+
+        return complete_feed;
+    }
+
+
+    void follow(int followerId, int followeeId) {
+        subscriptions[followerId].insert(followeeId);
+    }
+
+    void unfollow(int followerId, int followeeId) {
+        subscriptions[followerId].erase(followeeId);
+    }
+};
+
+/**
+ ,* Your Twitter object will be instantiated and called as such:
+ ,* Twitter* obj = new Twitter();
+ ,* obj->postTweet(userId,tweetId);
+ ,* vector<int> param_2 = obj->getNewsFeed(userId);
+ ,* obj->follow(followerId,followeeId);
+ ,* obj->unfollow(followerId,followeeId);
+ ,*/
+#+end_src
