@@ -1,0 +1,30 @@
+#+TITLE: 338 Counting_bits
+
+Topics: dynamic programming, bit manipulation
+
+Initial approach could be to iterate from 0 to n and use solution from [[file:191.Number_of_1_bits.org]] and apply hamming weight to every number and form array from them.
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> countBits(int n) {
+        vector<int> result(n + 1);
+        int offset = 1;
+
+        for(int i = 1; i < n + 1; i++) {
+          // basically we can do this with a shift, but multiplying by 2 is the same thing
+          // -> 10
+          // -> 100
+          // -> 1000
+          // -> 10000
+          if(offset * 2 == i) {
+            offset = i;
+          }
+
+          result[i] = 1 + result[i - offset];
+        }
+
+        return result;
+    }
+};
+#+end_src
