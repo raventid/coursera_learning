@@ -1,0 +1,37 @@
+#+TITLE: 33 Search_in_rotated_sorted_array
+
+#+begin_src c++
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int hi = nums.size() - 1;
+        int lo = 0;
+
+        while(lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+
+            if(nums[mid] == target) {
+                return mid;
+            }
+
+            // mid cursor is in a smaller numbers set
+            if(nums[lo] <= nums[mid]) {
+                if(nums[mid] < target || target < nums[lo]) {
+                    lo = mid + 1;
+                } else {
+                    hi = mid - 1;
+                }
+            // mid cursor is in a bigger numbers set
+            } else {
+                if(nums[hi] < target || target < nums[mid]) {
+                    hi = mid - 1;
+                } else {
+                    lo = mid + 1;
+                }
+            }
+        }
+
+        return -1;
+    }
+};
+#+end_src
