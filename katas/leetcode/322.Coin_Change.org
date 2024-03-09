@@ -1,0 +1,55 @@
+#+TITLE: 322 Coin_change
+
+My solution based on computation tree with memoization. Probably it could have been built in a more optimal way, but I've decided to use verbose optional<int>. I could've just used -1 as a guard value for finding minimum. But anyway it works.
+
+#+begin_src c++
+class Solution {
+public:
+    unordered_map<int, optional<int>> memo;
+
+    optional<int> compute(const vector<int>& coins, int amount) {
+        if(memo.contains(amount)) {
+            return memo[amount];
+        }
+        if(amount < 0) {
+            return std::nullopt; // cannot build the tree
+        }
+        if(amount == 0) {
+            return 0; // we found a path!
+        }
+
+        optional<int> optimal_exchange = std::nullopt;
+
+        for(const auto coin : coins) {
+            int new_amount = amount - coin;
+            optional<int> optimal_exchange_candidate = compute(coins, new_amount);
+
+            if(optimal_exchange_candidate.has_value()) {
+                if(optimal_exchange.has_value()) {
+                    optimal_exchange = std::min(optimal_exchange.value(), optimal_exchange_candidate.value());
+                } else {
+                    optimal_exchange = optimal_exchange_candidate.value();
+                }
+            }
+        }
+
+        if(optimal_exchange.has_value()) {
+            memo[amount] = 1 + optimal_exchange.value();
+        } else {
+            memo[amount] = optimal_exchange;
+        }
+
+        return memo[amount];
+    }
+
+    int coinChange(vector<int>& coins, int amount) {
+        const auto optimal = compute(coins, amount);
+
+        if(optimal.has_value()) {
+            return optimal.value();
+        } else {
+            return -1;
+        }
+    }
+};
+#+end_src
