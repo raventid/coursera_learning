@@ -1,0 +1,36 @@
+#+TITLE: 3 Longest_substring_without_repeating_characters
+
+
+#+begin_src c++
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        unordered_set<char> tracker = {};
+
+        int front = 0;
+        int back = 0;
+
+        int length = 0;
+
+        while(back != s.size()) {
+            char new_character = s[back];
+
+            if(tracker.contains(new_character)) {
+                length = std::max(length, (int)tracker.size());
+                front++;
+
+                while(s[front - 1] != new_character) {
+                    tracker.erase(s[front - 1]);
+                    front++;
+                }
+            }
+
+            tracker.insert(new_character);
+
+            back++;
+        }
+
+        return std::max(length, (int)tracker.size());
+    }
+};
+#+end_src
