@@ -1,0 +1,294 @@
+#+TITLE: 297 Serialize_and_deserialize_binary_tree
+
+My initial implementation which, unfortunately does not pass Time Limits. I'm doing a lot of different buffer allocation here, so it might be useful to decerease some buffer passing here nad there. optional should not be a problem by itself, but I guess that my substring cutting and other stuff really breaks it
+
+#+begin_src c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Codec {
+public:
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        vector<optional<int>> buffer;
+
+        if(!root) { return ""; }
+
+        // order level traversal
+        queue<TreeNode*> q;
+        q.push(root);
+
+        while(!q.empty()) {
+            int len = q.size();
+            bool level_has_values = false;
+
+            for(int i = 0; i < len; i++) {
+                auto value = q.front();
+                q.pop();
+
+                if(!value) {
+                    q.push(nullptr); // left child stub
+                    q.push(nullptr); // right child stub
+                } else {
+                    level_has_values = true;
+                    q.push(value->left);
+                    q.push(value->right);
+                }
+
+                if(value) {
+                    buffer.push_back(value->val);
+                } else {
+                    buffer.push_back(std::nullopt);
+                }
+            }
+
+            if(!level_has_values) {
+                 break;
+            }
+        }
+
+        // string generation
+        ostringstream oss;
+        for(const auto maybe_num : buffer) {
+            if(maybe_num.has_value()) {
+                oss << maybe_num.value();
+            } else {
+                oss << "n";
+            }
+            oss << ",";
+        }
+        string tmp = oss.str();
+        string serialized = tmp.substr(0, tmp.length() - 1);
+        return serialized;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        vector<optional<int>> res;
+        stringstream ss(data);
+        string token;
+
+        while(getline(ss, token, ',')) {
+            if(token == "n") {
+                res.push_back(std::nullopt);
+            } else {
+                res.push_back(std::stoi(token));
+            }
+        }
+
+        return _build(res, 0);
+    }
+
+    TreeNode* _build(const vector<optional<int>> v, int index) {
+        if(index >= v.size()) {
+            return nullptr;
+        }
+
+        const auto val = v[index];
+        if(!val.has_value()) {
+            return nullptr;
+        }
+
+        auto left = _build(v, 2 * index + 1);
+        auto right = _build(v, 2 * index + 2);
+
+        return new TreeNode(val.value(), left, right);
+    }
+};
+#+end_src
+
+Another approach, but still too slow
+
+#+begin_src c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Codec {
+public:
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        // vector<optional<int>> buffer;
+
+        if(!root) { return ""; }
+
+        ostringstream buffer;
+
+        // order level traversal
+
+        queue<TreeNode*> q;
+        q.push(root);
+
+        while(!q.empty()) {
+            int len = q.size();
+            bool next_level_has_values = false;
+
+            for(int i = 0; i < len; i++) {
+                auto value = q.front();
+                q.pop();
+
+                if(!value) {
+                    buffer << "n";
+                } else {
+                    buffer << value->val;
+                }
+
+                if(value) {
+                    q.push(value->left);
+                    q.push(value->right);
+                }
+            }
+        }
+
+        return buffer.str();
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        if(data.size() == 0) { return nullptr; }
+
+        stringstream serialized(data);
+        string token;
+
+        getline(serialized, token, ',');
+
+        TreeNode* root = new TreeNode(stoi(token));
+
+        queue<TreeNode*> q;
+        q.push(root);
+
+        while(!q.empty()) {
+            TreeNode* node = q.front();
+            q.pop();
+
+            getline(serialized, token, ',');
+            if(token == "n") {
+                node->left = nullptr;
+            } else {
+                TreeNode* left = new TreeNode(stoi(token));
+                node->left = left;
+                q.push(left);
+            }
+
+            getline(serialized, token, ',');
+            if(token == "n") {
+                node->right = nullptr;
+            } else {
+                TreeNode* right = new TreeNode(stoi(token));
+                node->right = right;
+                q.push(right);
+            }
+        }
+
+        return root;
+    }
+};
+#+end_src
+
+My last attempt to optimize my string buffer manipulations. This code works with the expected speed. Instead of building String with osstring buffer we utilize heap allocated string type and just appending to it. Why it works faster than string buffer? Good question!
+
+TODO: check string impelementation and why it is faster than string buffer.
+
+
+#+begin_src c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Codec {
+public:
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        // vector<optional<int>> buffer;
+
+        if(!root) { return ""; }
+
+        string buffer;
+
+        // order level traversal
+
+        queue<TreeNode*> q;
+        q.push(root);
+
+        while(!q.empty()) {
+            int len = q.size();
+            bool next_level_has_values = false;
+
+            for(int i = 0; i < len; i++) {
+                auto value = q.front();
+                q.pop();
+
+                if(!value) {
+                    buffer.append("n,");
+                } else {
+                    buffer.append(to_string(value->val) + ',');
+                    q.push(value->left);
+                    q.push(value->right);
+                }
+            }
+        }
+
+        return buffer;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        if(data.size() == 0) { return nullptr; }
+
+        stringstream serialized(data);
+        string token;
+
+        getline(serialized, token, ',');
+
+        TreeNode* root = new TreeNode(stoi(token));
+
+        queue<TreeNode*> q;
+        q.push(root);
+
+        while(!q.empty()) {
+            TreeNode* node = q.front();
+            q.pop();
+
+            getline(serialized, token, ',');
+            if(token == "n") {
+                node->left = nullptr;
+            } else {
+                TreeNode* left = new TreeNode(stoi(token));
+                node->left = left;
+                q.push(left);
+            }
+
+            getline(serialized, token, ',');
+            if(token == "n") {
+                node->right = nullptr;
+            } else {
+                TreeNode* right = new TreeNode(stoi(token));
+                node->right = right;
+                q.push(right);
+            }
+        }
+
+        return root;
+    }
+};
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser, deser;
+// TreeNode* ans = deser.deserialize(ser.serialize(root));
+#+end_src
