@@ -1,0 +1,45 @@
+#+TITLE: 40 Combination_sum_ii
+
+#+begin_src c++
+class Solution {
+public:
+    vector<vector<int>> result;
+    vector<int> buffer;
+
+    int find_next_index(const vector<int>& candidates, int i) {
+        while(i < candidates.size() - 1 && candidates[i] == candidates[i+1]) {
+            i++;
+        }
+
+        return i + 1;
+    }
+
+    void dfs(const vector<int>& candidates, int target, int sum, int i) {
+        if(sum == target) {
+            result.push_back(buffer);
+            return;
+        }
+
+        if(sum > target) {
+            return;
+        }
+
+        if(candidates.size() == i) {
+            return;
+        }
+
+
+        buffer.push_back(candidates[i]);
+        dfs(candidates, target, sum + candidates[i], i + 1);
+
+        buffer.pop_back();
+        dfs(candidates, target, sum, find_next_index(candidates, i));
+    }
+
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        std::sort(candidates.begin(), candidates.end());
+        dfs(candidates, target, 0, 0);
+        return result;
+    }
+};
+#+end_src
