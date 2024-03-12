@@ -1,0 +1,92 @@
+#+TITLE: 238 Product_of_array_except_self
+
+My initial attempt with division. Using division is forbidden by the leetcode task definition, but I will do this anyway,
+it's super easy to code this thing.
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        int total = 1;
+
+        for(int i = 0; i < nums.size(); i++) {
+            auto curr = nums[i];
+
+            total *= nums[i];
+        }
+
+        vector<int> arr;
+        for(int i = 0; i < nums.size(); i++) {
+            if (nums[i] != 0) {
+              arr.push_back(total / nums[i]);
+            } else {
+              arr.push_back(total)
+            }
+        }
+
+        return arr;
+    }
+};
+#+end_src
+
+
+This is the more optimized solution using prefix_prods and suffix_prods. So in prefix products we can always find all the products before current index. In suffix_prod we can always find all the products after the current index.
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        int total = 1;
+
+        vector<int> prefix_prods;
+        prefix_prods.reserve(nums.size());
+        prefix_prods[0] = 1;
+
+        vector<int> suffix_prods;
+        suffix_prods.reserve(nums.size());
+        suffix_prods[nums.size() - 1] = 1;
+
+        for(int i = 1; i < nums.size(); i++) {
+            prefix_prods[i] = prefix_prods[i - 1] * nums[i - 1];
+        }
+
+        for(int i = nums.size() - 2; i >= 0; i--) {
+          suffix_prods[i] = suffix_prods[i + 1] * nums[i + 1];
+        }
+
+        vector<int> result;
+        for(int i = 0; i < nums.size(); i++) {
+          result.push_back(prefix_prods[i] * suffix_prods[i]);
+        }
+
+        return result;
+    }
+};
+#+end_src
+
+Final superoptimization is to dynamically calculate prefix and postfix sums. In the end we only need to have last values in our hands, not all the values.
+
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        int total = 1;
+        vector<int> result = vector<int>(nums.size(), 1);
+
+        int last_prefix_product = 1;
+        for(int i = 0; i < nums.size(); i++) {
+          result[i] = last_prefix_product;
+          last_prefix_product = last_prefix_product * nums[i];
+        }
+
+        int last_postfix_product = 1;
+        for(int i = nums.size() - 1; i >= 0; i--) {
+          result[i] *= last_postfix_product;
+          last_postfix_product = last_postfix_product * nums[i];
+        }
+
+        return result;
+    }
+};
+#+end_src
