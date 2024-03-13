@@ -1,0 +1,31 @@
+#+TITLE: 235 Lowest_common_ancestor_of_a_binary_search_tree
+
+
+My initial thought was to traverse the tree and find node p's depth and then travers tree again and find node q'a depth.
+
+Also, we might want to save the path to q and p and then just move through this path and find the reference to the same node.
+
+#+begin_src c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if (p->val > root->val && q->val > root->val) {
+            return lowestCommonAncestor(root->right, p, q);
+        } else if (p->val < root->val && q->val < root->val) {
+            return lowestCommonAncestor(root->left, p, q);
+        }
+
+        return root;
+    }
+};
+#+end_src
