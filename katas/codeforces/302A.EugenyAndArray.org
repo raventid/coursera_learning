@@ -1,0 +1,136 @@
+#+TITLE: 302a Eugeny And Array
+
+Initial ugly implementation, here we are using many movements to iterate over a vector and then perform the computation. This is not a great approach and we should find a more elegant solution.
+
+#+begin_src c++
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+  ios_base::sync_with_stdio(0);
+  cout.tie(0);
+  cin.tie(0);
+
+  int n,m;
+  cin >> n;
+  cin >> m;
+
+  vector<int> vec;
+  vec.reserve(n);
+
+  for(int i = 0; i < n; i++) {
+    cin >> vec[i];
+  }
+
+  for(int brr=0; brr < m; brr++) {
+    int l, r;
+
+    cin >> l;
+    cin >> r;
+
+    int positive_integers_pool = 0;
+    int negative_integers_pool = 0;
+
+    int positive_in_range = 0;
+    int negative_in_range = 0;
+
+    if (((r - l) % 2) == 0) {
+      cout << 0 << endl;
+      continue;
+    }
+
+    l = l - 1;
+    r = r - 1;
+
+    for(int i = 0; i < n; i++) {
+      if (l <= i && i <= r) {
+        if (vec[i] == -1) {
+          negative_in_range++;
+        } else {
+          positive_in_range++;
+        }
+      } else {
+        if (vec[i] == -1) {
+          negative_integers_pool++;
+        } else {
+          positive_integers_pool++;
+        }
+      }
+    }
+
+    if (negative_in_range > positive_in_range) {
+      int needed_positives = negative_in_range - positive_in_range;
+
+      if (needed_positives > 1) { needed_positives = needed_positives / 2; }
+
+      if ((positive_integers_pool - needed_positives) >= 0) {
+        cout << 1 << "\n";
+      } else {
+        cout << 0 << "\n";
+      }
+    } else {
+      int needed_negatives = positive_in_range - negative_in_range;
+
+      if (needed_negatives > 1) { needed_negatives = needed_negatives / 2; }
+
+      if ((negative_integers_pool - needed_negatives) >= 0) {
+        cout << 1 << "\n";
+      } else {
+        cout << 0 << "\n";
+      }
+    }
+  }
+}
+#+end_src
+
+
+Now, the most elegant and efficient way of solving this based on a simple observation, that if we have a selection like [. . . .] and we have enough positive_numbers to fill half of it, and enough negative numbers to fill the other half we are good. In any other case we can do nothing with it.
+
+#+begin_src c++
+#include <iostream>
+
+using namespace std;
+
+int main() {
+  ios_base::sync_with_stdio(0);
+  cout.tie(0);
+  cin.tie(0);
+
+  int n,m;
+
+  int positive_integers_pool = 0;
+  int negative_integers_pool = 0;
+
+  cin >> n >> m;
+
+  for(int i = 0; i < n; i++) {
+    int current_value;
+
+    cin >> current_value;
+
+    if (current_value == 1) {
+      positive_integers_pool++;
+    } else {
+      negative_integers_pool++;
+    }
+  }
+
+  for(int brr=0; brr < m; brr++) {
+    int l, r;
+
+    cin >> l >> r;
+
+    int range = r - l + 1;
+
+    if (range % 2 == 1) {
+      cout << 0 << endl;
+    } else if ((range / 2) > min(positive_integers_pool, negative_integers_pool)) {
+      cout << 0 << endl;
+    } else {
+      cout << 1 << endl;
+    }
+  }
+}
+#+end_src
