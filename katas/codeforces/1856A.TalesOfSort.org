@@ -1,0 +1,92 @@
+#+TITLE: 1856a Tales Of a Sort
+
+Oh, that's a nasty one. Stupid solution with descreasing numbers and checking if array is sorted after this didn't work (expectedly). So, I've started to search for the biggest unordered element from the end of the list and this approach worked remarkedly well. The best thing is that it only takes linear time now.
+
+#+begin_src c++
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool is_sorted(vector<int> &vec, int len) {
+  for(int i = 0; i < len - 1; i++) {
+    if (vec[i] > vec[i+1]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+void decrease(vector<int> &vec, int len) {
+  for(int i = 0; i < len; i++) {
+    if (vec[i] > 0) {
+      vec[i]--;
+    }
+  }
+}
+
+int max(vector<int> &vec, int len) {
+  int max = INT_MIN;
+
+  for(int i = 0; i < len; i++) {
+    if (max < vec[i]) {
+      max = vec[i];
+    }
+  }
+
+  return max;
+}
+
+int max_pair_diff(vector<int> &vec, int len) {
+  int max = 0;
+
+  for(int i = 0; i < len; i++) {
+    for(int j = i+1; j < len; j++) {
+      if (max < (vec[i] - vec[j])) {
+        max = vec[i] - vec[j];
+      }
+    }
+  }
+
+  return max;
+}
+
+int biggest_unordering_from_right(vector<int> &vec, int len) {
+  int max = 0;
+
+  for(int i = len-1; i > 0; i--) {
+    if (vec[i-1] > vec[i]) {
+      if (vec[i-1] > max) {
+        max = vec[i-1];
+      }
+    }
+  }
+
+  return max;
+}
+
+int main() {
+  int t, n;
+
+  cin >> t;
+
+  for(int tt = 0; tt < t; tt++) {
+    cin >> n;
+
+    int counter = 0;
+    vector<int> v;
+    v.reserve(n);
+
+    for(int nn = 0; nn < n; nn++) {
+      cin >> v[nn];
+    }
+
+    if (!is_sorted(v, n)) {
+      cout << biggest_unordering_from_right(v, n) << endl;
+    } else {
+      cout << 0 << endl;
+    }
+  }
+}
+#+end_src
