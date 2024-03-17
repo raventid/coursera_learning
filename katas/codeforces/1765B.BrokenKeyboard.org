@@ -1,0 +1,55 @@
+#+TITLE: Broken_keyboard
+
+#+begin_src c++
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main() {
+  ios_base::sync_with_stdio(0);
+  cout.tie(0);
+  cin.tie(0);
+
+  int t, len;
+  string input;
+
+  cin >> t;
+
+  // main loop for test cases
+  for(int m = 0; m < t; m++) {
+    // 0 is one letter
+    // 1 is recorded_previous letter
+    // 2 is comparing previous letter and current
+    int state = 0;
+
+    // word length
+    cin >> len;
+    // string itself
+    cin >> input;
+
+    bool valid = true;
+
+    valid = true;
+
+    for(int i = 0; i < len; i++) {
+      if (state == 0 || state == 1) {
+        state++;
+      } else {
+        if (input[i-1] != input[i]) {
+          valid = false;
+          break;
+        }
+
+        state = 0; // reset to default
+      }
+    }
+
+    if (valid && (state == 0 || state == 1)) {
+      cout << "YES" << endl;
+    } else {
+      cout << "NO" << endl;
+    }
+  }
+}
+#+end_src
