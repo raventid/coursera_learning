@@ -1,0 +1,48 @@
+#+TITLE: 146a Lucky Ticket
+
+#+begin_src c++
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+bool is_lucky(int len, string number) {
+  auto left_sum = 0;
+  auto right_sum = 0;
+  auto middle = len / 2;
+
+  for (int i = 0; i < len; i++) {
+    // get val (ugly conversion from char to a int)
+    int digit = number[i] - '0';
+
+    if (i < middle) {
+      left_sum += digit;
+    } else {
+      right_sum += digit;
+    }
+
+    // next one if lucky
+    if (digit == 4 || digit == 7) {
+      // do nothing, it's lucky
+    } else {
+      return false;
+    }
+  }
+
+  return left_sum == right_sum;
+}
+
+int main() {
+  int len;
+  string number;
+
+  cin >> len;
+  cin >> number;
+
+  if (is_lucky(len, number)) {
+    cout << "YES" << "\n";
+  } else {
+    cout << "NO" << "\n";
+  }
+}
+#+end_src
