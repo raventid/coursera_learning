@@ -1,0 +1,61 @@
+#+TITLE: 144a Arrival Of The General
+
+#+begin_src c++
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+  int len;
+  cin >> len;
+
+  vector<int> soldiers;
+  soldiers.reserve(len);
+
+  for(int i = 0; i < len; i++) {
+    cin >> soldiers[i];
+  }
+
+  int
+    min=INT_MAX,
+    max=INT_MIN,
+    min_position=0,
+    max_position=0,
+    swap_counter=0;
+
+  // Looking for minimal element
+  for(int i = 0; i < len; i++) {
+    if (min >= soldiers[i]) {
+      min = soldiers[i];
+      min_position = i;
+    }
+  }
+
+  // Moving minimal element
+  for(int i = min_position; i < len-1; i++) {
+    auto tmp = soldiers[i+1];
+    soldiers[i+1] = soldiers[i];
+    soldiers[i] = tmp;
+    swap_counter++;
+  }
+
+  // Looking for max element (we do this after moving minimal to get correct index)
+  for(int i = 0; i < len; i++) {
+    if (max < soldiers[i]) {
+      max = soldiers[i];
+      max_position = i;
+    }
+  }
+
+  // Moving max
+  for(int i = max_position; i > 0; i--) {
+    auto tmp = soldiers[i-1];
+    soldiers[i-1] = soldiers[i];
+    soldiers[i] = tmp;
+    swap_counter++;
+  }
+
+  cout << swap_counter << endl;
+}
+#+end_src
