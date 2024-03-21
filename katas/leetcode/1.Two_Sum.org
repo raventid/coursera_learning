@@ -1,0 +1,96 @@
+#+TITLE: 1 Two_sum
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        map<int, int> missing_number;
+
+        for(int i = 0; i < nums.size(); i++) {
+            int required_diff = target - nums[i];
+
+            if(missing_number.find(nums[i]) != missing_number.end()) {
+                return {missing_number.find(nums[i])->second, i};
+            }
+
+            // this way we guaranty: if(i != j) condition
+            missing_number[required_diff] = i;
+
+            // for(int j = 0; j < nums.size(); j++) {
+            //     if(i != j) {
+            //         if((nums[i] + nums[j]) == target) {
+            //             return {i, j};
+            //         }
+            //     }
+            // }
+        }
+
+        return {};
+    }
+};
+#+end_src
+
+#+begin_src
+// You are given a 0-indexed N by M matrix. Each cell contains a pair -- some unique position (indexes i, j) in the matrix. Your task is to “sort” the matrix the way -- each cell numbers match the position in the matrix:
+
+// Example:
+
+// **Input**
+// 3 2
+
+// (0, 1) (2, 0)
+// (1, 1) (1, 0)
+// (0, 0) (2, 1)
+
+// (0, 0) (0, 1)
+// (1, 0) (1, 1)
+// (2, 0) (2, 1)
+
+[0,0] N * N (while)
+[0,1] N * 1 (while)
+
+[0,0] N * N (50%)
+[0,1] N * N (25%)
+
+[1,4,0,5,2,3,6,8,7]
+
+[0,->4,1,5,2,3,6,8,7]
+[0,->2,1,5,4,3,6,8,7]
+[0,->1,2,5...]
+
+N + N
+
+// **Output**:
+
+// (0, 0) (0, 1)
+// (1, 0) (1, 1)
+// (2, 0) (2, 1)
+
+pair<row, col>
+
+tmp_pair = matrix[row][col];
+matrix[row][col] = pair;
+
+
+correct_index?()
+
+void sort(vector<vector<pair<int, int>>> matrix) {
+  int rows = matrix.size();
+  int columns = matrix[0].size();
+
+  for(int i = 0; i < rows; i++) {
+    for(int j = 0; j < columns; j++) {
+      auto [rows_index, column_index] = matrix[i][j];
+
+      while(i != rows_index || j != column_index) {
+        auto tmp = matrix[rows_index][column_index];
+        matrix[rows_index][column_index] = matrix[i][j];
+        matrix[i][j] = tmp;
+
+        rows_index = tmp.first;
+        column_index = tmp.second;
+      }
+    }
+  }
+}
+#+end_src
