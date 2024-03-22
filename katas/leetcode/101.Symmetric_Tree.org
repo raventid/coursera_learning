@@ -1,0 +1,66 @@
+#+TITLE: 101 Symmetric_tree
+
+This problem could be solved in multiple ways. Here I'm showing a way to do it with a help of an order level traversal (my favourite traversal) approach. This solution is not super-efficeint because I create a vector on every function call. I now how many nodes I will have on a current iteration, so probably using stack based array without allocation will significantly increase the execution speed. Worth trying.
+
+#+begin_src c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool symmetric_row(const vector<int>& row) {
+        if(row.size() % 2 != 0) {
+            return false;
+        };
+
+        for(int i = 0; i < row.size() / 2; i++) {
+            if(row[i] != row[row.size() - i - 1]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool isSymmetric(TreeNode* root) {
+        if(!root->left && !root->right) { return true; }
+
+        // Order level traversal with vector check
+        queue<TreeNode*> q;
+        q.push(root->left);
+        q.push(root->right);
+
+        while(!q.empty()) {
+            const auto len = q.size();
+            vector<int> level = {};
+
+            for(int i = 0; i < len; i++) {
+                const auto node = q.front();
+                q.pop();
+
+                if(node) {
+                    level.push_back(node->val);
+                    q.push(node->left);
+                    q.push(node->right);
+                } else {
+                    level.push_back(INT_MIN);
+                }
+            }
+
+            if(!symmetric_row(level)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
+#+end_src
