@@ -1,0 +1,35 @@
+#+TITLE: 1046 Last_stone_weight
+
+Initial idea is just run full emulation with Max Heap.
+
+#+begin_src c++
+class Solution {
+public:
+    priority_queue<int> pq;
+
+    int lastStoneWeight(vector<int>& stones) {
+       for(auto s : stones) {
+           pq.push(s);
+       }
+
+       while(pq.size() > 1) {
+           auto first_stone = pq.top();
+           pq.pop();
+           auto second_stone = pq.top();
+           pq.pop();
+
+           int new_weight = std::abs(first_stone - second_stone);
+
+           if(new_weight != 0) {
+               pq.push(new_weight);
+           }
+       }
+
+       if(pq.size() == 1) {
+           return pq.top();
+       } else {
+           return 0;
+       }
+    }
+};
+#+end_src
