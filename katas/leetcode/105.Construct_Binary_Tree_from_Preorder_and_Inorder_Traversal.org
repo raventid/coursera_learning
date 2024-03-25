@@ -1,0 +1,41 @@
+#+TITLE: 105 Construct_binary_tree_from_preorder_and_inorder_traversal
+
+My initial idea was to understand where is the first half of the tree, and where is the second half of the tree. After this I can construct the tree from those pieces. But I couldn't fully figure out the full solution.
+
+Actually to find an optimal recursive solution to this problem is not easy, I've spent like 5 hours with pen and paper and cannot say I can quickly reproduce it. Need to resolve this again.
+
+#+begin_src c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        if(preorder.size() == 0 || inorder.size() == 0) {
+            return nullptr;
+        }
+
+        int current_root_val = preorder[0];
+        auto it = std::find(inorder.begin(), inorder.end(), current_root_val);
+        int cut_index = std::distance(inorder.begin(), it);
+
+        auto left_preorder = vector<int>(preorder.begin() + 1, preorder.begin() + cut_index + 1);
+        auto left_inorder = vector<int>(inorder.begin(), inorder.begin() + cut_index);
+        TreeNode* left = buildTree(left_preorder, left_inorder);
+
+        auto right_preorder = vector<int>(preorder.begin() + cut_index + 1, preorder.end());
+        auto right_inorder = vector<int>(inorder.begin() + cut_index + 1, inorder.end());
+        TreeNode* right = buildTree(right_preorder, right_inorder);
+
+        return new TreeNode(current_root_val, left, right);
+    }
+};
+#+end_src
