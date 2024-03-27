@@ -1,0 +1,18 @@
+#+TITLE: 1119 Remove_vowels_from_a_string
+
+#+begin_src c++
+class Solution {
+public:
+    string removeVowels(string s) {
+        std::stringstream stream;
+
+        for(const auto c : s) {
+            if(c != 'a' && c != 'e' && c != 'i' && c != 'o' && c != 'u') {
+                stream << c;
+            }
+        }
+
+        return stream.str();
+    }
+};
+#+end_src
