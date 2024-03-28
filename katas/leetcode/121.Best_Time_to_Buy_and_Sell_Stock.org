@@ -1,0 +1,51 @@
+#+TITLE: 121 Best_time_to_buy_and_sell_stock
+
+Supre naive quadratic algorithm which does not pass time limit exceeded test. Initial implementation was an easy to do.
+
+#+begin_src c++
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int max_profit = 0;
+
+        for(int sell = prices.size() - 1; sell > 0; sell--) {
+            for(int buy = sell - 1; buy >= 0; buy--) {
+                int current_profit = prices[sell] - prices[buy];
+                if(current_profit > max_profit) {
+                    max_profit = current_profit;
+                }
+            }
+        }
+
+        return max_profit;
+    }
+};
+#+end_src
+
+Sliding window solution, where we are carefully moving left and right part depending on the current state of stock prices.
+#+begin_src c++
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int max_profit = 0;
+        int buy = 0;
+        int sell = 1;
+
+        while(sell < prices.size()) {
+            int current_profit = prices[sell] - prices[buy];
+
+            if(current_profit < 0) {
+                buy = sell;
+                sell++;
+            } else {
+                if(max_profit < current_profit) {
+                    max_profit = current_profit;
+                }
+                sell++;
+            }
+        }
+
+        return max_profit;
+    }
+};
+#+end_src
