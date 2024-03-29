@@ -1,0 +1,28 @@
+#+TITLE: 122 Best_time_to_buy_and_sell_stock_ii
+
+My initial attemp in which I made a mistake and didn't understood that I can buy and sell stocks multiple times and not only one time.
+
+#+begin_src c++
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int max_profit = 0;
+        int buy = 0;
+        int sell = 0;
+
+        while(sell < prices.size()) {
+            int profit = prices[sell] - prices[buy];
+
+            if(profit < 0) {
+                buy = sell;
+            } else {
+                max_profit = std::max(max_profit, profit);
+            }
+
+            sell++;
+        }
+
+        return max_profit;
+    }
+};
+#+end_src
