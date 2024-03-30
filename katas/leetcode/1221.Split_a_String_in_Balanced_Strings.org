@@ -1,0 +1,28 @@
+#+TITLE: 1221 Split_a_string_in_balanced_strings
+
+Very simple implementation, initially I thought to use two counter, but I quickly noticed the simple arithmetic and understood that I don't actually need to apply anything similar to 2-counters, one thing is enough for me.
+
+#+begin_src c++
+class Solution {
+public:
+    int balancedStringSplit(string s) {
+        int diff = 0;
+        int counter = 0;
+
+        for(const char c : s) {
+            if(c == 'R') {
+                diff++;
+            }
+            if(c == 'L') {
+                diff--;
+            }
+
+            if(diff == 0) {
+                counter++;
+            }
+        }
+
+        return counter;
+    }
+};
+#+end_src
