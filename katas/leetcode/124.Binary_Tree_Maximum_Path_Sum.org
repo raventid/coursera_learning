@@ -1,0 +1,41 @@
+#+TITLE: 124 Binary tree maximum path sum
+
+Overall the mental exercise we have to do here is quite straightforward. We should make just one observation: If we are allowed to split at the current node or not?
+
+#+begin_src c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    pair<int, int> dfs(TreeNode* root) {
+        if(!root) { return { INT_MIN, INT_MIN }; }
+
+        auto [onlyLeftPath, totalSumFromLeftSide] = dfs(root->left);
+        auto [onlyRightPath, totalSumFromRightSide] = dfs(root->right);
+
+        int onlyLeftPathMax = std::max(0, onlyLeftPath);
+        int onlyRightPathMax = std::max(0, onlyRightPath);
+
+        // WITH SPLIT
+        int split = std::max(root->val + onlyLeftPathMax, root->val + onlyRightPathMax);
+        // WITHOUT SPLIT
+        int noSplit = std::max(totalSumFromLeftSide, std::max(totalSumFromRightSide, root->val + onlyLeftPathMax + onlyRightPathMax));
+
+        return {split, noSplit};
+    }
+
+    int maxPathSum(TreeNode* root) {
+        auto [split, noSplit] = dfs(root);
+        return std::max(split, noSplit);
+    }
+};
+#+end_src
