@@ -1,0 +1,72 @@
+#+TITLE: 125 Valid Palindrome
+
+My initial implementation, allocates additional memory and does 2 iterations, maybe not the smartest approach you can apply to this task, but works anyway.
+
+#+begin_src c++
+class Solution {
+public:
+    bool isPalindrome(string s) {
+        string cleaned;
+        cleaned.reserve(s.size());
+
+        std::copy_if(
+            s.begin(),
+            s.end(),
+            back_inserter(cleaned), [](char c) {
+                return isalnum(c);
+            }
+        );
+
+        for(int i = 0; i < cleaned.size(); i++) {
+            cleaned[i] = tolower(cleaned[i]);
+        }
+
+        for(int i = 0; i < cleaned.size() / 2; i++) {
+            if(cleaned[i] != cleaned[cleaned.size() - 1 - i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
+#+end_src
+
+This is more manual implementation that demonstrates some additional skills, like writing manual ascii manipulation code :)))
+
+#+begin_src c++
+class Solution {
+public:
+  bool alpha_numeric(char c) {
+    bool uppercase_letter = 'A' <= c && c <= 'Z';
+    bool lowercase_letter = 'a' <= c && c <= 'z';
+    bool is_numeric = '0' <= c && c <= '9';
+
+    return uppercase_letter || lowercase_letter || is_numeric;
+  }
+
+  bool isPalindrome(string s) {
+    int left_cursor = 0;
+    int right_cursor = s.size() - 1;
+
+    while(left_cursor <= right_cursor) {
+      while(left_cursor < right_cursor && !alpha_numeric(s[left_cursor])) {
+        left_cursor++;
+      }
+      while(right_cursor > left_cursor && !alpha_numeric(s[right_cursor])) {
+        right_cursor--;
+      }
+
+      if(tolower(s[left_cursor]) != tolower(s[right_cursor])) {
+        cout << s[left_cursor] << " " << s[right_cursor] << endl;
+        return false;
+      }
+
+      left_cursor = left_cursor + 1;
+      right_cursor = right_cursor - 1;
+    }
+
+    return true;
+  }
+};
+#+end_src
