@@ -1,0 +1,42 @@
+#+TITLE: 129. Sum root to leaf numbers
+
+#+begin_src c++
+class Solution {
+public:
+    int total = 0;
+    vector<int> path;
+
+    int num_from_path(vector<int> path) {
+        int num = 0;
+
+        for(int i = 0; i < path.size(); i++) {
+            num = num * 10 + path[i];
+        }
+
+        return num;
+    }
+
+    void dfs(TreeNode* root) {
+        path.push_back(root->val);
+
+        if(root->left) {
+            dfs(root->left);
+        }
+
+        if(root->right) {
+            dfs(root->right);
+        }
+
+        if(!root->left && !root->right) {
+            total += num_from_path(path);
+        }
+
+        path.pop_back();
+    }
+
+    int sumNumbers(TreeNode* root) {
+        dfs(root);
+        return total;
+    }
+};
+#+end_src
