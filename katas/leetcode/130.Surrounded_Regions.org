@@ -1,0 +1,65 @@
+#+TITLE: 130 Surrounded_regions
+
+This solution is quite intuitive, but requires some additional resources to come up with a good solution. The solution here would be to
+initially mark boarder-connected segments with a new letter "T" and then do another 2 full traversals to first change "O" left untouched to "X" and then transform "T" to "O"
+
+#+begin_src c++
+class Solution {
+public:
+    void colour_graph(vector<vector<char>>& board, int i, int j, int rows, int columns) {
+        if(i < 0 || i >= rows || j < 0 || j >= columns) {
+            return;
+        }
+        if(board[i][j] == 'X' || board[i][j] == 'T') {
+            return;
+        }
+
+        board[i][j] = 'T';
+
+        colour_graph(board, i - 1, j, rows, columns);
+        colour_graph(board, i, j + 1, rows, columns);
+        colour_graph(board, i + 1, j, rows, columns);
+        colour_graph(board, i, j - 1, rows, columns);
+    }
+
+    void solve(vector<vector<char>>& board) {
+        int rows = board.size();
+        int columns = board[0].size();
+
+        // Colour the pieces of the map that should stay
+        for(int i = 0; i < columns; i++) {
+            colour_graph(board, 0, i, rows, columns);
+        }
+
+        for(int i = 0; i < columns; i++) {
+            colour_graph(board, rows - 1, i, rows, columns);
+        }
+
+        for(int i = 0; i < rows; i++) {
+            colour_graph(board, i, 0, rows, columns);
+        }
+
+        for(int i = 0; i < rows; i++) {
+            colour_graph(board, i, columns - 1, rows, columns);
+        }
+
+        // Coulour captured "O" to "X"
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                if(board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                }
+            }
+        }
+
+        // Recover "T" to "O"
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                if(board[i][j] == 'T') {
+                    board[i][j] = 'O';
+                }
+            }
+        }
+    }
+};
+#+end_src
