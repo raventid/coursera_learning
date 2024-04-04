@@ -1,0 +1,61 @@
+#+TITLE: 131 Palindrome_partitioning
+
+I've spent more than two hours trying to solve this and still think it could be optimized to look better, than what it looks like now.
+
+#+begin_src c++
+class Solution {
+public:
+    vector<vector<string>> result;
+    vector<string> current_split;
+
+    bool is_palindrom(const string& str) {
+        for(int i = 0; i < str.size() / 2; i++) {
+           if(str[i] != str[str.size() - 1 - i]) {
+               return false;
+           }
+        }
+
+        return true;
+    }
+
+    void out(vector<string>& v) {
+        for(auto str : v) {
+            cout << str << " ";
+        }
+
+        cout << endl;
+    }
+
+    void dfs(string str, int split_position) {
+        if(split_position == str.size()) {
+            // cout << "valid: ";
+            // out(current_split);
+            result.push_back(current_split);
+            return;
+        }
+        if(split_position > str.size()) {
+            // cout << "NOT valid: ";
+            // out(current_split);
+            return;
+        }
+
+        for(int split_size = 1; split_size <= str.size(); split_size++) {
+            //  cout << split_position << " " << split_size <<  " ";
+        // out(current_split);
+            auto substr = str.substr(split_position, split_size);
+            // cout << substr << endl;
+
+            if(is_palindrom(substr)) {
+                current_split.push_back(substr);
+                dfs(str, split_position + split_size);
+                current_split.pop_back();
+            }
+        }
+    }
+
+    vector<vector<string>> partition(string s) {
+        dfs(s, 0);
+        return result;
+    }
+};
+#+end_src
