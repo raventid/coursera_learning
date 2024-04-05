@@ -1,0 +1,73 @@
+#+TITLE: 1356 Sort_integers_by_the_number_of_1_bits
+
+Naive and first solution, that worked for me. Create manual __popcount function and then create a custom comparator for sort, this comparator uses element value for comparison if number of one bits are the same.
+
+#+begin_src c++
+class Solution {
+public:
+    int number_of_ones(int n) {
+        int mask = 1;
+        int count = 0;
+
+        for(int i = 0; i < 32; i++) {
+            if ((mask & n) != 0) {
+                count++;
+            }
+            mask = mask << 1;
+        }
+
+        return count;
+    }
+
+    vector<int> sortByBits(vector<int>& arr) {
+        // Lambda to compare elements - returns true if a < b
+        auto comp = [this](int a, int b) {
+            if(this->number_of_ones(a) == this->number_of_ones(b)) {
+                return a < b;
+            }
+
+            return this->number_of_ones(a) < this->number_of_ones(b);
+        };
+
+        // Sort using the lambda comparison
+        std::sort(arr.begin(), arr.end(), comp);
+
+        return arr;
+    }
+};
+#+end_src
+
+A faster implementation introduces a few possible optimizations. First in comparator we are only computing values ones (in the implementaiton above we are doing this twice (but compiler could probably optimize this, but not 100% sure about that)), also count bits implemented in a slightly different way and seems to be a bit more efficient (we are exiting loop before reaching)
+
+#+begin_src c++
+class Solution {
+public:
+    // Count the number of set bits (1s) in the binary representation of a number.
+    static int countBits(int num) {
+        int count = 0;
+
+        while (num > 0) {
+            count++;
+            num &= (num - 1);  // Clear the least significant set bit.
+        }
+
+        return count;
+    }
+
+    static bool compare(int a, int b) {
+        int bitCountA = countBits(a);
+        int bitCountB = countBits(b);
+
+        if (bitCountA == bitCountB) {
+            return a < b;  // If set bit counts are equal, compare numerically.
+        }
+
+        return bitCountA < bitCountB;  // Sort by the set bit count in ascending order.
+    }
+
+    vector<int> sortByBits(vector<int>& arr) {
+        sort(arr.begin(), arr.end(), compare);
+        return arr;
+    }
+};
+#+end_src
