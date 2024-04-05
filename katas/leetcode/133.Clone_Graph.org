@@ -1,0 +1,52 @@
+#+TITLE: 133 Clone_graph
+
+Here we are using additional space for hashmap with visited values. Also we should remember to not run DFS if we've already seen the node (and it is in dictionary).
+
+#+begin_src c++
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    vector<Node*> neighbors;
+    Node() {
+        val = 0;
+        neighbors = vector<Node*>();
+    }
+    Node(int _val) {
+        val = _val;
+        neighbors = vector<Node*>();
+    }
+    Node(int _val, vector<Node*> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+};
+*/
+
+class Solution {
+public:
+    std::unordered_map<const Node*, Node*> db;
+
+    Node* dfs(const Node* node) {
+        Node* copied = new Node(node->val);
+        db[node] = copied;
+
+        for(const Node* neighbor : node->neighbors) {
+            if(!db.contains(neighbor)) {
+                dfs(neighbor);
+            }
+
+            copied->neighbors.push_back(db[neighbor]);
+        }
+
+        return copied;
+    }
+
+    Node* cloneGraph(Node* node) {
+        if(!node) { return nullptr; }
+
+        return dfs(node);
+    }
+};
+#+end_src
