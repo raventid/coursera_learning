@@ -1,0 +1,45 @@
+#+TITLE: 136 Single Number
+
+Topics: bit manipulation
+
+Link: https://leetcode.com/problems/single-number
+
+Editorial:
+Once you do a few XOR problems it becomes very obvious. You just have to remember the whole point of XOR is for finding bits that are different. Therefore you can find numbers that are different. So 30 XOR 30 = 0. But 30 XOR 30 XOR 2 = 2.
+
+So, for XOR operation it will always leave us with a set of bits that were different. In the case below it's gonna be 10 in decimal represantation.
+
+#+begin_src bash
+30 ^ 10 ^ 5 ^ 30 ^ 5
+#+end_src
+
+
+#+begin_src c++
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int diff = 0;
+
+        for(int i = 0; i < nums.size(); i++) {
+            diff = diff ^ nums[i];
+        }
+
+        return diff;
+    }
+};
+#+end_src
+
+My Elixir attempt to solve similar problem
+
+#+begin_src elixir
+defmodule Solution do
+  @spec single_number(nums :: [integer]) :: integer
+  def single_number(nums) do
+    Enum.reduce(
+      nums,
+      fn current, accumulated_xor ->
+        Bitwise.bxor(current, accumulated_xor)
+      end)
+  end
+end
+#+end_src
