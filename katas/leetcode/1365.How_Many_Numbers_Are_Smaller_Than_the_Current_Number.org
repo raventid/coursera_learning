@@ -1,0 +1,41 @@
+#+TITLE: 1365 How many numbers are smaller than the current number
+
+I was thinking about quadratic algorithm (stupid fullscan).
+Than, sorting the copy of vector and saving number -> pairs<count, original_position_in_vector>.
+
+But ther is another bucket-based version of algorithm:
+- we can do is collect frequency of every number in the vector
+- create partial sums like: 1 is 0 + 1, 2 is 2 + 1 + 0
+- in the last loop we just take 0 if 0, 1 if 2, n - 1 if n (we don't touch the last sum)
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
+        // this problem has a set of interesting contraints we
+        // can use to optimize algorithm for our exact use case
+        vector<int> count;
+        count.resize(101);
+
+        vector<int> ans;
+
+        for(int i = 0; i < nums.size(); i++) {
+            count[nums[i]]++;
+        }
+
+        for(int i = 1; i <= 100; i++) {
+            count[i] += count[i - 1];
+        }
+
+        for(const auto num : nums) {
+            if(num == 0) {
+                ans.push_back(0);
+            } else {
+                ans.push_back(count[num - 1]);
+            }
+        }
+
+        return ans;
+    }
+};
+#+end_src
