@@ -1,0 +1,92 @@
+#+TITLE: 139 Word_break
+
+My first attempt with a simple recursion. This solution works and looks correct, but it is still too slow. Even with string_view I cannot beat time limit excided issue.
+
+#+begin_src c++
+class Solution {
+public:
+    bool can_match(const std::string_view target, const string pattern) {
+        if(target.size() < pattern.size()) {
+            return false;
+        }
+
+        for(int i = 0; i < pattern.size(); i++) {
+            if(target[i] != pattern[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool matcher(const std::string_view s, const vector<string>& dict) {
+        if(s.size() <= 0) {
+            return true;
+        }
+
+        bool anything_matched = false;
+
+        for(int i = 0; i < dict.size(); i++) {
+            if(can_match(s, dict[i])) {
+                anything_matched = anything_matched || matcher(s.substr(dict[i].size(), s.size()), dict);
+            }
+        }
+
+        return anything_matched;
+    }
+
+    bool wordBreak(string s, vector<string>& wordDict) {
+        std::string_view v = std::string_view(s);
+        return matcher(v, wordDict);
+    }
+};
+#+end_src
+
+FORGOT TO ADD MEMO FOR DP AHAHAHA
+
+#+begin_src c++
+class Solution {
+public:
+    unordered_map<string_view, bool> memo;
+
+    bool can_match(const std::string_view target, const string pattern) {
+        if(target.size() < pattern.size()) {
+            return false;
+        }
+
+        for(int i = 0; i < pattern.size(); i++) {
+            if(target[i] != pattern[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool matcher(const std::string_view s, const vector<string>& dict) {
+        if(memo.contains(s)) {
+            return memo[s];
+        }
+        if(s.size() <= 0) {
+            return true;
+        }
+
+        bool anything_matched = false;
+
+        for(int i = 0; i < dict.size(); i++) {
+            if(can_match(s, dict[i])) {
+                anything_matched = anything_matched || matcher(s.substr(dict[i].size(), s.size()), dict);
+            }
+        }
+
+        memo[s] = anything_matched;
+
+        return memo[s];
+    }
+
+    bool wordBreak(string s, vector<string>& wordDict) {
+        std::string_view v = std::string_view(s);
+        return matcher(v, wordDict);
+    }
+};
+#+end_src
