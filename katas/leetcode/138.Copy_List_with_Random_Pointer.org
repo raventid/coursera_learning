@@ -1,0 +1,65 @@
+#+TITLE: 138 Copy_list_with_random_pointer
+
+#+begin_src c++
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+
+    Node(int _val) {
+        val = _val;
+        next = NULL;
+        random = NULL;
+    }
+};
+*/
+
+class Solution {
+public:
+    unordered_map<Node*, Node*> old2new;
+
+    Node* build_copy_with_old_random(Node* _node) {
+        if(!_node) {
+            return nullptr;
+        }
+
+        Node* node = new Node(
+            _node->val
+        );
+
+        node->random = _node->random;
+
+        return node;
+    }
+
+    Node* copyRandomList(Node* head) {
+        Node* dummy = new Node(-1);
+
+        Node* new_head = build_copy_with_old_random(head);
+        dummy->next = new_head;
+        old2new[head] = new_head;
+
+        while(head) {
+            new_head->next = build_copy_with_old_random(head->next);
+
+            new_head = new_head->next;
+            head = head->next;
+
+            old2new[head] = new_head;
+        }
+
+        new_head = dummy->next;
+
+        while(new_head) {
+            Node* random = old2new[new_head->random];
+            new_head->random = random;
+            new_head = new_head->next;
+        }
+
+        return dummy->next;
+    }
+};
+#+end_src
