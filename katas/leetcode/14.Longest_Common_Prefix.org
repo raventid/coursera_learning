@@ -1,0 +1,21 @@
+#+TITLE: 14 Longest_common_prefix
+
+#+begin_src c++
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        string prefix = strs[0];
+
+        for(const string& s : strs) {
+            for(int i = 0; i < prefix.size(); i++) {
+                if(prefix[i] != s[i]) {
+                    prefix = prefix.substr(0, i);
+                    break;
+                }
+            }
+        }
+
+        return prefix;
+    }
+};
+#+end_src
