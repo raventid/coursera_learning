@@ -1,0 +1,31 @@
+#+TITLE: 229 Majority element II
+
+My first initial implementation. Quite an obvious solution, based on a btree map.
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> majorityElement(vector<int>& nums) {
+        map<int, int> storage;
+        int coeff = nums.size() / 3;
+
+        for(int i = 0; i < nums.size(); i++) {
+            int current_value = nums[i];
+            storage[current_value]++;
+        }
+
+        vector<int> result;
+        for(auto& [current_value, times_seen] : storage) {
+            if(times_seen > coeff) {
+                result.push_back(current_value);
+            }
+        }
+
+        return result;
+    }
+};
+#+end_src
+
+Boyer moore algo
+
+TODO: For different voting tasks this is a very useful algo to know, so I should learn it.
