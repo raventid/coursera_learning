@@ -1,0 +1,5 @@
+#+TITLE: 2265 Count_nodes_equal_to_average_of_subtree
+
+TODO: Does (100 + ((2 + 3 + 4) / 3) + ((7 + 10) / 2)) / 3 is the same as (100 + 2 + 3 + 4 + 7 + 10) / 6?
+
+Need to refresh my arithmetic knowledge.
