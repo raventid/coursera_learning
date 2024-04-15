@@ -1,0 +1,98 @@
+#+TITLE: 1424 Diagonal traversal II
+
+Initial solution tries to just traverse everything in diagonal order and if element
+does not exist it skips it. This solution times out, becase it is fairly inefficient.
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> result;
+
+    void traverse(vector<vector<int>>& nums, int longest_column, int row, int column) {
+        while(row >= 0 && column <= longest_column) {
+            vector<int> row_line = nums[row];
+
+            if(row_line.size() > column) {
+                result.push_back(row_line[column]);
+            }
+
+            row--;
+            column++;
+        }
+    }
+
+    vector<int> findDiagonalOrder(vector<vector<int>>& nums) {
+        int rows = nums.size() - 1;
+        int columns = nums[rows].size() - 1;
+        int longest_column = 0;
+
+        for(int row = 0; row <= rows; row++) {
+            int cur = nums[row].size();
+            longest_column = std::max(longest_column, cur);
+        }
+
+        for(int row = 0; row <= rows; row++) {
+            traverse(nums, longest_column, row, 0);
+        }
+
+        for(int column = 1; column <= longest_column; column++) {
+            traverse(nums, longest_column, rows, column);
+        }
+
+        return result;
+    }
+};
+#+end_src
+
+Another attempt, what if we observe the next thing, coordinates always sum to the same number on diagonal. Illustrated by the next ascii art.
+
+(0,0 = 0) (0,1 = 1) (0,2 = 2)
+(1,0 = 1) (1,1 = 2) (1,2 = 3)
+(2,0 = 2) (2,1 = 3) (2,2 = 4)
+
+So, what we can do here is to move line by line and group number based on diagonal.
+The other thing is that we are getting them in reversed order. For example we will first push back (0,1) and later (1,0). So, when, we will form a final result we should travers them in rever order, the good thing is that diagonal number constatly grows, so we can safely user array for grouping.
+
+With this approach we do not not array-miss, so we very efficient on checking cells.
+
+The only thing I don't like about this code is this formation of grouped matrix, because we have to do a terrible things here. I want to write something like
+
+#+begin_example
+grouped[diagonal].push_back(nums[i][j]).or_initialize_with(nums[i][j]);
+#+end_example
+
+This code works because diagonal number increases 1 by 1 so grouped.push_back will increase vector by 1 and it's ok, but still I feel this is fragile code.
+
+TODO: Maybe improve my approach to work around this issue in an elegant way.
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> findDiagonalOrder(vector<vector<int>>& nums) {
+        vector<vector<int>> grouped;
+        grouped.resize(nums.size());
+
+        vector<int> result;
+
+        for(int i = 0; i < nums.size(); i++) {
+          for(int j = 0; j < nums[i].size(); j++) {
+            int diagonal = i + j;
+
+            if(diagonal < grouped.size()) {
+                grouped[diagonal].push_back(nums[i][j]);
+            } else {
+                grouped.push_back({ nums[i][j] });
+            }
+          }
+        }
+
+        for(int i = 0; i < grouped.size(); i++) {
+          for(int j = grouped[i].size() - 1; j >= 0; j--) {
+            result.push_back(grouped[i][j]);
+          }
+        }
+
+        return result;
+    }
+};
+#+end_src
