@@ -1,0 +1,27 @@
+#+TITLE: 152 Maximum_product_subarray
+
+It's not easy to come up with an elegant solution, but this is kinda a tabular DP approach with tracking minimum and maximum optimums.
+
+Also it is interesting to look at this solution from an Finite State Automata perspective. What I mean by that is that this solution basically changing the state of 3 elements, current_max, current_min and absolute_max. And one more time it is a proof that every data stream processing algrorithm is representable using FSA approach to designing data processing.
+
+#+begin_src c++
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        int ans = nums[0];
+        int min = 1, max = 1;
+
+        for(const auto n : nums) {
+          int candidate1 = n * max;
+          int candidate2 = n * min;
+
+          max = std::max({candidate1, candidate2, n});
+          min = std::min({candidate1, candidate2, n});
+
+          ans = std::max(max, ans);
+        }
+
+        return ans;
+    }
+};
+#+end_src
