@@ -1,0 +1,65 @@
+#+TITLE: 143 Reorder_list
+
+TODO: It was notoriously difficult to solve this problem. I've made a lot of mistakes and it was very difficult to find an optimal model
+
+
+#+begin_src c++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverse(ListNode* head) {
+        ListNode* previous = nullptr;
+
+        while(head != nullptr) {
+            ListNode* next = head->next;
+            head->next = previous;
+
+            previous = head;
+            head = next;
+        }
+
+        return previous;
+    }
+
+    ListNode* mergeLists(ListNode* target, ListNode* source) {
+        ListNode* head = target;
+
+        while(target) {
+            cout << target->val << endl;
+            ListNode* breaking_point = target->next;
+            target->next = source;
+
+            // Flip target and source
+            target = target->next;
+            source = breaking_point;
+        }
+
+        return head;
+    }
+
+    void reorderList(ListNode* head) {
+        if(head->next == nullptr || head->next->next == nullptr) {
+            return;
+        }
+
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        while(fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        head = mergeLists(head, reverse(slow));
+    }
+};
+#+end_src
