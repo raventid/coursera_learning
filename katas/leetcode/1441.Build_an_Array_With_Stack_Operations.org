@@ -1,0 +1,27 @@
+#+TITLE: 1441 Build_an_array_with_stack_operations
+
+Initial and working approach based on computation. (No emulation)
+
+#+begin_src c++
+class Solution {
+public:
+    vector<string> buildArray(vector<int>& target, int n) {
+        vector<string> result;
+
+        for(int i = 0; i < target.size(); i++) {
+            int previous = i == 0 ? 0 : target[i-1];
+            int current = target[i];
+
+            result.push_back("Push");
+
+            while(current - previous > 1) {
+                result.push_back("Pop");
+                result.push_back("Push");
+                previous++;
+            }
+        }
+
+        return result;
+    }
+};
+#+end_src
