@@ -1,0 +1,89 @@
+#+TITLE: 146 Lru_cache
+
+Classical implementation where, instead of the value itself we store Node* in a hashmap. And we can connect those nodes with a Doubly-Linked List approach. There is no secret knowledge here, just implementation is not easy and you need to write this carefully step by step. There are also many states: what if we out of capacity, what if we already have element in our map and many more other small things we should account for.
+
+#+begin_src c++
+class LRUCache {
+public:
+    class Node {
+    public:
+        int key;
+        int value;
+        Node* prev;
+        Node* next;
+
+        Node(int _key, int _value) {
+            key = _key;
+            value = _value;
+            prev = nullptr;
+            next = nullptr;
+        }
+    };
+
+    unordered_map<int, Node*> storage;
+    int capacity;
+
+    Node* lguard;
+    Node* rguard;
+
+    LRUCache(int _capacity) {
+        capacity = _capacity;
+
+        lguard = new Node(-1, -1);
+        rguard = new Node(-1, -1);
+
+        lguard->next = rguard;
+        rguard->prev = lguard;
+    }
+
+    int get(int key) {
+        if(storage.contains(key)) {
+            Node* node = storage[key];
+            disconnect_node(node);
+            place_node(node);
+
+            return storage[key]->value;
+        }
+
+        return -1;
+    }
+
+    void put(int key, int value) {
+        if(storage.contains(key)) {
+            Node* node = storage[key];
+            disconnect_node(node);
+            delete node;
+        }
+
+        Node* new_node = new Node(key, value);
+        storage[key] = new_node;
+        place_node(new_node);
+
+        if(storage.size() > capacity) {
+            Node* lru_node = lguard->next;
+            disconnect_node(lru_node);
+
+            storage.erase(lru_node->key);
+            delete lru_node;
+        }
+    }
+private:
+    void disconnect_node(Node* node) {
+        Node* prev = node->prev;
+        Node* next = node->next;
+
+        prev->next = next;
+        next->prev = prev;
+    }
+
+    void place_node(Node* node) {
+        Node* prev = rguard->prev;
+
+        prev->next = node;
+        rguard->prev = node;
+
+        node->next = rguard;
+        node->prev = prev;
+    }
+};
+#+end_src
