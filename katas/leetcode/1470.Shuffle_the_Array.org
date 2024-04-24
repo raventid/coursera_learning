@@ -1,0 +1,25 @@
+#+TITLE: 1470 Shuffle_the_array
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> shuffle(vector<int>& nums, int n) {
+        vector<int> result;
+        result.resize(nums.size());
+
+        int l = 0;
+
+        for(int i = 0; i < nums.size(); i++) {
+            if(i % 2 == 0) {
+                result[i] = nums[l];
+                l++;
+            } else {
+                result[i] = nums[n];
+                n++;
+            }
+        }
+
+        return result;
+    }
+};
+#+end_src
