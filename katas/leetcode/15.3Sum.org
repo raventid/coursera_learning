@@ -1,0 +1,70 @@
+#+TITLE: 15 3sum
+
+Initital solution that does not work because it is too slow
+
+
+#+begin_src c++
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        set<vector<int>> result;
+
+        for(int i = 0; i < nums.size() - 2; i++) {
+            for(int j = i+1; j < nums.size() - 1; j++) {
+                for(int z = j+1; z < nums.size(); z++) {
+                    if((nums[i] + nums[j] + nums[z]) == 0) {
+                        vector<int> tmp = {nums[i], nums[j], nums[z]};
+                        std::sort(tmp.begin(), tmp.end());
+                        result.insert(tmp);
+                    }
+                }
+            }
+        }
+
+        return std::vector<vector<int>>(result.begin(), result.end());
+    }
+};
+#+end_src
+
+
+One of the possible solutions with sorting and two pointers that are computing all possibl two sums. (TODO: binary search-based solution)
+#+begin_src c++
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> result;
+
+        int current_value = INT_MAX;
+
+        std::sort(nums.begin(), nums.end());
+
+        for(int i = 0; i < nums.size() - 2; i++) {
+            if(current_value == nums[i]) {
+                continue;
+            } else {
+                current_value = nums[i];
+            }
+
+            int target = nums[i];
+            int l = i + 1;
+            int r = nums.size() - 1;
+
+            while(l < r) {
+                if(target + nums[l] + nums[r] < 0) {
+                    l++;
+                } else if(target + nums[l] + nums[r] > 0) {
+                    r--;
+                } else {
+                    result.push_back({target, nums[l], nums[r]});
+                    l++;
+                    while(nums[l] == nums[l-1] && l < r) {
+                        l++;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+};
+#+end_src
