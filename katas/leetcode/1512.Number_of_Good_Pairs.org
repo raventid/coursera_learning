@@ -1,0 +1,58 @@
+#+TITLE: 1512 Number_of_good_pairs
+
+Initial approach is N * N/2, which is O(N^2). Just loop and compare all possible pairs. Very simple and cache friendly solution, but not a great asymptotics.
+
+#+begin_src c++
+class Solution {
+public:
+    int numIdenticalPairs(vector<int>& nums) {
+        int good_pairs = 0;
+
+        for(int i = 0; i < nums.size() - 1; i++) {
+            for(int j = i + 1; j < nums.size(); j++) {
+                if (nums[i] == nums[j]) { good_pairs++; }
+            }
+        }
+
+        return good_pairs;
+    }
+};
+#+end_src
+
+One of the possible O(N) solutions is to notice how we can calculate a number of pairs from the amount of the same element we have in array.
+
+#+begin_src c++
+class Solution {
+public:
+    int numIdenticalPairs(vector<int>& nums) {
+        int good_pairs = 0;
+        unordered_map<int, int> count;
+
+        // [1] -> 0
+        // [1,1] -> 0 + 1 = 1
+        // [1,1,1] -> 0 + 1 + 2 = 3
+        // [1,1,1,1] -> 0 + 1 + 2 + 3 = 6
+        // [1,1,1,1,1] -> 0 + 1 + 2 + 3 + 4 = 10
+        // [1,1,1,1,1,1] -> 0 + 1 + 2 + 3 + 4 + 5 = 14
+
+        // To explain this combinatorics -
+        // first element can create 6 pairs
+        // second element can create 5 pairs
+        // third element can create 4 pairs
+        // ...
+        // [1,1,1,1,1,1,1] -> 6 + 5 + 4 + 3 + 2 + 1 = 21
+
+        for (int e: nums) {
+            // zero on the first step, later it will be 1,2,3...
+            int previous_value = count[e]; // zero by default
+            count[e]++;
+            // here we move in the different direction,
+            // from the example above, first we add 0, than 1,
+            // than 2, than 3, etc
+            good_pairs += previous_value;
+        }
+
+        return good_pairs;
+    }
+};
+#+end_src
