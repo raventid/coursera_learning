@@ -1,0 +1,32 @@
+#+TITLE: 153 Find_minimum_in_rotated_sorted_array
+
+Many binary search problems are still quite complicated to me. So I'm not sure I can confidently solve them.
+
+#+begin_src c++
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+       int l = 0;
+       int r = nums.size() - 1;
+       int ans = nums[0];
+
+       while(l <= r) {
+           if(nums[l] < nums[r]) {
+               ans = std::min(ans, nums[l]);
+               break;
+           }
+
+           int mid = l + (r - l) / 2;
+           ans = std::min(ans, nums[mid]);
+
+           if(nums[mid] >= nums[l]) {
+               l = mid + 1;
+           } else {
+               r = mid - 1;
+           }
+       }
+
+       return ans;
+    }
+};
+#+end_src
