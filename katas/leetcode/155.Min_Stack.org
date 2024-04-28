@@ -1,0 +1,58 @@
+#+TITLE: 155 Min_stack
+
+
+#+begin_src c++
+class MinStack {
+public:
+    vector<int> main_storage;
+    vector<int> min_storage;
+    int current_min;
+
+    MinStack() {
+        vector<int> main_storage = {};
+        vector<int> min_storage = {};
+        current_min = INT_MAX;
+    }
+
+    void push(int val) {
+        if(val < current_min) {
+            current_min = val;
+        }
+
+        main_storage.push_back(val);
+        min_storage.push_back(current_min);
+    }
+
+    void pop() {
+        main_storage.pop_back();
+        min_storage.pop_back();
+
+        if(min_storage.empty()) {
+            current_min = INT_MAX;
+        } else {
+            current_min = min_storage.back();
+        }
+    }
+
+    int top() {
+        auto val = main_storage.back();
+
+        return val;
+    }
+
+    int getMin() {
+        auto val = min_storage.back();
+
+        return val;
+    }
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack* obj = new MinStack();
+ * obj->push(val);
+ * obj->pop();
+ * int param_3 = obj->top();
+ * int param_4 = obj->getMin();
+ */
+#+end_src
