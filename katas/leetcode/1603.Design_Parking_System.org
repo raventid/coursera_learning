@@ -1,0 +1,41 @@
+#+TITLE: 1603 Design_parking_system
+
+#+begin_src c++
+class ParkingSystem {
+public:
+    int big;
+    int medium;
+    int small;
+
+    ParkingSystem(int _big, int _medium, int _small) {
+        big = _big;
+        medium = _medium;
+        small = _small;
+    }
+
+    bool addCar(int carType) {
+        switch(carType) {
+            case 1:
+                if(big > 0) {
+                    big--;
+                    return true;
+                }
+                break;
+            case 2:
+                if(medium > 0) {
+                    medium--;
+                    return true;
+                }
+                break;
+            case 3:
+                if(small > 0) {
+                    small--;
+                    return true;
+                }
+                break;
+        };
+
+        return false;
+    }
+};
+#+end_src
