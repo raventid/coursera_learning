@@ -1,0 +1,64 @@
+#+TITLE: 167 Two_sum_ii_input_array_is_sorted
+
+There might be multiple solutions to this problem, my initial thought was to use binary search, basically iterate over array and look for (target - current_element) value. So, this is O(N * log N) solution.
+
+There is a better solution, with two cursors we can just scan the array and act in the next way. If target sum is bigger than current sum we move the right_cursor to the left, if current sum is smaller than our target we move left_cursor to the right.
+
+Below is the proof (not very strict) that this solution is correct.
+
+#+begin_comment
+The two pointer method seems pretty straight forward. Increase L if sum is smaller, decrease R if sum is larger.
+
+But I was having the same question as many others: How to prove that the algorithm is actually correct? Why can't I decrease R if the sum is smaller? Here is my idea:
+
+Forget about the 1-indexed array thing, say it's 0-indexed. Assume that we are using two pointers L and R with starting position of 0 and n-1. And we know that it's guaranteed to have a solution [X, Y] where nums[X] + nums[Y] = Traget. Then
+
+Theorem 1: With our proposed two pointer algorithm, at least one of L or R will reach its solution position first. That is, either L reaches X first, or R reaches Y first.
+
+This is obvious. L and R will never cross. If L keeps increasing and R keeps decreasing, and there is a solution, at one of L and R must reaches the right position first (they can arrive at the same time, doesn't matter.)
+
+Theorem 2: With our proposed algorithm, if L or R is at its solution position, they will not keep going and then miss the position.
+
+Say the solution is [X, Y].
+
+If L find its position first. L = X, R = Y + K. K is some random non-negative number. Because the array is sorted, nums[L] + nums[R] > Target. Our algorithm will then decrease R.
+
+Vice versa if R find its position first.
+
+I think now it's proven that the algo will work.
+#+end_comment
+
+Here is my implementation. I don't like this endless loop. Maybe it would be more elegant to write it as:
+
+#+begin_src c++
+while(current_sum != target) { ... }
+#+end_src
+
+But in this case it would be difficult to use this current_sum variable and I'll have to write a raw expression, which I don't want to do
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& numbers, int target) {
+      int front_cursor = 0;
+      int rear_cursor = numbers.size() - 1;
+      bool found = false;
+
+      while(!found) {
+        int current_sum = numbers[front_cursor] + numbers[rear_cursor];
+
+        if(current_sum > target) {
+          rear_cursor--;
+        } else if(current_sum < target) {
+          front_cursor++;
+        } else {
+          found = true;
+          return {front_cursor+1, rear_cursor+1};
+        }
+      }
+
+      // Unreachable
+      return { -1, -1 };
+    }
+};
+#+end_src
