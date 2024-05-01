@@ -1,0 +1,28 @@
+#+TITLE: 169 Majority_element
+
+Initial attemp with Boyer Moor voting algo
+
+#+begin_src c++
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        int element = 0;
+        int most_frequent = 0;
+
+        for(auto i : nums) {
+            if(element == i) {
+                most_frequent++;
+            } else {
+                if(most_frequent == 0) {
+                    element = i;
+                    most_frequent = 1;
+                } else {
+                    most_frequent--;
+                }
+            }
+        }
+
+        return element;
+    }
+};
+#+end_src
