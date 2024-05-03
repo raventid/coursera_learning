@@ -1,0 +1,41 @@
+#+TITLE: 1743 Restore_the_array_from_adjacent_pairs
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> restoreArray(vector<vector<int>>& adjacentPairs) {
+        std::unordered_map<int, vector<int>> pairs;
+
+        for(auto pair : adjacentPairs) {
+            int a = pair[0], b = pair[1];
+            pairs[a].push_back(b);
+            pairs[b].push_back(a);
+        }
+
+        vector<int> result;
+
+        for(auto [node, neighbours] : pairs) {
+            if(neighbours.size() == 1) {
+                result.push_back(node);
+                result.push_back(neighbours[0]);
+                break;
+            }
+        }
+
+        while(result.size() <= adjacentPairs.size()) {
+            auto current = result[result.size() - 1];
+            auto prev = result[result.size() - 2];
+
+            auto neighbours = pairs[current];
+
+            if (neighbours[0] != prev) {
+                result.push_back(neighbours[0]);
+            } else {
+                result.push_back(neighbours[1]);
+            }
+        }
+
+        return result;
+    }
+};
+#+end_src
