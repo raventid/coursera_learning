@@ -1,0 +1,24 @@
+#+TITLE: 1759 Count_number_of_homogenous_substrings
+
+
+#+begin_src c++
+class Solution {
+public:
+    int countHomogenous(string s) {
+        int intermediate = 1;
+        int counter = 1;
+
+        for(int i = 1; i < s.size(); i++) {
+            if(s[i-1] == s[i]) {
+                intermediate++;
+            } else {
+                intermediate = 1;
+            }
+
+            counter = (counter + intermediate) % 1000000007;
+        }
+
+        return counter;
+    }
+};
+#+end_src
