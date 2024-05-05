@@ -1,0 +1,53 @@
+#+TITLE: 1814 Count_nice_pairs_in_an_array
+
+The trickiest part here is to see other form of condition:
+
+First one makes a lot of sense and triggers the intuition, but what about the second one?
+
+- 0 <= i < j < nums.length
+- nums[i] + rev(nums[j]) == nums[j] + rev(nums[i])
+
+Here we can use a simple algebraic transformation and noted that
+
+nums[i] + rev(nums[j]) == nums[j] + rev(nums[i]) is equals to
+
+nums[i] - rev(nums[i]) == nums[j] - rev(nums[j])
+
+After this solution becomes obvious and writes itself.
+
+#+begin_src c++
+class Solution {
+public:
+    const int M = 1e9 + 7;
+
+    int reverse(int original) {
+        int reversed = 0;
+
+        while(original > 0) {
+            int remainder = original % 10;
+            original = original / 10;
+
+            reversed = reversed * 10 + remainder;
+        }
+
+        return reversed;
+    }
+
+    int countNicePairs(vector<int>& nums) {
+        unordered_map<int, int> seen;
+        int counter = 0;
+
+        for(int i = 0; i < nums.size(); i++) {
+            int candidate = nums[i] - reverse(nums[i]);
+
+            if(seen.contains(candidate)) {
+                counter = (counter + seen[candidate]) % M;
+            }
+
+            seen[candidate]++;
+        }
+
+        return counter;
+    }
+};
+#+end_src
