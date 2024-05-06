@@ -1,0 +1,45 @@
+#+TITLE: 1845 Seat_reservation_manager
+
+Can be quite easily solved with a Priority Queue, nothing is especially interesting about it.
+
+#+begin_src c++
+class SeatManager {
+public:
+    priority_queue<int, vector<int>, greater<>> pq;
+
+    SeatManager(int n) {
+        vector<int> container;
+        container.reserve(n);
+
+        priority_queue<
+          int,
+          vector<int>,
+          greater<>
+        > queue (greater<>(), move(container));
+
+        pq = queue;
+
+        for(int i = 1; i <= n; i++) {
+            pq.push(i);
+        }
+    }
+
+    int reserve() {
+        int seatNumber = pq.top();
+        pq.pop();
+
+        return seatNumber;
+    }
+
+    void unreserve(int seatNumber) {
+        pq.push(seatNumber);
+    }
+};
+
+/**
+ * Your SeatManager object will be instantiated and called as such:
+ * SeatManager* obj = new SeatManager(n);
+ * int param_1 = obj->reserve();
+ * obj->unreserve(seatNumber);
+ */
+#+end_src
