@@ -1,0 +1,22 @@
+#+TITLE: 1887 Reduction_operations_to_make_the_array_elements_equal
+
+This algorithm is a math model of a process. We are not actually emulating what task is asking us to emulate
+but we are instead modelling the situation and calculating the required result.
+
+#+begin_src c++
+class Solution {
+public:
+    int reductionOperations(vector<int>& nums) {
+        int result = 0;
+        std::sort(nums.begin(), nums.end(), greater());
+
+        for(int i = 1; i < nums.size(); i++) {
+            if(nums[i - 1] != nums[i]) {
+                result += i;
+            }
+        }
+
+        return result;
+    }
+};
+#+end_src
