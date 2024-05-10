@@ -1,0 +1,35 @@
+#+TITLE: 191 Number_of_1_bits
+
+Topics: bit manipulation
+
+Here we are implementing a very simple approach, iterating over bits in number and on every step we are changing a mask by moving a bit to the left.
+
+So, we are starting with the following mask:
+
+0000000000000000001;
+
+And then we are moving this mask structure to the next state like:
+
+mask = mask << 1; // move bit in the mask
+
+0000000000000000010;
+
+#+begin_src c++
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+      uint32_t mask = 1;
+      int counter = 0;
+
+      for(int i = 0; i < 32; i++) {
+          if((n & mask) != 0) {
+              counter++;
+          }
+
+          mask = mask << 1; // move bit in the mask
+      }
+
+      return counter;
+    }
+};
+#+end_src
