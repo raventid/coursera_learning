@@ -1,0 +1,67 @@
+#+TITLE: 1921 Eliminate_maximum_number_of_monsters
+
+I personally think this solution is good, but Leetcode is disagree with me.
+
+#+begin_example
+dist = [4,2,3]
+speed = [2,1,1]
+
+Output: 1
+Expected: 3
+#+end_example
+
+I eliminate monsters who are comming to close to the borderline. But I guess the idea was, that you can eliminate any monster at all. Good point.
+
+#+begin_src c++
+class Solution {
+public:
+    int eliminateMaximum(vector<int>& dist, vector<int>& speed) {
+        int eliminated = 0;
+        map<int, int> timeline;
+
+        for(int i = 0; i < dist.size(); i++) {
+            int minutes_to_reach = ceil(dist[i] / speed[i]);
+            timeline[minutes_to_reach]++;
+        }
+
+        for(auto it = timeline.cbegin(); it != timeline.cend(); ++it) {
+            eliminated++;
+            if(it->second != 1) {
+                break;
+            }
+        }
+
+        return eliminated;
+    }
+};
+#+end_src
+
+Here is another logic:
+
+#+begin_src c++
+class Solution {
+public:
+  int eliminateMaximum(vector<int>& dist, vector<int>& speed) {
+    for(int i = 0; i < dist.size(); i++) {
+      dist[i] = (dist[i] - 1) / speed[i]; // as usual ceil(dist / speed) is not good
+    }
+
+    std::sort(dist.begin(), dist.end());
+
+    // we shoot monsters (in the arrival order),
+    // until a monster arrives earlier than we can make our next shot
+
+    // i.e., if we have made 5 shots,
+    // and the next monster arrives in 4 minutes, we lose
+    for(int shoot = 0; shoot < dist.size(); shoot++) {
+      int next_monster_position = shoot;
+
+      if(shoot > dist[next_monster_position]) {
+        return shoot;
+      }
+    }
+
+    return dist.size();
+  }
+};
+#+end_src
