@@ -1,0 +1,11 @@
+#+TITLE: 1929 Concatenation_of_array
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> getConcatenation(vector<int>& nums) {
+        nums.insert(nums.end(), nums.begin(), nums.end());
+        return nums;
+    }
+};
+#+end_src
