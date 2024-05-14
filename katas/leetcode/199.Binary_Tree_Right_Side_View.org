@@ -1,0 +1,50 @@
+#+TITLE: 199 Binary_tree_right_side_view
+
+#+begin_src c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> result;
+
+    void bfs(TreeNode* root) {
+        queue<TreeNode*> level;
+        level.push(root);
+
+        while(level.size() != 0) {
+            int current_level_len = level.size();
+            int not_found_yet = true;
+
+            for(int i = 0; i < current_level_len; i++) {
+                // rightmost on this level
+                TreeNode* node = level.front();
+                level.pop();
+
+                if(!node) { continue; }
+
+                if(not_found_yet) {
+                    result.push_back(node->val);
+                    not_found_yet = false;
+                }
+
+                level.push(node->right);
+                level.push(node->left);
+            }
+        }
+    }
+
+    vector<int> rightSideView(TreeNode* root) {
+        bfs(root);
+        return result;
+    }
+};
+#+end_src
