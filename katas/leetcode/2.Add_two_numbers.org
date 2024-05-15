@@ -1,0 +1,51 @@
+#+TITLE: 2 Add_two_numbers
+
+Nothing special here, the only thing to be careful about is to save carry till the end of computation. Even if we only have the rest of the left number, it could be 9->9->9->9->9, so in this case we should move our carry til the end of the loop, and also add additional check after the loop, because we might still have a carry after traversing the longest number.
+
+#+begin_src c++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        int carry = 0;
+        ListNode* dummy = new ListNode();
+        ListNode* dummy_head = dummy;
+
+        while(l1 || l2) {
+            int sum = 0;
+
+            if(l1) {
+                sum += l1->val;
+                l1 = l1->next;
+            }
+
+            if(l2) {
+                sum += l2->val;
+                l2 = l2->next;
+            }
+
+            sum += carry;
+            carry = sum / 10;
+            int remainder = sum % 10;
+
+            dummy->next = new ListNode(remainder);
+            dummy = dummy->next;
+        }
+
+        if(carry) {
+            dummy->next = new ListNode(carry);
+        }
+
+        return dummy_head->next;
+    }
+};
+#+end_src
