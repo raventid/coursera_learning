@@ -1,0 +1,172 @@
+#+TITLE: 200 _number_of_islands
+
+I've spent a huge amount of time on this monumental solution and it looks rather ugly. Still, simple bfs and dfs solutions usually show much better results in comparison to those complicated UF :(
+
+#+begin_src c++
+#include <vector>
+#include <set>
+#include <tuple>
+
+struct DisjointSet {
+    std::vector<int> parent;
+    std::vector<int> size;
+
+    DisjointSet(int n) {
+        parent.resize(n);
+        size.resize(n);
+
+        for(int i = 0; i < n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+
+    int root(int v) {
+        if (v == parent[v]) {
+            return v;
+        }
+
+        return parent[v] = root(parent[v]);
+    }
+
+    // here we are doing a very tiny adaptation of algorithm for our case
+    // we want to understand if we are connecting new sets or not, because in
+    // this case we can track how many roots we have
+    bool union_set(int a, int b) {
+        a = root(a);
+        b = root(b);
+
+        if (a != b) {
+            if (size[a] < size[b]) {
+                std::swap(a, b);
+            }
+
+            parent[b] = a;
+            size[a] += size[b];
+            return true;
+        } else {
+          // roots are the same we didn't make a new unification
+          return false;
+        }
+    }
+};
+
+class Solution {
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        auto height = grid.size();
+        auto width = grid[0].size();
+        auto disjoint_set = DisjointSet(height * width);
+        int counter = 0;
+
+        for(int i = 0; i < height; i++) {
+            for(int j = 0; j < width; j++) {
+             auto [current_value, current_index] = get_index(i, j, width, height, grid);
+
+                if (current_value == '1') {
+                    counter++;
+
+                    auto [above_value, above_index] = get_above_cell(i, j, width, height, grid);
+                    if (above_value == '1') {
+                        if (disjoint_set.union_set(current_index, above_index)) {
+                          counter--;
+                        }
+                    }
+
+                    auto [left_value, left_index] = get_left_cell(i, j, width, height, grid);
+                    if (left_value == '1') {
+                        if (disjoint_set.union_set(current_index, left_index)) {
+                          counter--;
+                        }
+                    }
+
+                    auto [right_value, right_index] = get_right_cell(i, j, width, height, grid);
+                    if (right_value == '1') {
+                        if (disjoint_set.union_set(current_index, right_index)) {
+                          counter--;
+                        }
+                    }
+
+                    auto [bottom_value, bottom_index] = get_bottom_cell(i, j, width, height, grid);
+                    if (bottom_value == '1') {
+                        if (disjoint_set.union_set(current_index, bottom_index)) {
+                          counter--;
+                        }
+                    }
+                }
+            }
+        }
+
+        return counter;
+    }
+
+std::tuple<char, int> get_index(int row, int col, int width, int height, vector<vector<char>>& grid) {
+  return std::make_tuple( grid[row][col], (row * width) + col );
+}
+
+std::tuple<char, int> get_above_cell(int row, int col, int width, int height, vector<vector<char>>& grid) {
+  if (row == 0) { return std::make_tuple('0', -1); }
+  int previous_row = row - 1;
+  return get_index(previous_row, col, width, height, grid);
+}
+
+std::tuple<char, int> get_left_cell(int row, int col, int width, int height, vector<vector<char>>& grid) {
+  if (col == 0) { return std::make_tuple('0', -1); }
+  int previous_col = col - 1;
+  return get_index(row, previous_col, width, height, grid);
+}
+
+std::tuple<char, int> get_right_cell(int row, int col, int width, int height, vector<vector<char>>& grid) {
+  if (col == width - 1) { return std::make_tuple('0', -1); }
+  int next_col = col + 1;
+  return get_index(row, next_col, width, height, grid);
+}
+
+std::tuple<char, int> get_bottom_cell(int row, int col, int width, int height, vector<vector<char>>& grid) {
+  if (row == height - 1) { return std::make_tuple('0', -1); }
+  int next_row = row + 1;
+  return get_index(next_row, col, width, height, grid);
+}
+
+};
+#+end_src
+
+Again, my simple DFS looks much more straightforward and elegant. Unnecessarily complicated UF solution looks terrible in comparison to this.
+
+#+begin_src c++
+class Solution {
+public:
+    void dfs(vector<vector<char>>& grid, int i, int j) {
+      int rows = grid.size();
+      int columns = grid[0].size();
+
+      if(!(i >= 0 && i < rows && j >= 0 && j < columns)) {
+        return;
+      }
+      if(grid[i][j] == '0') {
+        return;
+      }
+
+      grid[i][j] = '0';
+
+      dfs(grid, i + 1, j);
+      dfs(grid, i - 1, j);
+      dfs(grid, i, j + 1);
+      dfs(grid, i, j - 1);
+    }
+
+    int numIslands(vector<vector<char>>& grid) {
+      int counter = 0;
+      for(int i = 0; i < grid.size(); i++) {
+        for(int j = 0; j < grid[0].size(); j++) {
+          if(grid[i][j] == '1') {
+            dfs(grid, i, j);
+            counter++;
+          }
+        }
+      }
+
+      return counter;
+    }
+};
+#+end_src
