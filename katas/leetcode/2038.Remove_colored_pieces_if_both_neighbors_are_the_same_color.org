@@ -1,0 +1,104 @@
+#+TITLE: 2038 Remove_colored_pieces_if_both_neighbors_are_the_same_color
+
+This is a solution using two sets of two-pointers. It does not work and fails some tests.
+
+#+begin_src c++
+class Solution {
+public:
+    bool winnerOfGame(string colors) {
+        int alice_left_pointer = 0;
+        int alice_right_pointer = 0;
+
+        int bob_left_pointer = 0;
+        int bob_right_pointer = 0;
+
+        bool alice_turn = true;
+
+        while(true) {
+            if(alice_turn) {
+                if((alice_right_pointer - alice_left_pointer) < 2) {
+                    alice_left_pointer = alice_right_pointer;
+
+                    if (alice_left_pointer >= colors.size()) { return false; }
+
+                    while(colors[alice_left_pointer] != 'A') {
+                     alice_left_pointer++;
+                     if (alice_left_pointer >= colors.size()) { return false; }
+                    }
+
+                    alice_right_pointer = alice_left_pointer;
+                    while(colors[alice_right_pointer] == 'A' && alice_right_pointer < colors.size()) {
+                      alice_right_pointer++;
+                    }
+                    alice_right_pointer--;
+ cout << alice_left_pointer << endl;
+                cout << alice_right_pointer << endl;
+                    if((alice_right_pointer - alice_left_pointer) < 2) {
+                        return false;
+                    }
+                }
+
+
+
+                alice_left_pointer++;
+                alice_turn = false;
+            } else {
+if((bob_right_pointer - bob_left_pointer) < 2) {
+                    bob_left_pointer = bob_right_pointer;
+
+                    if (bob_left_pointer >= colors.size()) { return true; }
+
+                    while(colors[bob_left_pointer] != 'B') {
+                     bob_left_pointer++;
+                     if (bob_left_pointer >= colors.size()) { return true; }
+                    }
+
+                    bob_right_pointer = bob_left_pointer;
+                    while(colors[bob_right_pointer] == 'B' && bob_right_pointer < colors.size()) {
+                      bob_right_pointer++;
+                    }
+                    bob_right_pointer--;
+
+                    if((bob_right_pointer - bob_left_pointer) < 2) {
+                        return true;
+                    }
+                }
+
+                bob_left_pointer++;
+                alice_turn = true;
+            }
+        }
+    }
+};
+#+end_src
+
+Other approach with a simple pattern patching.
+
+Initialize two variables, aliceWins and bobWins, to keep track of the number of consecutive valid moves each player can make.
+
+Iterate through the string colors from the second character to the second-to-last character. This ensures that we do not consider the edge pieces (the first and last characters), as the rules for removal require pieces to have both neighbors.
+
+For each position i, check if there are three consecutive 'A's or three consecutive 'B's. If there are, increment the corresponding counter (aliceWins or bobWins). This means that Alice can remove the 'A' piece or Bob can remove the 'B' piece at that position.
+
+After iterating through the string, compare the counts of aliceWins and bobWins. If aliceWins is greater than bobWins, Alice wins the game, so return true. Otherwise, Bob wins the game, so return false.
+
+#+begin_src c++
+class Solution {
+ public:
+ bool winnerOfGame(string colors) {
+   int alice_wins = 0, bob_wins = 0;
+
+   // Count the number of consecutive 'A's and 'B's.
+   for (int i = 1; i < colors.size() - 1; i++) {
+     if (colors[i - 1] == 'A' && colors[i] == 'A' && colors[i + 1] == 'A') {
+       alice_wins++;
+     } else if (colors[i - 1] == 'B' && colors[i] == 'B' && colors[i + 1] == 'B') {
+       bob_wins++;
+     }
+   }
+
+   // Alice starts, so if she has strictly more opportunities to remove 'A', she wins.
+   return alice_wins > bob_wins;
+ }
+};
+#+end_src
