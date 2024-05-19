@@ -1,0 +1,55 @@
+#+TITLE: 207 Course schedule
+
+#+begin_src c++
+class Solution {
+public:
+    bool dfs(
+        unordered_map<int, vector<int>>& adj_list,
+        unordered_set<int>& seen,
+        int course
+    ) {
+        if(!adj_list.contains(course)) {
+            return true;
+        }
+        if(seen.contains(course)) {
+            return false;
+        }
+
+        seen.insert(course);
+
+        const auto prerequisites = adj_list[course];
+
+        for(const auto p : prerequisites) {
+            if(!dfs(adj_list, seen, p)) {
+                return false;
+            }
+        }
+
+        adj_list[course].clear();
+        seen.erase(course);
+
+        return true;
+    }
+
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+       unordered_map<int, vector<int>> adj_list;
+
+       for(int i = 0; i < prerequisites.size(); i++) {
+           int course = prerequisites[i][0];
+           int prerequisite = prerequisites[i][1];
+
+           adj_list[course].push_back(prerequisite);
+       }
+
+       for(int i = 0; i < numCourses; i++) {
+           unordered_set<int> seen;
+
+           if(!dfs(adj_list, seen, i)) {
+               return false;
+           }
+       }
+
+       return true;
+    }
+};
+#+end_src
