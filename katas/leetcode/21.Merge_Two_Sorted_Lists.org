@@ -1,0 +1,72 @@
+#+TITLE: 21 Merge_two_sorted_lists
+
+
+#+begin_src c++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        ListNode* head = nullptr;
+        ListNode* cursor = nullptr;
+
+        while(list1 != nullptr && list2 != nullptr) {
+            if(list1->val <= list2->val) {
+                if(cursor == nullptr) {
+                    cursor = list1;
+                    head = list1;
+                    list1 = list1->next;
+                } else {
+                    cursor->next = list1;
+                    cursor = cursor->next;
+                    list1 = list1->next;
+                }
+            } else {
+                if(cursor == nullptr) {
+                    cursor = list2;
+                    head = list2;
+                    list2 = list2->next;
+                } else {
+                    cursor->next = list2;
+                    cursor = cursor->next;
+                    list2 = list2->next;
+                }
+            }
+        }
+
+        while(list1 != nullptr) {
+           if(cursor == nullptr) {
+                    cursor = list1;
+                    head = list1;
+                    list1 = list1->next;
+                } else {
+                    cursor->next = list1;
+                    cursor = cursor->next;
+                    list1 = list1->next;
+                }
+        }
+
+        while(list2 != nullptr) {
+            if(cursor == nullptr) {
+                    cursor = list2;
+                    head = list2;
+                    list2 = list2->next;
+                } else {
+                    cursor->next = list2;
+                    cursor = cursor->next;
+                    list2 = list2->next;
+                }
+        }
+
+        return head;
+    }
+};
+#+end_src
