@@ -1,0 +1,66 @@
+#+TITLE: 211 Design add and search words data structure
+
+The solution is not super complicated, but you need some dedication to write the correct code.
+
+#+begin_src c++
+class Node {
+public:
+    unordered_map<char, Node*> children;
+    bool terminal;
+
+    Node() {
+        terminal = false;
+    }
+};
+
+class WordDictionary {
+public:
+    Node* root;
+
+    WordDictionary() {
+        root = new Node();
+    }
+
+    void addWord(string word) {
+        Node* cur = root;
+
+        for(const auto c : word) {
+            if(!cur->children.contains(c)) {
+                cur->children[c] = new Node();
+            }
+
+            cur = cur->children[c];
+        }
+
+        cur->terminal = true;
+    }
+
+    bool search(string word) {
+        return dfs(root, word, 0);
+    }
+
+    bool dfs(Node* cur, string& word, int index) {
+        for(int i = index; i < word.size(); i++) {
+            char c = word[i];
+
+            if(c == '.') {
+                for(const auto [_key, child_node] : cur->children) {
+                    if(dfs(child_node, word, i + 1)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            } else {
+                if(!cur || !cur->children.contains(c)) {
+                    return false;
+                }
+
+                cur = cur->children[c];
+            }
+        }
+
+        return cur->terminal;
+    }
+};
+#+end_src
