@@ -1,0 +1,219 @@
+#+TITLE: 212. Word search II
+
+Initial idea is to build a Trie data-structure from a dictionary and then do traversal of matrix and start search from every cell, while there is a path in my Trie we continue our traversal, because we still have a chance to find some word in our matrix.
+
+My initial attempt to implement this algorithm is below, but it's still not passig the time limits. I think I'm thinking about this problem in the wrong way, what I'm doing here is I'm taking Trie container and write an external dfs algorithm which uses Trie as a black box in this case. Instead I can attach dfs to the trie itself and try to use Trie as a white box in my dfs traversal. This attempt is going to be implement below.
+
+#+begin_src c++
+enum t_result { PREFIX, WORD, NOT_FOUND };
+
+class Node {
+public:
+    unordered_map<char, Node*> children;
+
+    bool terminal;
+
+    Node() {
+        terminal = false;
+    }
+};
+
+class Trie {
+public:
+    Node* root;
+
+    Trie() {
+        root = new Node();
+    }
+
+    void insert(string word) {
+        Node* cur = root;
+
+        for(const auto c : word) {
+            if(!cur->children.contains(c)) {
+                cur->children[c] = new Node();
+            }
+
+            cur = cur->children[c];
+        }
+
+        cur->terminal = true;
+    }
+
+    const t_result search(vector<char>& word) const {
+        Node* cur = root;
+
+        for(const auto c : word) {
+            if(!cur->children.contains(c)) {
+                return NOT_FOUND;
+            }
+
+            cur = cur->children[c];
+        }
+
+        if(cur->terminal) {
+            return WORD;
+        } else {
+            return PREFIX;
+        }
+    }
+};
+
+
+class Solution {
+public:
+    unordered_set<string> result;
+    vector<char> buffer;
+
+    void dfs(
+        vector<vector<char>>& board,
+        Trie* dict,
+        int rows,
+        int columns,
+        int i,
+        int j
+    ) {
+      if(i < 0 || i >= rows || j < 0 || j >= columns) {
+          return;
+      }
+
+      buffer.push_back(board[i][j]);
+      board[i][j] = '-';
+
+      t_result r = dict->search(buffer);
+
+      switch (r) {
+        case PREFIX:
+            // run search
+            dfs(board, dict, rows, columns, i - 1, j);
+            dfs(board, dict, rows, columns, i, j + 1);
+            dfs(board, dict, rows, columns, i + 1, j);
+            dfs(board, dict, rows, columns, i, j - 1);
+            break;
+        case WORD:
+            // add a word and run the search
+            dfs(board, dict, rows, columns, i - 1, j);
+            dfs(board, dict, rows, columns, i, j + 1);
+            dfs(board, dict, rows, columns, i + 1, j);
+            dfs(board, dict, rows, columns, i, j - 1);
+
+            result.insert(string(buffer.begin(), buffer.end()));
+            break;
+        case NOT_FOUND:
+            // stop here
+            break;
+      }
+
+      board[i][j] = buffer.back();
+      buffer.pop_back();
+    }
+
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        auto dict = new Trie();
+        int rows = board.size();
+        int columns = board[0].size();
+
+        for(string& word : words) {
+            dict->insert(word);
+        }
+
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                dfs(board, dict, rows, columns, i, j);
+            }
+        }
+
+        return vector<string>(result.begin(), result.end());;
+    }
+};
+#+end_src
+
+The solution below uses multiple tricks:
+- instead of using hashset to track unique words we just remove full_word flag and disable adding element on the next step.
+- use array for children with `character - 'a'` (a becomes 0, b becomes 1, in array and further)
+- use `string` instead of `vec<char>` (no need to allocate string from vec<char>)
+
+#+begin_src c++
+class TrieNode {
+public:
+    TrieNode* children[26];
+    bool full_word;
+
+    TrieNode() {
+        for (int i = 0; i < 26; i++) {
+            children[i] = nullptr;
+        }
+        full_word = false;
+    }
+};
+
+class Solution {
+public:
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        for (string& word : words) {
+            insert(word);
+        }
+
+        int rows = board.size();
+        int columns = board[0].size();
+
+        TrieNode* node = root;
+        vector<string> result;
+
+        for(int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                dfs(board, i, j, rows, columns, node, "", result);
+            }
+        }
+
+        return result;
+    }
+private:
+    TrieNode* root = new TrieNode();
+
+    void insert(string word) {
+        TrieNode* node = root;
+        int curr = 0;
+
+        for(int i = 0; i < word.size(); i++) {
+            curr = word[i] - 'a';
+
+            if (node->children[curr] == nullptr) {
+                node->children[curr] = new TrieNode();
+            }
+
+            node = node->children[curr];
+        }
+
+        node->full_word = true;
+    }
+
+    void dfs(vector<vector<char>>& board, int i, int j, int m, int n, TrieNode* node, string word, vector<string>& result) {
+        if (i < 0 || i >= m || j < 0 || j >= n || board[i][j] == '#') {
+            return;
+        }
+
+        char c = board[i][j];
+
+        node = node->children[c - 'a'];
+        if (node == nullptr) {
+            return;
+        }
+
+        word += board[i][j];
+        if (node->full_word) {
+            result.push_back(word);
+            node->full_word = false;
+        }
+
+        board[i][j] = '#';
+
+        dfs(board, i - 1, j, m, n, node, word, result);
+        dfs(board, i + 1, j, m, n, node, word, result);
+        dfs(board, i, j - 1, m, n, node, word, result);
+        dfs(board, i, j + 1, m, n, node, word, result);
+
+        board[i][j] = c;
+    }
+};
+#+end_src
