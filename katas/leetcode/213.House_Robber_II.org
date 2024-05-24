@@ -1,0 +1,55 @@
+#+TITLE: 213 House_robber_ii
+
+Surely, not the most beautifull solution to the problem, because:
+
+- I clean memo cache (fuuuuuuuuuuuu)
+- I have to run DP from 4 different positions (stupid)
+- But it works
+
+#+begin_src c++
+class Solution {
+public:
+    unordered_map<int, int> memo;
+
+    int dp(const vector<int>& nums, const int size, int index) {
+        if(memo.contains(index)) {
+            return memo[index];
+        }
+        if(index >= size) {
+            return 0;
+        }
+
+        int one_step = dp(nums, size, index + 2);
+        int two_steps = dp(nums, size, index + 3);
+
+        memo[index] = std::max(nums[index] + one_step, nums[index] + two_steps);
+
+        return memo[index];
+    }
+
+    int rob(vector<int>& nums) {
+        int size = nums.size();
+
+        if(size == 1) {
+            return nums[0];
+        }
+
+        int best_with_first = std::max(
+            dp(nums, size-1, 1),
+            dp(nums, size-1, 0)
+        );
+
+        memo.clear();
+
+        int best_without_first = std::max(
+            dp(nums, size, 1),
+            dp(nums, size, 2)
+        );
+
+        return std::max(
+            best_with_first,
+            best_without_first
+        );
+    }
+};
+#+end_src
