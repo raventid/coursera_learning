@@ -1,0 +1,10 @@
+#+TITLE: 2235 Add_two_integers
+
+#+begin_src c++
+class Solution {
+public:
+    int sum(int num1, int num2) {
+        return num1 + num2;
+    }
+};
+#+end_src
