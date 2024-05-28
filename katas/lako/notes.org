@@ -1,0 +1,148 @@
+#+TITLE: Notes
+
+
+* Reading inputs and outputs
+
+#+begin_src c++
+ios::sync_with_stdio(0);
+cin.tie(0);
+#+end_src
+
+UPD from codeforces:
+#+begin_src c++
+ios_base::sync_with_stdio(0);
+cout.tie(0);
+cin.tie(0);
+#+end_src
+
+
+Note that the newline "\n" works faster than endl, because endl always
+causes a flush operation.
+
+
+
+The C functions scanf and printf are an alternative to the C++ standard
+streams. They are usually a bit faster, but they are also more difficult to use. The following code reads two integers from the input:
+
+,#+begin_src c++
+int a, b;
+scanf("%d %d", &a, &b);
+#+end_src
+
+
+Sometimes the program should read a whole line from the input, possibly
+containing spaces. This can be accomplished by using the getline function:
+
+#+begin_src c++
+string s;
+getline(cin, s);
+#+end_src
+
+For unknown amount of data:
+
+#+begin_src c++
+while (cin >> x) {
+  // code
+}
+#+end_src
+
+
+In some contest systems, files are used for input and output. An easy solution
+for this is to write the code as usual using standard streams, but add the following lines to the beginning of the code:
+
+#+begin_src c++
+freopen("input.txt", "r", stdin);
+freopen("output.txt", "w", stdout);
+#+end_src
+
+
+
+
+* Numbers
+
+The most used integer type in competitive programming is int, which is a 32-bit
+type with a value range of −231 . . . 231 − 1 or about −2 · 109 . . . 2 · 109.
+
+If the type int is not enough, the 64-bit type long long can be used. It has a value range of −263 . . . 263 − 1 or about −9 · 1018 . . . 9 · 1018.
+
+The following code defines a long long variable:
+
+#+begin_src c++
+long long x = 123456789123456789LL;
+#+end_src
+
+WARNING:
+
+a is an int, so in the end we'll get int result!
+
+#+begin_src c++
+int a = 123456789;
+long long b = a * a; // to fix it we need to do the next: (long long)a*a
+cout << b << "\n"; // -1757895751
+#+end_src
+
+Attention: "Modular arithmetic"
+We can use modular arithmetic when the answer is too large.
+
+** Floating point
+Do not forget to compare them with epsilon
+
+#+begin_src c++
+if (abs(a-b) < 1e-9) {
+  // a and b are equal
+}
+#+end_src
+
+
+2 3
+
+1 -1
+
+1 1
+1 2
+2 2
+
+
+pir = 1
+nip = 1
+
+
+
+5 5
+
+-1 1 1 1 -1
+
+1 1
+2 3
+3 5
+2 5 // 1 4
+1 5
+
+1 1 1 1 1 -1
+
+
+1 1 1 1 1 -1
+
+nip = 1
+
+pir = 3
+nir = 1
+
+5 - 2 = 3
+
+c = 3 + 1
+
+c / 2 = 2
+2 > min(positive_pool, negative_pool)
+
+
+l init: 3
+r init: 5
+l postinit: 2
+r postinit: 4
+l: 2
+r: 4
+NEGATIVE POOL: 1
+POSITIVE INTEGERS: 2
+NEGATIVE INTEGERS: 1
+1

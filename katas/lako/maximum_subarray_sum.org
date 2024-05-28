@@ -1,0 +1,43 @@
+#+TITLE: Maximum Subarray Sum
+
+#+begin_src c++
+int main() {
+  int best = 0;
+
+  // In two loops we use two cursors to stretch a selection over array
+  for (int a = 0; a < n; a++) {
+    for (int b = a; b < n; b++) {
+      int sum = 0;
+
+      // Here we sum the values
+      for (int k = a; k <= b; k++) {
+        sum += array[k];
+      }
+
+      // Comparing to the previous best values
+      best = max(best, sum);
+    }
+  }
+
+  cout << best << "\n";
+}
+#+end_src
+
+
+Two examples:
+
+1. [0, 1, 2, -123, 255, 10]
+2. [255, 120, -500, 5, 5, 6]
+
+#+begin_src c++
+int best = 0, sum = 0;
+
+for (int k = 0; k < n; k++) {
+  sum = max(array[k], sum + array[k]);
+  best = max(best, sum);
+}
+
+cout << best << "\n";
+
+}
+#+end_src
