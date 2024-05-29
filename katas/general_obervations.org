@@ -1,0 +1,32 @@
+#+TITLE: General_obervations
+
+* My mistakes and their reasons
+
+** C++
+*** i = 0 instead of i == 0 in comparisons like if (i == 0)
+
+Mitigation?
+
+Possibly use 0 == i, looks ugly, but helps to avoid the problem
+
+
+*** not enought const usage, just be more careful about it
+
+*** floating point errors on distance related programs
+std::ceil(a / b); vs (a + b - 1) / b;
+std::floor(a / b); vs (a - 1) / b
+
+* My own tasks I find interesting
+
+Imaging you are trading multiple stocks on the market. You are provided with a few vector<int> with a different stock prices.
+
+Apple: [1,2,3,4,3,19,12,20,7]
+Microsoft: [5,4,5,6,1,2,3,4]
+Ibm: [5,97,6,4,3,5,78]
+
+Those vectors size are the same size. You can trade stocks any day (buy and sell in the same time if needed).
+
+Questions:
+
+What is the maximum profit you can get out of all trading time?
+What is the highest profit you can get from trading every stock? (on what days you should've bought and sell the stock)
