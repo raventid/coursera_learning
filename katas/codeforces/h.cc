@@ -1,0 +1,71 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+bool reducable(int counter) {
+  while(counter > 0) {
+    if(counter == 3) {
+      return true;
+    }
+
+    counter = counter - 2;
+  }
+
+  // if it's not 0 (so, counter became negative)
+  // we could not reduce counter properly
+  return counter == 0;
+}
+
+int main() {
+  ios_base::sync_with_stdio(0);
+  cout.tie(0);
+  cin.tie(0);
+
+  int t;
+
+  cin >> t;
+
+  for(int main = 0; main < t; main++) {
+    string str;
+
+    cin >> str;
+
+    char previous_letter = str[0];
+    bool cannot_build = false;
+    int counter = 0;
+
+    for(int i = 0; i < str.length(); i++) {
+      if (previous_letter == str[i]) {
+        counter++;
+      } else {
+        // we are changing letter
+        if (!reducable(counter)) {
+          cannot_build = true;
+        }
+
+        // first letter of a new type
+        counter = 1;
+
+        if(cannot_build) { break; }
+      }
+
+      previous_letter = str[i];
+    }
+
+    // we have some letters left to check
+    if (counter > 0) {
+      if (reducable(counter)) {
+        cout << "YES" << endl;
+      } else {
+        cout << "NO" << endl;
+      }
+    } else {
+      if (cannot_build) {
+        cout << "NO" << endl;
+      } else {
+        cout << "YES" << endl;
+      }
+    }
+  }
+}
