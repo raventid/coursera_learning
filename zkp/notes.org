@@ -1,0 +1,32 @@
+#+TITLE: Notes
+
+* Intro
+C - arithmetic circuit;
+
+S(C); (pp, vp) <- public params for prover and verifier
+
+P(pp, x , w); len(π) = log(C)
+
+
+V(vp, x, π); time() ??
+vp - contains short summary of arithmetic circuit
+
+
+** The trivial SNARK is not a SNARK
+Prover sends w to verifier
+Verifier checks if C(x, w) = 0 and accepts if so
+
+Problems:
+w might be long: we want a short proof
+computing S(x, w) may be hard: we want a "fast" verifier
+w might be a secret: prover might not want to reveal w to verifier
+
+* ZKP MOOC Lecture 2: Overview of Modern SNARK Constructions (Part 3)
+
+#+attr_org: :width 500
+[[file:img/useful_obervation.png][img]]
+
+
+Polynomial?
+Combinatorics and probability?
+Vectors? Vectors multiplication?
