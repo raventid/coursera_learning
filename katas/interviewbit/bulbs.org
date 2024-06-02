@@ -1,0 +1,27 @@
+#+TITLE: Bulbs
+
+Initial - simplest possible solution is easy to come up with.
+
+Greedy algorithm:
+
+#+begin_src c++
+int Solution::bulbs(vector<int> &A) {
+    int cost = 0;
+
+    for(int bulb : A) {
+        if(cost % 2 == 0) {
+            bulb = bulb;
+        } else {
+            bulb = !bulb;
+        }
+
+        if(bulb == 1) {
+            continue;
+        } else {
+            cost++;
+        }
+    }
+
+    return cost;
+}
+#+end_src
