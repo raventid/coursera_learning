@@ -1,0 +1,24 @@
+#+TITLE: 215 Kth_largest_element_in_an_array
+
+Initial solution based on the priority_queue. Maybe it could be more efficient, but still quite good as an approximation.
+
+#+begin_src c++
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        priority_queue<int, vector<int>, std::greater<>> pq;
+
+        for(int i : nums) {
+            pq.push(i);
+        }
+
+        int rest = nums.size() - k;
+
+        for(int i = 0; i < rest; i++) {
+            pq.pop();
+        }
+
+        return pq.top();
+    }
+};
+#+end_src
