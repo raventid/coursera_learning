@@ -12,3 +12,6 @@
 %token COLON
 %token COMMA
 %token EOF
+
+%start <Json.value option> prog
+%%
