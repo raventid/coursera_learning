@@ -15,3 +15,7 @@
 
 %start <Json.value option> prog
 %%
+
+prog:
+  | v = value { Some v }
+  | EOF       { None };
