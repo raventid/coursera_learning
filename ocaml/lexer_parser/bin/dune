@@ -1,4 +1,4 @@
 (executable
  (public_name lexer_parser)
  (name main)
- (libraries lexer_parser))
+ (libraries lexerparser core_unix.command_unix))
