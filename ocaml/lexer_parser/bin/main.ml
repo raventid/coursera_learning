@@ -19,7 +19,7 @@ let parse_with_error_handling lexical_buffer =
       None
     | Parser.Error ->
       fprintf stderr "%a: parser failed with a syntax error\n" print_error_position lexical_buffer;
-      exit (-1)
+      -1 |> exit
 
 let rec parse_and_print_json lexical_buffer =
   match parse_with_error_handling lexical_buffer with
