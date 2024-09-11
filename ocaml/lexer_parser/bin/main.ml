@@ -2,39 +2,42 @@ open Core
 open Lexerparser
 open Lexing
 
-(* module Lexer = Lexerparser.Lexer *)
-(* module Parser = Lexerparser.Parser *)
+let print_error_position output_channel lexical_buffer =
+  let buffer_current_position = lexical_buffer.lex_curr_p in
+  fprintf output_channel "%s:%d:%d"
+    buffer_current_position.pos_fname
+    buffer_current_position.pos_lnum
+    (buffer_current_position.pos_cnum - buffer_current_position.pos_bol + 1)
 
-let print_position outx lexbuf =
-  let pos = lexbuf.lex_curr_p in
-  fprintf outx "%s:%d:%d" pos.pos_fname
-    pos.pos_lnum (pos.pos_cnum - pos.pos_bol + 1)
+let parse_with_error_handling lexical_buffer =
+  let parse = Parser.prog Lexer.read in
+    try
+       parse lexical_buffer
+    with
+    | Lexer.SyntaxError error_message ->
+      fprintf stderr "%a: %s\n" print_error_position lexical_buffer error_message;
+      None
+    | Parser.Error ->
+      fprintf stderr "%a: parser failed with a syntax error\n" print_error_position lexical_buffer;
+      exit (-1)
 
-let parse_with_error lexbuf =
-  try Parser.prog Lexer.read lexbuf with
-  | Lexer.SyntaxError msg ->
-    fprintf stderr "%a: %s\n" print_position lexbuf msg;
-    None
-  | Parser.Error ->
-    fprintf stderr "%a: syntax error\n" print_position lexbuf;
-    exit (-1)
-
-let rec parse_and_print lexbuf =
-  match parse_with_error lexbuf with
-  | Some value ->
-    printf "%a\n" Json.output_value value;
-    parse_and_print lexbuf
+let rec parse_and_print_json lexical_buffer =
+  match parse_with_error_handling lexical_buffer with
+  | Some json_value ->
+    printf "%a\n" Json.output_value json_value;
+    parse_and_print_json lexical_buffer
   | None -> ()
 
-let loop filename () =
-  let inx = In_channel.create filename in
-  let lexbuf = Lexing.from_channel inx in
-  lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = filename };
-  parse_and_print lexbuf;
-  In_channel.close inx
+let process_json_file filename () =
+  let input_channel = In_channel.create filename in
+  let lexical_buffer = Lexing.from_channel input_channel in
+  lexical_buffer.lex_curr_p <- { lexical_buffer.lex_curr_p with pos_fname = filename };
+  parse_and_print_json lexical_buffer;
+  In_channel.close input_channel
 
 let () =
-  Command.basic_spec ~summary:"Parse and display JSON"
+  Command.basic_spec
+    ~summary:"Parse and display JSON"
     Command.Spec.(empty +> anon ("filename" %: string))
-    loop
+    process_json_file
   |> Command_unix.run
