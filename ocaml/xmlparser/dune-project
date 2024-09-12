@@ -19,8 +19,10 @@
  (name xmlparser)
  (synopsis "A short synopsis")
  (description "A longer description")
- (depends ocaml dune)
+ (depends ocaml dune menhir)
  (tags
   (topics "to describe" your project)))
+
+(using menhir 3.0)
 
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/reference/dune-project/index.html
