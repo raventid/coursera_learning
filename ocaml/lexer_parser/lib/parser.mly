@@ -1,3 +1,9 @@
+/* This grammar follows the JSON standard described */
+/* in https://datatracker.ietf.org/doc/html/rfc8259#section-3 */
+
+/* TODO: expose additional parser start that follows original RFC */
+/* with a first JSON spec https://datatracker.ietf.org/doc/html/rfc4627 */
+
 %token <int> INT
 %token <float> FLOAT
 %token <string> ID
