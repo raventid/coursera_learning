@@ -1,2 +1,10 @@
+(menhir
+ (modules parser))
+
+(ocamllex lexer)
+
 (library
- (name xmlparser))
+ (name xmlparser)
+ (modules parser lexer xml)
+ (libraries core)
+)

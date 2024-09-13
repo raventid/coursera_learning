@@ -1,0 +1,6 @@
+<outer>
+  <inner1>Some text</inner1>
+  <inner2>
+    <deeperTag>Deep text</deeperTag>
+  </inner2>
+</outer>
