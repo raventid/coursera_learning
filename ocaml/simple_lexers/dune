@@ -1,0 +1,8 @@
+(ocamllex
+ (modules lexer))
+
+(executable
+ (name runner)
+ (libraries core stdio))
+
+(env (dev (flags (:standard -warn-error -A))))
