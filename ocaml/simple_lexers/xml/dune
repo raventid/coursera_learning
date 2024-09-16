@@ -3,6 +3,7 @@
 
 (executable
  (name runner)
- (libraries core stdio))
+ (libraries core stdio core_unix.command_unix)
+ (preprocess (pps ppx_deriving.show)))
 
 (env (dev (flags (:standard -warn-error -A))))
