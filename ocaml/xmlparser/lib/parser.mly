@@ -1,5 +1,5 @@
 %{
-  open Xml  (* Assuming your type definitions are in a module named Xml *)
+  open Xml
 %}
 
 %token <string> TEXT
@@ -12,40 +12,41 @@
 %%
 
 prog:
-  | v = value     { Some v }
-  | EOF           { None   }
-;
+  | v = element EOF  { Some v }
+  | EOF              { None   };
 
-value:
-  | list { $1 }
-  | leaf { $1 }
-;
+element:
+  | empty_element    { $1 }
+  | leaf_element     { $1 }
+  | nested_element   { $1 }
 
-list:
-  | LEFT_QUOTE; name = TEXT; RIGHT_QUOTE;
-    content = value_list;
-    LEFT_QUOTE; SLASH; close_name = TEXT; RIGHT_QUOTE
-    {
+empty_element:
+  | name = tag_open; close_name = tag_close {
       if name = close_name then
-        List (name, content)
+        Leaf (name, "")
       else
-        raise (Failure ("Mismatched tags: " ^ name ^ " and " ^ close_name))
+        Leaf ("error", "Mismatched tags: " ^ name ^ " and " ^ close_name)
     }
-;
 
-leaf:
-  | LEFT_QUOTE; name = TEXT; RIGHT_QUOTE;
-    content = TEXT? ;  (* Make content optional *)
-    LEFT_QUOTE; SLASH; close_name = TEXT; RIGHT_QUOTE
-    {
+leaf_element:
+  | name = tag_open;
+    content = TEXT;
+    close_name = tag_close {
       if name = close_name then
-        Leaf (name, Option.value content ~default:"")
+        Leaf (name, content)
       else
-        raise (Failure ("Mismatched tags: " ^ name ^ " and " ^ close_name))
+        Leaf ("error", "Mismatched tags: " ^ name ^ " and " ^ close_name)
     }
-;
 
-value_list:
-  | v = value { [v] }
-  | v = value; rest = value_list { v :: rest }
-;
+nested_element:
+  | name = tag_open;
+    children = nonempty_list(element);
+    close_name = tag_close {
+      if name = close_name then
+        Nested (name, children)
+      else
+        Nested ("error", [Leaf ("error", "Mismatched tags: " ^ name ^ " and " ^ close_name)])
+    }
+
+tag_open: LEFT_QUOTE; name = TEXT; RIGHT_QUOTE; { name }
+tag_close: LEFT_QUOTE; SLASH; name = TEXT; RIGHT_QUOTE { name }

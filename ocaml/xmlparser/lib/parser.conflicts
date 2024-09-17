@@ -1,0 +1,31 @@
+
+** Conflict (shift/reduce) in state 19.
+** Token involved: LEFT_QUOTE
+** This state is reached from prog after reading:
+
+tag_open element
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+prog 
+element EOF 
+nested_element 
+(?)
+
+** In state 19, looking ahead at LEFT_QUOTE, reducing production
+** nonempty_list(element) -> element
+** is permitted because of the following sub-derivation:
+
+tag_open nonempty_list(element) tag_close // lookahead token appears because tag_close can begin with LEFT_QUOTE
+         element . 
+
+** In state 19, looking ahead at LEFT_QUOTE, shifting is permitted
+** because of the following sub-derivation:
+
+tag_open nonempty_list(element) tag_close 
+         element nonempty_list(element) 
+                 element 
+                 empty_element 
+                 tag_open tag_close 
+                 . LEFT_QUOTE TEXT RIGHT_QUOTE 
