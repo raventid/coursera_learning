@@ -1,11 +1,12 @@
 %{
   open Xml
+  exception MismatchedTags of string * string
 %}
 
 %token <string> TEXT
 %token LEFT_QUOTE
+%token CLOSING_LEFT_QUOTE
 %token RIGHT_QUOTE
-%token SLASH
 %token EOF
 
 %start <Xml.value option> prog
@@ -16,37 +17,28 @@ prog:
   | EOF              { None   };
 
 element:
-  | empty_element    { $1 }
-  | leaf_element     { $1 }
-  | nested_element   { $1 }
-
-empty_element:
-  | name = tag_open; close_name = tag_close {
-      if name = close_name then
-        Leaf (name, "")
+  | open_id = tag_open; close_id = tag_close {
+    if open_id = close_id then
+      Leaf (open_id, "")
+    else
+      raise (MismatchedTags (open_id, close_id))
+  }
+  | open_id = tag_open; content = TEXT; close_id = tag_close {
+      if open_id = close_id then
+        Leaf (open_id, content)
       else
-        Leaf ("error", "Mismatched tags: " ^ name ^ " and " ^ close_name)
+        raise (MismatchedTags (open_id, close_id))
+    }
+  | open_id = tag_open; content = nested_tags; close_id = tag_close {
+      if open_id = close_id then
+        Nested (open_id, content)
+      else
+        raise (MismatchedTags (open_id, close_id))
     }
 
-leaf_element:
-  | name = tag_open;
-    content = TEXT;
-    close_name = tag_close {
-      if name = close_name then
-        Leaf (name, content)
-      else
-        Leaf ("error", "Mismatched tags: " ^ name ^ " and " ^ close_name)
-    }
+nested_tags:
+  | e = element; l = nested_tags  { e :: l }
+  | e = element                   { [e] }
 
-nested_element:
-  | name = tag_open;
-    children = nonempty_list(element);
-    close_name = tag_close {
-      if name = close_name then
-        Nested (name, children)
-      else
-        Nested ("error", [Leaf ("error", "Mismatched tags: " ^ name ^ " and " ^ close_name)])
-    }
-
-tag_open: LEFT_QUOTE; name = TEXT; RIGHT_QUOTE; { name }
-tag_close: LEFT_QUOTE; SLASH; name = TEXT; RIGHT_QUOTE { name }
+tag_open: LEFT_QUOTE; name = TEXT; RIGHT_QUOTE { name }
+tag_close: CLOSING_LEFT_QUOTE; name = TEXT; RIGHT_QUOTE { name }
