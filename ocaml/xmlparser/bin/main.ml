@@ -1,3 +1,4 @@
+open Core
 open Xmlparser
 
 let parse_with_error lexbuf =
@@ -14,13 +15,31 @@ let rec print_ast indent = function
       Printf.printf "%s%s: %s\n" indent tag content
   | Nested (tag, children) ->
       Printf.printf "%s%s:\n" indent tag;
-      List.iter (print_ast (indent ^ "  ")) children
+      List.iter ~f:(print_ast (indent ^ "  ")) children
 
-let () =
-  let xml = "<a><i></i><j>text</j></a>" in
-  let lexbuf = Lexing.from_string xml in
-  match parse_with_error lexbuf with
+(* let () = *)
+(*   let xml = "<a><i></i><j>text</j></a>" in *)
+(*   let lexbuf = Lexing.from_string xml in *)
+(*   match parse_with_error lexbuf with *)
+(*   | Some value -> *)
+(*       print_endline "Parsed AST:"; *)
+(*       print_ast "" value *)
+(*   | None -> print_endline "Failed to parse XML" *)
+
+let process_xml_file filename () =
+  let input_channel = In_channel.create filename in
+  let lexical_buffer = Lexing.from_channel input_channel in
+  lexical_buffer.lex_curr_p <- { lexical_buffer.lex_curr_p with pos_fname = filename };
+  match parse_with_error lexical_buffer with
   | Some value ->
       print_endline "Parsed AST:";
       print_ast "" value
-  | None -> print_endline "Failed to parse XML"
+  | None -> print_endline "Failed to parse XML";
+  In_channel.close input_channel
+
+let () =
+  Command.basic_spec
+    ~summary:"Parse and display JSON"
+    Command.Spec.(empty +> anon ("filename" %: string))
+    process_xml_file
+  |> Command_unix.run

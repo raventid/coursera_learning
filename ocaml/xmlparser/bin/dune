@@ -1,4 +1,4 @@
 (executable
  (public_name xmlparser)
  (name main)
- (libraries xmlparser))
+ (libraries xmlparser core_unix.command_unix))
