@@ -17,15 +17,6 @@ let rec print_ast indent = function
       Printf.printf "%s%s:\n" indent tag;
       List.iter ~f:(print_ast (indent ^ "  ")) children
 
-(* let () = *)
-(*   let xml = "<a><i></i><j>text</j></a>" in *)
-(*   let lexbuf = Lexing.from_string xml in *)
-(*   match parse_with_error lexbuf with *)
-(*   | Some value -> *)
-(*       print_endline "Parsed AST:"; *)
-(*       print_ast "" value *)
-(*   | None -> print_endline "Failed to parse XML" *)
-
 let process_xml_file filename () =
   let input_channel = In_channel.create filename in
   let lexical_buffer = Lexing.from_channel input_channel in
