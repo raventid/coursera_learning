@@ -1,0 +1,5 @@
+#+title: Readme
+
+#+begin_src bash
+dune exec xmlparser data_samples/xml.xml
+#+end_src

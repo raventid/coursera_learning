@@ -24,6 +24,7 @@ let process_xml_file filename () =
   match parse_with_error lexical_buffer with
   | Some value ->
       print_endline "Parsed AST:";
+      print_endline "";
       print_ast "" value
   | None -> print_endline "Failed to parse XML";
   In_channel.close input_channel
