@@ -1,0 +1,61 @@
+#+title: 22 Generate Parentheses
+
+Quite ineffective solution that generate all possible combinations and
+has to check if combination is valid or not every time.
+
+#+begin_src c++
+class Solution {
+public:
+    vector<char> buffer;
+    vector<string> result;
+
+    bool is_valid() {
+        stack<char> s = {};
+
+        for(char c : buffer) {
+            if(c == '(') {
+                s.push(c);
+            } else {
+                if (s.empty()) {
+                    return false;
+                }
+
+                s.pop();
+            }
+        }
+
+        return s.empty();
+    }
+
+    void gen(int n, int depth) {
+        if(depth == n) {
+            if (is_valid()) {
+                string candidate(buffer.begin(), buffer.end());
+                result.push_back(candidate);
+            }
+
+            return;
+        }
+
+        for(int i = 0; i < 2; i++) {
+            if (i == 0) {
+                buffer[depth] = '(';
+                gen(n, depth + 1);
+            } else {
+                buffer[depth] = ')';
+                gen(n, depth + 1);
+            }
+        }
+    }
+
+    vector<string> generateParenthesis(int n) {
+        buffer.resize(n * 2);
+        gen(n * 2, 0);
+        return result;
+    }
+};
+#+end_src
+
+#+begin_src c++
+
+#+end_src
