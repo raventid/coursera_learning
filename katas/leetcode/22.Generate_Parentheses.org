@@ -56,6 +56,38 @@ public:
 };
 #+end_src
 
-#+begin_src c++
+More elegant and simple backtracking solution
 
+#+begin_src c++
+class Solution {
+public:
+    vector<char> buffer;
+    vector<string> result;
+
+    void backtrack(int n, int closing_count, int openning_count) {
+        if (n == closing_count && n == openning_count) {
+            string candidate(buffer.begin(), buffer.end());
+            result.push_back(candidate);
+            return;
+        }
+
+        if (openning_count < n) {
+            buffer.push_back('(');
+            backtrack(n, closing_count, openning_count + 1);
+            buffer.pop_back();
+        }
+
+        if (closing_count < openning_count) {
+            buffer.push_back(')');
+            backtrack(n, closing_count + 1, openning_count);
+            buffer.pop_back();
+        }
+    }
+
+    vector<string> generateParenthesis(int n) {
+        buffer.reserve(n * 2);
+        backtrack(n, 0, 0);
+        return result;
+    }
+};
 #+end_src
