@@ -1,0 +1,31 @@
+#+title: 2275 Largest Combination With Bitwise And Greater Than Zero
+
+Summary: check how many bits are `1` at every position in 32-bit integer,
+this is enough to understand how many numbers could be combined to number more than 0 with bitwise AND operation
+
+#+begin_src c++
+class Solution {
+public:
+    int largestCombination(vector<int>& candidates) {
+        std::array<int, 32> buffer;
+
+        for (int candidate : candidates) {
+            int buffer_index = 0;
+            int mask = 1;
+
+            while (buffer_index < 32) {
+                auto is_bit_enabled = candidate & mask;
+
+                if (is_bit_enabled) {
+                    buffer[buffer_index] += 1;
+                }
+
+                mask = mask << 1;
+                buffer_index += 1;
+            }
+        }
+
+        return *std::max_element(buffer.begin(), buffer.end());
+    }
+};
+#+end_src
