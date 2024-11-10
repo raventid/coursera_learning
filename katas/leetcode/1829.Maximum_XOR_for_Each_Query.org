@@ -1,0 +1,30 @@
+#+title: 1829 Maximum Xor For Each Query
+
+The whole idea is based on a fact that
+
+https://medium.com/@Harshit_Raj_14/useful-properties-of-xor-in-coding-bitwise-manipulation-and-bitmasking-2c332256bd61
+
+A ^ B = C => A ^ C = B
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> getMaximumXor(vector<int>& nums, int maximumBit) {
+        int n = nums.size();
+        int mask = (1 << maximumBit) - 1;
+        vector<int> cache = {};
+
+        cache.push_back(nums[0]);
+        for (int i = 1; i < n; i++) {
+            cache.push_back(cache[i - 1] ^ nums[i]);
+        }
+
+        vector<int> results;
+        for (int i = n - 1; i >= 0; i--) {
+            results.push_back(cache[i] ^ mask);
+        }
+
+        return results;
+    }
+};
+#+end_src
