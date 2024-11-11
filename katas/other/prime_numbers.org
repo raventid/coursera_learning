@@ -1,6 +1,8 @@
 #+title: Prime Numbers
 
-Prime number generator designed with C++ couroutines (uses quite a primitive brute-force approach)
+Prime number generator designed with C++ couroutines (uses quite a primitive brute-force approach) (switch algo to Sieve of Atkin with a limit for couroutine).
+
+(Analyze if switch makes sense in a couroutine-based implementation)
 
 #+begin_src cpp :flags -std=c++20 :results output
 #include <iostream>
