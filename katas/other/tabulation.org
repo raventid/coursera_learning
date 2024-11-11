@@ -1,4 +1,4 @@
-#+TITLE: Cansum
+#+TITLE: Tabulation in different types of problems
 
 Tabulation approach for different types of dynamic programming problems
 
