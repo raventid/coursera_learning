@@ -1,0 +1,30 @@
+#+title: 2068 Check Whether Two Strings Are Almost Equivalent
+
+Initial solution is just naive "pushing everything into hashmap". What if we can sort both arrays and move cursors over them to spot difference immediately?
+
+Tough to say what is faster.
+
+#+begin_src cpp
+class Solution {
+public:
+    bool checkAlmostEquivalent(string word1, string word2) {
+        map<char, int> counter;
+
+        for(char c: word1) {
+            counter[c]++;
+        }
+
+        for(char c: word2) {
+            counter[c]--;
+        }
+
+        for(const auto [_,v] : counter) {
+            if(v > 3 || v < -3) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
+#+end_src
