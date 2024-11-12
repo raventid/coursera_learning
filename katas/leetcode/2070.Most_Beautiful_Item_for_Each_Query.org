@@ -1,0 +1,73 @@
+#+title: 2070 Most Beautiful Item For Each Query
+
+Naive solution, does not pass all the tests:
+
+#+begin_src cpp
+class Solution {
+public:
+    vector<int> maximumBeauty(vector<vector<int>>& items, vector<int>& queries) {
+        vector<int> answer(queries.size());
+
+        for(int i = 0; i < queries.size(); i++) {
+            int query_price = queries[i];
+
+
+            // Look for max beauty
+            for (const auto item : items) {
+                int price = item[0];
+                int beauty = item[1];
+
+                if (query_price >= price) {
+                    answer[i] = std::max(answer[i], beauty);
+                }
+            }
+        }
+
+        return answer;
+    }
+};
+#+end_src
+
+Rebuilding items array to sort it by price first and attach optimal beauty to every price value. Also sorting query elements in order.
+
+This way we will move over intervals and cut of searched elements with price_index variable. This way it works in a much more efficient way.
+
+Complexity is O(m + n + log n + log m) (roughly)
+
+#+begin_src cpp
+class Solution {
+public:
+    vector<int> maximumBeauty(vector<vector<int>>& items, vector<int>& queries) {
+        vector<int> answer(queries.size());
+        vector<pair<int, int>> query_with_index;
+
+        std::sort(
+            items.begin(),
+            items.end(),
+            [](const auto &a, const auto &b) {
+                return a[0] < b[0];
+            });
+
+        // Create pairs with query and index
+        for(int i = 0; i < queries.size(); i++) {
+            query_with_index.push_back({queries[i], i});
+        }
+        std::sort(query_with_index.begin(), query_with_index.end(), [](const auto &a, const auto &b){
+            return a.first < b.first;
+        });
+
+        int max_beauty = 0;
+        int price_index = 0;
+        for(auto &[current_query_price, current_query_index] : query_with_index) {
+            while (price_index < items.size() && items[price_index][0] <= current_query_price) {
+                max_beauty = std::max(max_beauty, items[price_index][1]);
+                price_index++;
+            }
+
+            answer[current_query_index] = max_beauty;
+        }
+
+        return answer;
+    }
+};
+#+end_src
