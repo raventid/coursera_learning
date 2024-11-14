@@ -33,7 +33,9 @@ public:
         }
 
         while(lo < hi) {
-            int k = (hi + lo) / 2;
+            // before I used  (hi + lo) / 2
+            // but better to stick to this one, to avoid overflow
+            int k = lo + (hi - lo) / 2;
             long long computed_h = 0;
             // We are approaching zero because available number of hours is huge,
             // but we only have a small amount of bananas, so even if we eat 0.00000001 banana at the time we are still good.
@@ -44,8 +46,13 @@ public:
             for(int i : piles) {
                     // You might want to do: computed_h += ceil(i / (float)k);
                     // This will lead to an accumulated computation error: like piles=1000000000, h=2
-                    computed_h += i / k;
-                    if(i % k != 0) { computed_h++; }
+
+                    // This was a good appraoch, but I found a beeter way
+                    // computed_h += i / k;
+                    // if(i % k != 0) { computed_h++; }
+
+                    // Should remember this as a standard way to do round up
+                    computed_h += std::ceil(static_cast<double>(i) / k);
             }
 
             if(computed_h <= h) {
@@ -69,3 +76,4 @@ int main() {
 #+end_src
 
 #+RESULTS:
+: 6
