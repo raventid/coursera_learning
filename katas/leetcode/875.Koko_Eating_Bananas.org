@@ -43,16 +43,16 @@ public:
               return 1;
             }
 
-            for(int i : piles) {
-                    // You might want to do: computed_h += ceil(i / (float)k);
+            for(int pile : piles) {
+                    // You might want to do: computed_h += ceil(pile / (float)k);
                     // This will lead to an accumulated computation error: like piles=1000000000, h=2
 
                     // This was a good appraoch, but I found a beeter way
-                    // computed_h += i / k;
-                    // if(i % k != 0) { computed_h++; }
+                    // computed_h += pile / k;
+                    // if(pile % k != 0) { computed_h++; }
 
                     // Should remember this as a standard way to do round up
-                    computed_h += std::ceil(static_cast<double>(i) / k);
+                    computed_h += std::ceil(static_cast<double>(pile) / k);
             }
 
             if(computed_h <= h) {
