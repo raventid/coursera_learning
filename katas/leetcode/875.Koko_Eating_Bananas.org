@@ -16,7 +16,11 @@ Last Executed Input
 968709470
 #+end_src
 
-#+begin_src c++
+#+begin_src cpp :flags -std=c++20 :results output
+#include <vector>
+#include <iostream>
+using namespace std;
+
 class Solution {
 public:
     int minEatingSpeed(vector<int>& piles, int h) {
@@ -41,7 +45,7 @@ public:
                     // You might want to do: computed_h += ceil(i / (float)k);
                     // This will lead to an accumulated computation error: like piles=1000000000, h=2
                     computed_h += i / k;
-                    if(i%k != 0) { computed_h++; }
+                    if(i % k != 0) { computed_h++; }
             }
 
             if(computed_h <= h) {
@@ -54,4 +58,14 @@ public:
         return lo;
     }
 };
+
+int main() {
+  auto s = new Solution {};
+  vector<int> v = {1,2,3,4,5,6,7};
+
+  int res = s->minEatingSpeed(v, 8);
+  cout << res;
+}
 #+end_src
+
+#+RESULTS:
