@@ -1,0 +1,51 @@
+#+title: 1574 Shortest Subarray To Be Removed To Make Array Sorted
+
+#+begin_src cpp
+class Solution {
+public:
+    int findLengthOfShortestSubarray(vector<int>& arr) {
+        int res = 0;
+
+        // try remove prefix
+        int r = arr.size() - 1;
+        while (r > 0 && arr[r - 1] <= arr[r]) {
+            r--;
+        }
+
+        res = r;
+
+        // try remove postfix
+        int l = 0;
+        while ((l < arr.size() - 1) && arr[l] <= arr[l + 1]) {
+            l++;
+        }
+
+        res = std::min(res, (int)(arr.size() - 1 - l));
+
+        // try remove middle
+        // reinitialize cursors
+        l = 0;
+        r = arr.size() - 1;
+
+        while (l < r) {
+            while (r < arr.size() && l + 1 < r && arr[r - 1] <= arr[r] && arr[l] <= arr[r]) {
+                r--;
+            }
+
+            while (r < arr.size() && arr[l] > arr[r]) {
+                r++;
+            }
+
+            res = std::min(res, r - l - 1);
+
+            if(arr[l] > arr[l + 1]) {
+                break;
+            }
+
+            l++;
+        }
+
+        return res;
+    }
+};
+#+end_src
