@@ -1,0 +1,38 @@
+#+title: 2064 Minimized Maximum Of Products Distributed To Any Store
+
+Binary search implementation: quite similar to what you can find in [[file:875.Koko_Eating_Bananas.org][Koko eating bananas]]
+
+#+begin_src cpp
+class Solution {
+public:
+    int minimizedMaximum(int n, vector<int>& quantities) {
+      auto can_distribute = [&](int x) {
+        int stores = 0;
+
+        for (auto quantity : quantities) {
+            stores += std::ceil(static_cast<double>(quantity) / x);
+        }
+
+        return stores <= n;
+      };
+
+      int l = 1;
+      int r = *std::max_element(quantities.begin(), quantities.end());
+
+      int res = 0;
+
+      while ( l <= r ) {
+        int m = l + (h - l) / 2;
+
+        if (can_distribute(m)) {
+          res = m;
+          r = m - 1;
+        } else {
+          l = m + 1;
+        }
+      }
+
+      return res;
+    }
+};
+#+end_src
