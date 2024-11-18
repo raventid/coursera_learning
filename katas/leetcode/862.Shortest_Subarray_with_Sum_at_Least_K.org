@@ -1,0 +1,41 @@
+#+title: 862 Shortest Subarray With Sum At Least K
+
+#+begin_src cpp
+class Solution {
+public:
+    int shortestSubarray(vector<int>& nums, int k) {
+        int res = INT_MAX;
+        long long current_sum = 0;
+
+        std::deque<std::vector<long long>> deque;
+
+        for(int i = 0; i < nums.size(); i++) {
+            current_sum += nums[i];
+
+            if (current_sum >= k) {
+                res = std::min(res, i + 1);
+            }
+
+            while (!deque.empty() && (current_sum - deque.front()[0]) >= k) {
+                long long  prefix_sum = deque.front()[0];
+                int end_pos = (int) deque.front()[1];
+
+                deque.pop_front();
+                res = std::min(res, i - end_pos);
+            }
+
+            while (!deque.empty() && deque.back()[0] >= current_sum) {
+                deque.pop_back();
+            }
+
+            deque.push_back({current_sum, i});
+        }
+
+        if (res == INT_MAX) {
+            return -1;
+        } else {
+            return res;
+        }
+    }
+};
+#+end_src
