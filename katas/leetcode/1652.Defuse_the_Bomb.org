@@ -1,0 +1,28 @@
+#+title: 1652 Defuse The Bomb
+
+#+begin_src cpp
+class Solution {
+public:
+    vector<int> decrypt(vector<int>& code, int k) {
+        vector<int> res(code.size());
+
+        if (k == 0) {
+            return res;
+        }
+
+        for (int i = 0; i < res.size(); i++) {
+            if (k > 0) {
+                for (int j = i + 1; j <= i + k; j++) {
+                    res[i] += code[(j + code.size()) % code.size()];
+                }
+            } else {
+                for (int j = i - 1; j >= i - std::abs(k); j--) {
+                    res[i] += code[(j + code.size()) % code.size()];
+                }
+            }
+        }
+
+        return res;
+    }
+};
+#+end_src
