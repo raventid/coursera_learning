@@ -1,0 +1,113 @@
+#+title: 2461 Maximum Sum Of Distinct Subarrays With Length K
+
+Not the worst solution in my opinion, at least with this design it is possible to refactor it in something more performant. But leetcode fails with Time Limit Exceeded.
+
+#+begin_src cpp
+class Solution {
+public:
+    void check_and_update(
+        std::unordered_set<int>& current_numbers,
+        std::map<int, int>& counter,
+        int removed_number,
+        int added_number
+    ) {
+        counter[removed_number]--;
+        counter[added_number]++;
+
+        if (counter[removed_number] <= 0) {
+            current_numbers.erase(removed_number);
+        }
+
+        if (counter[added_number] > 0) {
+            current_numbers.insert(added_number);
+        }
+    }
+
+
+    long long maximumSubarraySum(vector<int>& nums, int k) {
+        std::unordered_set<int> current_numbers;
+        std::map<int, int> counter;
+
+        long long best_sum = 0;
+
+        // Fill initial state
+        for (int i = 0; i < k; i++) {
+            counter[nums[i]]++;
+            current_numbers.insert(nums[i]);
+        }
+
+        // Compute sum for 1st array
+        if (current_numbers.size() == k) {
+            for (int i = 0; i < k; i++) {
+                best_sum += nums[i];
+            }
+        }
+
+        //[1,2,3,4, 5,6]
+        //         ^4
+
+        // run the algo with prefilled data
+        for (int i = k; i < nums.size(); i++) {
+            check_and_update(current_numbers, counter, nums[i - k], nums[i]);
+
+            // cout << "Set size is " << current_numbers.size() << endl;
+            // for (auto it = current_numbers.begin(); it != current_numbers.end(); ++it) {
+            //    cout << ' ' << *it;
+            // }
+            // cout << endl;
+
+            if (current_numbers.size() == k) {
+                long long candidate_sum = 0;
+
+                for (int j = i - k + 1; j <= i; j++) {
+                    candidate_sum += nums[j];
+                }
+
+                best_sum = std::max(best_sum, candidate_sum);
+            }
+        }
+
+        return best_sum;
+    }
+};
+#+end_src
+
+
+Let's just clean this solution with a couple of optimisations and see if it will be good enough for leetcode. We use running sum now and a bit nasty (it computes on every run) if statement to move sliding window on every step. This solution is good enough for leetcode. We can find a more optimal solution, by jumping over windows that have patterns like "66", "88" (repeating characters). But I think this solution is good enough.
+#+begin_src cpp
+class Solution {
+public:
+    long long maximumSubarraySum(vector<int>& nums, int k) {
+        std::map<int, int> counter;
+
+        int l = 0;
+
+        long long best_sum = 0;
+        long long current_sum = 0;
+
+        // run the algo with prefilled data
+        for (int r = 0; r < nums.size(); r++) {
+            counter[nums[r]]++;
+            current_sum += nums[r];
+
+            if (r - l + 1 > k) {
+                int value = nums[l];
+                counter[value]--;
+                current_sum -= value;
+
+                if (counter[value] <= 0) {
+                    counter.erase(value);
+                }
+
+                l++;
+            }
+
+            if (counter.size() == k) {
+                best_sum = std::max(best_sum, current_sum);
+            }
+        }
+
+        return best_sum;
+    }
+};
+#+end_src
