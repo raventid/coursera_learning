@@ -28,6 +28,8 @@ public:
 };
 #+end_src
 
+#+RESULTS:
+
 Rebuilding items array to sort it by price first and attach optimal beauty to every price value. Also sorting query elements in order.
 
 This way we will move over intervals and cut of searched elements with price_index variable. This way it works in a much more efficient way.
