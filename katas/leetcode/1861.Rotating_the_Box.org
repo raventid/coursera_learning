@@ -1,0 +1,61 @@
+#+title: 1861 Rotating The Box
+
+rearange function could be redone as a proper state machine, for now it is just two pointer idea, and open_area pointer becomes invalidated from time to time.
+
+even in this code it would be better to express open area as option<int>, but I used the old-school -1 guard value (got some respect from my 60 year old interviewer)
+
+#+begin_src cpp
+class Solution {
+public:
+    vector<vector<char>> rotateTheBox(vector<vector<char>>& box) {
+        int m = box.size();
+        int n = box[0].size();
+
+        std::vector<std::vector<char>> rotated_box(n, std::vector<char>(m));
+        // do the rotation
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                rotated_box[i][j] = box[m - 1 - j][i];
+            }
+        }
+
+        auto rearrange = [&](int j) {
+            int open_area = -1;
+
+            for (int i = n - 1; i >= 0; i--) {
+                int element = rotated_box[i][j];
+
+                if (element == '.') {
+                   if (open_area == -1) {
+                    open_area = i;
+                   }
+                }
+
+                if (element == '*') {
+                    open_area = -1;
+                }
+
+                if (element == '#') {
+                    if (open_area != -1) {
+                        // remove stone
+                        rotated_box[i][j] = '.';
+                        rotated_box[open_area][j] = '#';
+
+                        // Look for the next open area
+                        while (open_area >= 0 && rotated_box[open_area][j] != '.') {
+                            open_area--;
+                        }
+                    }
+                }
+            }
+        };
+
+        for (int j = 0; j < m; j++) {
+            rearrange(j);
+        }
+
+        return rotated_box;
+    }
+};
+#+end_src
