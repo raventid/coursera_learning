@@ -13,61 +13,61 @@ using namespace std;
 // Generator class for generating prime numbers
 class PrimeGenerator {
 public:
-    struct promise_type {
-        int current_value;
-        auto get_return_object() { return PrimeGenerator{this}; }
-        auto initial_suspend() { return suspend_always{}; }
-        auto final_suspend() noexcept { return suspend_always{}; }
-        void unhandled_exception() { std::terminate(); }
-        auto yield_value(int value) {
-            current_value = value;
-            return suspend_always{};
-        }
-    };
-
-    PrimeGenerator(promise_type* p) : handle(std::coroutine_handle<promise_type>::from_promise(*p)) {}
-    ~PrimeGenerator() { handle.destroy(); }
-
-    auto operator()() {
-        handle.resume();
-        return handle.promise().current_value;
+  struct promise_type {
+    int current_value;
+    auto get_return_object() { return PrimeGenerator{this}; }
+    auto initial_suspend() { return suspend_always{}; }
+    auto final_suspend() noexcept { return suspend_always{}; }
+    void unhandled_exception() { std::terminate(); }
+    auto yield_value(int value) {
+      current_value = value;
+      return suspend_always{};
     }
+  };
+
+  PrimeGenerator(promise_type* p) : handle(std::coroutine_handle<promise_type>::from_promise(*p)) {}
+  ~PrimeGenerator() { handle.destroy(); }
+
+  auto operator()() {
+    handle.resume();
+    return handle.promise().current_value;
+  }
 
 private:
-    std::coroutine_handle<promise_type> handle;
+  std::coroutine_handle<promise_type> handle;
 };
 
 // Coroutine function to generate prime numbers
 PrimeGenerator generatePrimes() {
-    int num = 2;
-    while (true) {
-        bool isPrime = true;
+  int num = 2;
+  while (true) {
+    bool isPrime = true;
 
-        for (int i = 2; i * i <= num; ++i) {
-            if (num % i == 0) {
-                isPrime = false;
-                break;
-            }
-        }
-
-        if (isPrime) {
-            co_yield num;
-        }
-
-        ++num;
+    for (int i = 2; i * i <= num; ++i) {
+      if (num % i == 0) {
+        isPrime = false;
+        break;
+      }
     }
+
+    if (isPrime) {
+      co_yield num;
+    }
+
+    ++num;
+  }
 }
 
 int main() {
-    PrimeGenerator primes = generatePrimes();
+  PrimeGenerator primes = generatePrimes();
 
-    // Generate and print the first 20 prime numbers
-    for (int i = 0; i < 20; ++i) {
-        cout << primes() << " ";
-    }
-    cout << endl;
+  // Generate and print the first 20 prime numbers
+  for (int i = 0; i < 20; ++i) {
+    cout << primes() << " ";
+  }
+  cout << endl;
 
-    return 0;
+  return 0;
 }
 #+end_src
 
