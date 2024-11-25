@@ -1,0 +1,54 @@
+#+title: Draw Tree
+
+This is our output target, babel execution failes to output exactly this.
+But should like this.
+
+          *
+         ***
+        *****
+       *******
+      *********
+     ***********
+    *************
+   ***************
+  *****************
+ *******************
+
+
+#+begin_src cpp
+#include <iostream>
+
+void draw(int height) {
+  for(int row = 0; row < height + 1; row++) {
+    int left_padding = height - row - 1;
+    int row_length = 2 * row + 1;
+
+    for (int i = 0; i < left_padding; i++) {
+      std::cout << " ";
+    }
+
+    for (int i = 0; i < row_length; i++) {
+      std::cout << "*";
+    }
+
+    std::cout << std::endl;
+  }
+}
+
+int main() {
+  int height = 9;
+  draw(9);
+}
+#+end_src
+
+#+RESULTS:
+| *                   |
+| ***                 |
+| *****               |
+| *******             |
+| *********           |
+| ***********         |
+| *************       |
+| ***************     |
+| *****************   |
+| ******************* |
