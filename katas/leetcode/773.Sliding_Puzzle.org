@@ -1,0 +1,110 @@
+#+title: 773 Sliding Puzzle
+
+Unexpectedly solution is actually bfs, but with so many twists, that it is very nasty problem to code
+
+#+begin_src cpp
+class Solution {
+public:
+    map<pair<int, int>, vector<pair<int, int>>>
+    build_adjacency_list(vector<vector<int>>& board) {
+        return {{{0, 0}, {{0, 1}, {1, 0}}},         {{0, 1}, {{0, 0}, {0, 2}, {1, 1}}},
+         {{0, 2}, {{0, 1}, {1, 2}}},         {{1, 0}, {{0, 0}, {1, 1}}},
+         {{1, 1}, {{1, 0}, {0, 1}, {1, 2}}}, {{1, 2}, {{0, 2}, {1, 1}}}};
+    }
+
+    string encode(vector<vector<int>>& board) {
+        std::stringstream ss;
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board[0].size(); j++) {
+                ss << board[i][j];
+            }
+        }
+        return ss.str();
+    }
+
+    vector<vector<int>> decode(string encoded, int rows, int cols) {
+        vector<vector<int>> vec(rows, vector<int>(cols));
+
+        int idx = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                vec[i][j] = encoded[idx] - '0';
+                idx++;
+            }
+        }
+
+        return vec;
+    }
+
+    pair<int, int> find_zero(vector<vector<int>>& board) {
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board[0].size(); j++) {
+                if (board[i][j] == 0) {
+                    return {i, j};
+                }
+            }
+        }
+
+        // should be unreachable
+        return {0,0};
+    }
+
+    int bfs(vector<vector<int>>& board) {
+        map<pair<int, int>, vector<pair<int, int>>> adj_list =
+            build_adjacency_list(board);
+        set<string> unique_combination;
+        int rows = board.size();
+        int cols = board[0].size();
+
+        unique_combination.insert(encode(board));
+
+        string target = "123450";
+
+        queue<pair<string, int>> q;
+
+        auto zero_index = find_zero(board);
+
+        q.push({encode(board), 0});
+
+        while (!q.empty()) {
+            int batch = q.size();
+
+            while (batch--) {
+                auto [state, steps] = q.front();
+                q.pop();
+
+                if (state == target) {
+                    return steps;
+                }
+
+                vector<vector<int>> board_state = decode(state, rows, cols);
+                auto [zero_i, zero_j] = find_zero(board_state);
+
+                for (const auto& neighbor : adj_list[{zero_i, zero_j}]) {
+                    int target_i = neighbor.first;
+                    int target_j = neighbor.second;
+
+                    swap(board_state[zero_i][zero_j],
+                         board_state[target_i][target_j]);
+
+                    string new_state = encode(board_state);
+
+                    if (!unique_combination.contains(new_state)) {
+                        unique_combination.insert(new_state);
+                        q.push({new_state, steps + 1});
+                    }
+
+                    swap(board_state[zero_i][zero_j],
+                         board_state[target_i][target_j]);
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    int slidingPuzzle(vector<vector<int>>& board) {
+        return bfs(board);
+    }
+};
+#+end_src
