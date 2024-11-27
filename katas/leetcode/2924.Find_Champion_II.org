@@ -1,0 +1,27 @@
+#+title: 2924 Find Champion Ii
+
+#+begin_src cpp
+class Solution {
+public:
+    int findChampion(int n, vector<vector<int>>& edges) {
+        unordered_set<int> never_lost;
+        for (int i = 0; i < n; i++) {
+            never_lost.insert(i);
+        }
+
+        for (const vector<int>& pair : edges) {
+            int looser = pair[1];
+
+            if (never_lost.contains(looser)) {
+                never_lost.erase(looser);
+            }
+        }
+
+        if (never_lost.size() == 1) {
+            return *never_lost.begin();
+        } else {
+            return -1;
+        }
+    }
+};
+#+end_src
