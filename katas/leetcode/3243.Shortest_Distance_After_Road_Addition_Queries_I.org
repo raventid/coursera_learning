@@ -1,5 +1,7 @@
 #+title: 3243 Shortest Distance After Road Addition Queries I
 
+Visited vector is a significant optimization for cutting already explored paths, without it I get Time Limit error on the platform
+
 #+begin_src cpp
 class Solution {
 public:
