@@ -1,0 +1,47 @@
+#+title: 1792 Maximum Average Pass Ratio
+
+Here I build a priority queue (max heap) sorted by the potential gain of adding 1 person to the class.
+I keep adding 1 person to the class with the best potential gain. After this I just compute average and it is done.
+
+#+begin_src cpp
+class Solution {
+public:
+    double maxAverageRatio(vector<vector<int>>& classes, int extraStudents) {
+        auto compute_gain = [](int pass, int total) {
+            return
+            static_cast<double>(pass + 1) / (total + 1)
+            -
+            static_cast<double>(pass) / total;
+        };
+
+        priority_queue<pair<double, pair<int, int>>> max_heap;
+
+        for (vector<int>& class_ : classes) {
+            int pass = class_[0];
+            int total = class_[1];
+            max_heap.push({compute_gain(pass, total), {pass, total}});
+        }
+
+        while(extraStudents--) {
+            auto [_ratio, class_info] = max_heap.top();
+            auto [pass, total] = class_info;
+            max_heap.pop();
+            max_heap.push({compute_gain(pass + 1, total + 1), {pass + 1, total + 1}});
+        }
+
+        double sum_of_averages = 0.0;
+
+        while(!max_heap.empty()) {
+            auto [_ratio, class_info] = max_heap.top();
+            auto [pass, total] = class_info;
+            max_heap.pop();
+            double average_per_class = static_cast<double>(pass) / total;
+            sum_of_averages += average_per_class;
+        }
+
+        double common_average = sum_of_averages / classes.size();
+
+        return common_average;
+    }
+};
+#+end_src
