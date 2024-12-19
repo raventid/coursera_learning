@@ -1,0 +1,37 @@
+#+title: 769 Max Chunks To Make Sorted
+
+Quick solution. A little bit chaotic and not really elegant, but does work.
+
+#+begin_src cpp
+class Solution {
+public:
+    bool is_consecutive(const set<int>& seen) {
+        if (seen.empty()) { return true; }
+        return (*seen.rbegin() - *seen.begin() + 1) == seen.size();
+    }
+
+    int maxChunksToSorted(vector<int>& arr) {
+        int looking_for = 0;
+        int total = 0;
+        set<int> seen;
+
+        for (int i = 0; i < arr.size(); i++) {
+            seen.insert(arr[i]);
+
+            if (arr[i] == looking_for) {
+                // check if chunk is valid
+                if (is_consecutive(seen)) {
+                    total++;
+                    looking_for = i + 1;
+                    seen.clear();
+                } else {
+                    looking_for++;
+                    while (seen.contains(looking_for)) { looking_for++; }
+                }
+            }
+        }
+
+        return total;
+    }
+};
+#+end_src
