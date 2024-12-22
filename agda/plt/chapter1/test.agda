@@ -1,3 +1,5 @@
+{-# OPTIONS --guardedness #-}
+
 open import IO
 
 data ℕ : Set where
