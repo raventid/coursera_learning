@@ -149,3 +149,64 @@ fn main() {
 #+END_SRC
 
 #+RESULTS:
+
+For C++ solution below I didn't even have to use any tricks and lack of memo was not a problem.
+Just stupid recursion and incrementing the count in the end.
+#+begin_src cpp
+class Solution {
+public:
+    void traverse(vector<int>& nums, int index, int current_sum, int target) {
+        if (index == nums.size()) {
+            if (current_sum == target) {
+                total_count++;
+            }
+
+            return;
+        }
+
+        traverse(nums, index+1, current_sum + nums[index], target);
+        traverse(nums, index+1, current_sum - nums[index], target);
+    }
+
+    int findTargetSumWays(vector<int>& nums, int target) {
+        total_count = 0;
+        traverse(nums, 0, 0, target);
+        return total_count;
+    }
+
+private:
+    int total_count;
+};
+#+end_src
+
+I have tried to move to a lambda solution from this, but got time limit
+#+begin_src cpp
+#+end_src
+
+Have to use memo technic and approach, now return 1 if match and 0 if not to allow effective memoization of tails
+#+begin_src cpp
+class Solution {
+public:
+    int findTargetSumWays(vector<int>& nums, int target) {
+        map<pair<int, int>, int> memo;
+
+        function<int(int,int)> traverse = [&](int index, int current_sum) {
+            if (index == nums.size()) {
+                return current_sum == target ? 1 : 0;
+            }
+
+            if (memo.contains({index, current_sum})) {
+                return memo[{index, current_sum}];
+            }
+
+            int ways =
+                traverse(index + 1, current_sum + nums[index]) +
+                traverse(index + 1, current_sum - nums[index]);
+            memo[{index, current_sum}] = ways;
+            return ways;
+        };
+
+        return traverse(0, 0);
+    }
+};
+#+end_src
