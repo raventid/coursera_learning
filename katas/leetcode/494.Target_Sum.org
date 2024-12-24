@@ -181,6 +181,28 @@ private:
 
 I have tried to move to a lambda solution from this, but got time limit
 #+begin_src cpp
+class Solution {
+public:
+  int findTargetSumWays(vector<int>& nums, int target) {
+    total_count = 0;
+
+    function<void(int, int)> traverse = [&](int index, int current_sum){
+      if (index == nums.size()) {
+        if (current_sum == target) {
+          total_count++;
+        }
+
+        return;
+      }
+
+      traverse(nums, index+1, current_sum + nums[index], target);
+      traverse(nums, index+1, current_sum - nums[index], target);
+    };
+
+    traverse(nums, 0, 0, target);
+    return total_count;
+  }
+};
 #+end_src
 
 Have to use memo technic and approach, now return 1 if match and 0 if not to allow effective memoization of tails
