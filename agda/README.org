@@ -1,0 +1,5 @@
+#+title: Readme
+
+* Agda
+** Installation on Apple Silicon
+Here I will describe my very special experience installing Agda on Apple Silicon...
