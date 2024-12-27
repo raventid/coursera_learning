@@ -3,6 +3,8 @@ Just my Coursera's homeworks and notes. Now it's more then that, I put here a bi
 
 Also it's a monorepo, and I have a chance to evolve it the way I want and to see how to organize multilanguage repo. Where to put .gitignore files, how to structure commit messages and stuff like that.
 
+It is not implemented yet, but would be nice to have a setup script, so I can have a working environment with a text editor and the technologies listed here (this is kinda a big TODO)
+
 The repository's content is protected by MIT license (or by the license of original material if it was copypasted from book), but I have no idea why you might want to use it, or even some part of it :)
 
 # Note for copywriters
