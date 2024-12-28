@@ -1,0 +1,43 @@
+#+title: 689 Maximum Sum Of 3 Non Overlapping Subarrays
+
+Solution:
+
+
+
+
+My initial attempt to play around max_heap. The big question here is how to insert or eject elements the way, so
+we do not have overlapping instances. I could not figure out how to do it in a proper way.
+
+#+begin_src cpp
+class Solution {
+public:
+    vector<int> maxSumOfThreeSubarrays(vector<int>& nums, int k) {
+        priority_queue<pair<int, int>> max_heap;
+        int current_window = 0;
+
+        for (int i = 0; i < k; i++) {
+            current_window += nums[i];
+        }
+        max_heap.push({current_window, 0});
+
+        for (int i = 1; i <= nums.size() - k - 1; i++) {
+            current_window -= nums[i - 1];
+            current_window += nums[i + k - 1];
+
+            max_heap.push({current_window, i});
+        }
+
+        vector<int> result;
+        int times = 3;
+
+        while (times--) {
+            auto [sum, index] = max_heap.top();
+            max_heap.pop();
+
+            result.push_back(index);
+        }
+
+        return result;
+    }
+};
+#+end_src
