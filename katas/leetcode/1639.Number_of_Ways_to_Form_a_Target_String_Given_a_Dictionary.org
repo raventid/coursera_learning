@@ -1,0 +1,45 @@
+#+title: 1639 Number Of Ways To Form A Target String Given A Dictionary
+
+
+My initial attemp with a map for memoization. As usual that was not an optimal solution for c++, especially since I am using a lambda object, so I got a time limit.
+
+#+begin_src cpp
+class Solution {
+public:
+    int numWays(vector<string>& words, string target) {
+        int mod = 1000000007;
+
+        map<pair<int, char>, long long> counter;
+
+        for(auto word : words) {
+            for(int i = 0; i < word.size(); i++) {
+                int letter = word[i];
+                counter[{i, letter}]++;
+            }
+        }
+
+        map<pair<int ,int>, int> memo;
+
+        function<int(int, int)> backtrack = [&](int i, int k){
+            if ( i == target.size()) {
+                return 1;
+            }
+            if (k == words[0].size()) {
+                return 0;
+            }
+            if (memo.contains({i, k})) {
+                return memo[{i, k}];
+            }
+
+            char c = target[i];
+
+            int skip = backtrack(i, k + 1);
+            int take = (counter[{k, c}] * backtrack(i + 1, k + 1)) % mod;
+            memo[{i,k}] = (skip + take) % mod;
+            return memo[{i,k}];
+        };
+
+        return backtrack(0,0);
+    }
+};
+#+end_src
