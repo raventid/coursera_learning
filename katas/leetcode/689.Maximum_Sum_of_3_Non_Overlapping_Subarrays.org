@@ -2,13 +2,72 @@
 
 Solution:
 
+Not the fastests solution, but gets the job done and passes leetcode test suite. Mostly based on dynamic programming technike.
+
+#+begin_src cpp
+class Solution {
+public:
+    vector<int> maxSumOfThreeSubarrays(vector<int>& nums, int k) {
+      vector<int> k_sums;
+
+      k_sums.push_back(0);
+      for(int i = 0; i < k; i++) { k_sums[0] += nums[i]; }
+
+      for(int i = k; i < nums.size(); i++) {
+        k_sums.push_back(k_sums[k_sums.size() - 1] + nums[i] - nums[i - k]);
+      }
+
+      map<pair<int, int>, int> memo;
+      function<int(int, int)> get_max_sum = [&](int index, int count){
+        if(count == 3 || index > nums.size() - k) {
+            return 0;
+        }
+
+        if (memo.contains({index, count})) {
+            return memo[{index, count}];
+        }
+
+        // include current sum
+        int include = k_sums[index] + get_max_sum(index + k, count + 1);
+        // skip current sum
+        int skip = get_max_sum(index + 1, count);
+
+        int result = std::max(include, skip);
+        memo[{index, count}] = result;
+
+        return memo[{index, count}];
+      };
+
+      auto get_indices = [&](){
+        int i = 0;
+        vector<int> indices;
+
+        while(i <= nums.size() - k && indices.size() < 3) {
+            int include = k_sums[i] + get_max_sum(i + k, indices.size() + 1);
+            int skip = get_max_sum(i + 1, indices.size());
+
+            if(include >= skip) {
+                indices.push_back(i);
+                i += k;
+            } else {
+                i += 1;
+            }
+        }
+
+        return indices;
+      };
+
+      return get_indices();
+    }
+};
+#+end_src
 
 
 
 My initial attempt to play around max_heap. The big question here is how to insert or eject elements the way, so
 we do not have overlapping instances. I could not figure out how to do it in a proper way.
 
-#+begin_src cpp
+,#+begin_src cpp
 class Solution {
 public:
     vector<int> maxSumOfThreeSubarrays(vector<int>& nums, int k) {
