@@ -1,0 +1,31 @@
+#+title: 2390 Removing Stars From A String
+
+#+begin_src cpp
+class Solution {
+public:
+    string removeStars(string s) {
+        stack<char> st;
+        for(char c : s) {
+            if(c == '*') {
+                st.pop();
+            } else {
+                st.push(c);
+            }
+        }
+
+        stack<char> reverse;
+        while(!st.empty()) {
+            reverse.push(st.top());
+            st.pop();
+        }
+
+        ostringstream oss;
+        while(!reverse.empty()) {
+            oss << reverse.top();
+            reverse.pop();
+        }
+
+        return oss.str();
+    }
+};
+#+end_src
