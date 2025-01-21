@@ -1,8 +1,31 @@
 #+title: 2017 Grid Game
 
+Editorial style solution happens to be the best as usual. Something like backtracking might work for m*n grid, but we just have 2 rows, so prefix_sum solves it.
+
+#+begin_src cpp
+class Solution {
+public:
+    long long gridGame(vector<vector<int>>& grid) {
+        long long first_row_sum = accumulate(begin(grid[0]), end(grid[0]), 0LL),
+                  second_row_sum = 0;
+
+        long long minimum_sum = LONG_LONG_MAX;
+
+        for (int turn_index = 0; turn_index < grid[0].size(); turn_index++) {
+            first_row_sum -= grid[0][turn_index];
+            // Find the minimum maximum value out of `first_row_sum` and
+            // `second_row_sum`
+            minimum_sum = min(minimum_sum, max(first_row_sum, second_row_sum));
+            second_row_sum += grid[1][turn_index];
+        }
+
+        return minimum_sum;
+    }
+};
+#+end_src
 
 I have tried a version of backtracking, but this one fails tests with wrong answer, so logic is flawed in this one.
-#+begin_src cpp
+,#+begin_src cpp
 class Solution {
 public:
     void find_optimal_path(vector<vector<int>>& grid,
