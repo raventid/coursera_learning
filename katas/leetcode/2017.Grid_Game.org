@@ -1,0 +1,88 @@
+#+title: 2017 Grid Game
+
+
+I have tried a version of backtracking, but this one fails tests with wrong answer, so logic is flawed in this one.
+#+begin_src cpp
+class Solution {
+public:
+    void find_optimal_path(vector<vector<int>>& grid,
+                          vector<pair<pair<int, int>, long long>>& path, int path_depth,
+                          long long sum, int i, int j) {
+        if (i >= grid.size()) {
+            return;
+        }
+        if (j >= grid[0].size()) {
+            return;
+        }
+        if (i == grid.size() - 1 && j == grid[0].size() - 1) {
+            if (path[path_depth].second < sum) {
+                path[path_depth] = {{i, j}, sum};
+            }
+
+            return;
+        }
+
+        int current = grid[i][j];
+
+        // right
+        find_optimal_path(grid, path, path_depth + 1, sum + current, i, j + 1);
+
+        // down
+        find_optimal_path(grid, path, path_depth + 1, sum + current, i + 1, j);
+
+        long long best_sum = path[path_depth + 1].second;
+        long long current_sum = path[path_depth].second;
+
+        if (best_sum > current_sum) {
+            path[path_depth] = {{i, j}, best_sum};
+        }
+    }
+
+    long long gridGame(vector<vector<int>>& grid) {
+        vector<pair<pair<int, int>, long long>> path;
+        path.resize(grid.size() * grid[0].size());
+        path.assign(grid.size() * grid[0].size(), {{-1, -1}, INT_MIN});
+
+        find_optimal_path(grid, path, 0, 0, 0, 0);
+
+        for (auto p : path) {
+            pair<int, int> coords = p.first;
+            int sum = p.second;
+
+            if (coords.first == -1 && coords.second == -1) { break; }
+
+            grid[coords.first][coords.second] = 0;
+        }
+
+        for (pair<pair<int, int>, long long> p : path) {
+            cout << p.first.first << " " << p.first.second << " " << p.second << " | ";
+        }
+        cout << endl;
+
+        for (auto r : grid) {
+            for (auto e : r) {
+                cout << e << " ";
+            }
+            cout << endl;
+        }
+        cout << endl;
+
+        path.assign(grid.size() * grid[0].size(), {{-1, -1}, INT_MIN});
+        path[0] = {{0, 0}, grid[0][0]};
+
+        find_optimal_path(grid, path, 0, 0, 0, 0);
+
+        for (pair<pair<int, int>, long long> p : path) {
+            cout << p.first.first << " " << p.first.second << " " << p.second << " | ";
+        }
+        cout << endl;
+
+        return path[0].second;
+    }
+};
+#+end_src
+
+This grid gives the wrong anser:
+
+grid =
+[[20,3,20,17,2,12,15,17,4,15],[20,10,13,14,15,5,2,3,14,3]]
