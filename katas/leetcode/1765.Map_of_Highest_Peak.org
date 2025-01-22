@@ -1,0 +1,50 @@
+#+title: 1765 Map Of Highest Peak
+
+Multisource BFS from water. Quite a fast solution.
+
+#+begin_src cpp
+class Solution {
+public:
+    vector<vector<int>> highestPeak(vector<vector<int>>& isWater) {
+        vector<vector<bool>> visited(isWater.size(), vector<bool>(isWater[0].size(), false));
+
+        queue<pair<int, int>> q;
+
+        for(int i = 0; i < isWater.size(); i++) {
+            for(int j = 0; j < isWater[0].size(); j++) {
+                if (isWater[i][j] == 1) {
+                    q.push({i, j});
+                }
+            }
+        }
+
+        int current_height = -1;
+        vector<pair<int, int>> directions = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+
+        while (!q.empty()) {
+            int times = q.size();
+            current_height++;
+
+            while(times--) {
+                auto [i, j] = q.front();
+                q.pop();
+
+                if (visited[i][j]) { continue; }
+                visited[i][j] = true;
+
+                isWater[i][j] = current_height;
+
+                for(auto [y, x] : directions) {
+                    int next_i = i + y;
+                    int next_j = j + x;
+                    if(next_i >= 0 && next_i < isWater.size() && next_j >= 0 && next_j < isWater[0].size()) {
+                        q.push({next_i, next_j});
+                    }
+                }
+            }
+        }
+
+        return isWater;
+    }
+};
+#+end_src
