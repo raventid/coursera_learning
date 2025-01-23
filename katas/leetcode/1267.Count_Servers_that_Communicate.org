@@ -1,0 +1,43 @@
+#+title: 1267 Count Servers That Communicate
+
+
+Initial solution, quite a few allocations and deallocation, but not the worst performance, passed leetcode test suite.
+#+begin_src cpp
+class Solution {
+public:
+    int countServers(vector<vector<int>>& grid) {
+        set<pair<int, int>> communicate;
+
+        for (int i = 0; i < grid.size(); i++) {
+            set<pair<int, int>> row_coords;
+
+            for (int j = 0; j < grid[0].size(); j++) {
+                if (grid[i][j] == 1) {
+                    row_coords.insert({i, j});
+                }
+            }
+
+            if (row_coords.size() > 1) {
+                communicate.merge(row_coords);
+            }
+        }
+
+        for (int j = 0; j < grid[0].size(); j++) {
+            set<pair<int, int>> column_coords;
+
+            for (int i = 0; i < grid.size(); i++) {
+
+                if (grid[i][j] == 1) {
+                    column_coords.insert({i, j});
+                }
+            }
+
+            if (column_coords.size() > 1) {
+                communicate.merge(column_coords);
+            }
+        }
+
+        return communicate.size();
+    }
+};
+#+end_src
