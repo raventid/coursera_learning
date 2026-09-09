@@ -1,0 +1,380 @@
+#+TITLE: How Rust compiles async: reading list and Q&A
+#+DATE: 2026-09-08
+
+Notes toward a possible third article after the runtime-from-scratch and thread-per-core ones.
+Topic: what rustc actually does to an =async fn=, pass by pass.
+
+* Existing articles
+
+The gap: plenty of articles explain the "async fn becomes an enum" picture. Almost none walk
+through what the compiler does step by step with real MIR dumps. The one Russian habr piece
+that touches it gives async two or three paragraphs and no MIR.
+
+** Tier 1: conceptual (the enum-of-states picture, no compiler internals)
+- [[https://os.phil-opp.com/async-await/][Writing an OS in Rust, Async/Await]] (Philipp Oppermann).
+  Best intro to the state machine and why pinning is needed. Draws the enum by hand.
+- [[https://doc.rust-lang.org/stable/book/ch17-05-traits-for-async.html][The Rust Book, ch. 17.5, Traits for Async]]. Official, short.
+- [[https://without.boats/blog/pin/][without.boats, "Pin"]]. Design history of Pin from its designer.
+- [[https://habr.com/ru/articles/1031398/][Habr: Как Rust обманывает процессор]]. Russian, one short async section, no MIR.
+
+** Tier 2: empirical (source to assembly, compiler as a black box)
+- [[https://www.eventhelix.com/rust/rust-to-assembly-async-await/][EventHelix, From State Machines to Assembly Code]]
+  and [[https://www.eventhelix.com/rust/rust-to-assembly-async-await-nested/][Nested async/await: desugaring and assembly]].
+  Shows the jump table on the discriminant in real assembly. Closest existing thing to "step by step".
+- [[https://jeffmcbride.net/blog/2025/05/16/rust-async-functions-as-state-machines/][Jeff McBride, Using a Rust async function as a polled state machine]]. Embedded angle.
+
+** Tier 3: compiler internals (the actual passes)
+- [[https://tmandry.gitlab.io/blog/posts/optimizing-await-1/][Tyler Mandry, How Rust optimizes async/await I]]
+  and [[https://tmandry.gitlab.io/blog/posts/optimizing-await-2/][II: Program analysis]].
+  Only writeup by someone who implemented the layout optimization. Witness type, liveness across
+  yields, overlapping storage for variables never live at the same time. 2019, says "generator"
+  where rustc now says "coroutine".
+- [[https://doc.rust-lang.org/nightly/nightly-rustc/rustc_mir_transform/coroutine/index.html][rustc_mir_transform::coroutine docs]].
+  Module comment is a good description of the transform: self argument becomes the state,
+  reserved states for unresumed / returned / poisoned, the drop shim.
+- [[https://rustc-dev-guide.rust-lang.org/coroutine-closures.html][rustc-dev-guide, coroutine-closures]]
+  and [[https://rustc-dev-guide.rust-lang.org/mir/construction.html][MIR construction]]. Reference, not tutorial.
+- [[https://rust-lang.github.io/rfcs/2033-experimental-coroutines.html][RFC 2033, experimental coroutines]]
+  and [[https://lang-team.rust-lang.org/design_notes/general_coroutines.html][lang team, Generalizing coroutines]]. Design docs.
+- [[https://goals.rust-lang.org/2026/async-statemachine-optimisation.html][Rust Project Goal 2026: Async statemachine optimisation]].
+  Owner Dion Dokter, compiler champion Eric Holk. Plans: skip the state machine for awaitless
+  futures, collapse a single-await future into the future it awaits, collapse identical await
+  states, flag to replace panic branches with Pending. Nobody has written about this yet.
+
+* Proposed outline for our article
+
+Take one small async fn and follow it through every stage with real compiler output.
+
+1. Desugaring at HIR. =async fn= becomes a fn returning an =async= block; =.await= becomes a
+   loop that polls via =IntoFuture= and yields. Show with =-Zunpretty=hir=.
+2. MIR before the transform. Still one function, with =Yield= terminators. =-Zdump-mir=.
+3. The coroutine transform. Liveness analysis deciding which locals go into the witness,
+   storage-conflict analysis overlapping them, rewrite of =Yield= into =return Pending= plus a
+   state store. Mandry's material, updated to current pass names. Hardest part: must read the
+   pass source and check dumps match the explanation.
+4. The generated layout. Enum with reserved states; why =Unpin= is dropped when a borrow crosses
+   a yield. =-Zprint-type-sizes=; make the "400 kB future" problem tangible.
+5. The drop shim. What happens when a future is dropped mid-await. No existing article covers it.
+6. What is coming. The 2026 project goal above. Fresh angle.
+
+Needs nightly for the dump flags. Debug MIR is verbose; output will need aggressive trimming.
+
+* Q&A
+
+** Q: Does async desugar into MIR coroutines? Why do we need coroutines if we have the futures concept and could just use callbacks?
+
+Yes. =async fn= is rewritten into a plain fn returning an =async {}= block. The block is lowered in
+HIR as a closure with a coroutine kind. Every =.await= becomes:
+
+#+begin_src rust
+loop {
+    match Future::poll(Pin::new_unchecked(&mut fut), get_context(cx)) {
+        Poll::Ready(v) => break v,
+        Poll::Pending => yield,
+    }
+}
+#+end_src
+
+In MIR the body is one function with =Yield= terminators. The coroutine pass turns it into a
+=resume= method over a state enum. The =Future= impl for the async block is compiler built-in
+and trivial: =poll= calls =resume=, mapping =Yielded(())= to =Pending= and =Complete(v)= to
+=Ready(v)=. Future is the interface the runtime sees; coroutine is the mechanism implementing
+the body.
+
+Why not callbacks: Rust had that design (futures 0.1 combinators, =and_then=, =map=). Problems
+were structural:
+- Borrowing dies at every callback boundary. Each closure owns its captures because the previous
+  stage is gone. No =&mut buf= across a wait; everything became =Arc<Mutex<..>>= and ='static=.
+  A coroutine keeps locals in one struct, so borrows live across =.await=. That is why generated
+  futures can be self-referential and the whole reason =Pin= exists.
+- Control flow rebuilt by hand. Loop with an await inside is a recursive chain of closures;
+  =?= and early return need combinators. With the transform, =if= / =while= / =match= / =?= are
+  just MIR basic blocks.
+- Types explode. Ten-stage chain is a ten-deep nested generic.
+
+The transform is the same idea as continuation-passing style, which is what callbacks are. The
+difference is the output: CPS by hand gives a chain of separately allocated closures; the
+transform gives one flat struct, a discriminant, a jump table, and locals never live at the same
+time share storage. One allocation per task, no dynamic dispatch, LLVM can inline across awaits.
+
+Why not a stack (stackful coroutines / green threads like Go): Rust shipped those pre-1.0 and
+removed them in 2014 (RFC 230). They need a runtime in the language, a stack per task that is
+either wastefully large or segmented and slow, and FFI is awkward. The stackless coroutine is
+exactly as big as its live locals and needs no runtime support, which lets a future be an
+ordinary struct any executor can poll.
+
+Where the Waker fits: it is the one remaining callback, "call me when something changes", one
+per task at the runtime-facing edge. The transform handles the inside of the task.
+
+Why rustc says "coroutine" not "future": the same transform serves =gen= blocks (yield values
+instead of =()=) and =async gen=. The MIR pass does not know about =Future=; it sees a resume
+type, a yield type, a return type. =async= is the specialization where resume is a =Context=
+pointer, yield is =()=, return is the output.
+
+** Q: But isn't a future a state machine with all the variables as fields? That way we just pass the whole state to the next callback.
+
+Yes, and that is exactly what a coroutine is. The two are not alternatives. "State machine with
+all live variables as fields plus a discriminant saying where to continue" is the definition of
+a stackless coroutine. The struct is the saved stack frame, the discriminant is the saved
+program counter, =poll= is =resume=.
+
+The hand-written =Timer= from the first runtime is one:
+
+#+begin_src rust
+struct Timer { when: Instant, registered: bool, shared: Arc<TimerThread> }
+#+end_src
+
+=registered= is the state; the other two are the locals that survive suspension. Nobody calls it
+a coroutine because it has two states.
+
+For an async fn with three awaits and a buffer live across the middle one, the hand-written
+struct needs: unresumed, after await 1/2/3, returned, and poisoned (panic mid-body). The buffer
+must be a field only in the variants where it is live or the future bloats. Each awaited
+sub-future needs a field in its own variant. =poll= needs a jump table over the discriminant,
+each arm resumes the inner future, stores the result, falls through into the next arm's code.
+A borrow of the buffer across an await makes it self-referential: =Pin= and =!Unpin=. Dropping
+halfway needs a drop that knows which fields are initialized in the current variant.
+
+That is mechanical, error-prone code that changes every time the body changes. The coroutine
+transform is the pass that writes it from straight-line code with =yield= points. Futures are
+the trait. Coroutines are how the compiler builds a type implementing it from a function body.
+
+The distinction against callbacks is different in kind. One entry point (=poll=) and one type
+carrying all state is the coroutine model. Futures 0.1 combinators: each =and_then(|x| ..)= is a
+separate closure with its own captures and its own type, the continuation type changes at every
+stage. "Pass the whole state to the next callback" is not possible there because there is no
+single whole state, only a chain of closures each owning the slice it needs. That is what forced
+=Arc= and ='static= everywhere. The flat struct is precisely the improvement the transform
+brought.
+
+** Q: If a future is just a coroutine, why does clippy warn about large future size?
+
+Because of how the coroutine is implemented: stackless, as a plain value. The generated enum has
+one variant per =.await=, each holding every local still live at that point. An awaited inner
+future is not called on a separate stack; it is stored by value as a field of the variant. So
+size is roughly
+
+#+begin_example
+max over states of (live locals + inner future awaited in that state)
+#+end_example
+
+and nesting adds up by value: =a= awaits =b= awaits =c= means =a='s struct physically contains
+=b='s which contains =c='s. No heap, no runtime, that is the design. But it means the "stack
+frame" is one flat object with a compile-time size.
+
+A goroutine or thread has a growable stack somewhere and the handle you pass around is a
+pointer. A Rust future /is/ the frame. Every move memcpys the whole thing: =block_on(fut)= puts
+it on the caller's stack, =tokio::spawn(fut)= moves it by value into the fn and then into a
+=Box=, =join!= and =Vec= pushes move it too. A 200 kB future means 200 kB of stack per call
+level and 200 kB copies; deep nesting overflows the stack.
+
+Sizes are often bigger than expected because the layout is not optimal:
+- a local moved into an awaited call may be stored twice, once as the local and once in the
+  inner future's argument slot;
+- dead-but-not-dropped values across an =.await= keep their slot;
+- a big buffer held across one await sits in every state after it.
+Hand-written state machines are often 2-3x smaller. This is what the 2026 project goal above
+targets.
+
+=clippy::large_futures= (pedantic, 16 kB default) checks =size_of= of the future type where it
+is passed by value and suggests =Box::pin=. Boxing turns the fat coroutine into a pointer-sized
+=Pin<Box<dyn Future>>=, so moves are cheap and the frame lives on the heap once: effectively
+opting that one coroutine into stackful-like storage for the cost of one allocation.
+
+** Q: So in Rust a coroutine is just a struct with multiple states and transitions between them?
+
+Yes. A struct plus a =poll= that is the transition function. For
+
+#+begin_src rust
+async fn fetch(url: String) -> usize {
+    let conn = connect(&url).await;
+    let body = conn.read().await;
+    body.len()
+}
+#+end_src
+
+the compiler emits roughly (pinning omitted):
+
+#+begin_src rust
+enum FetchFuture {
+    Start { url: String },
+    AwaitingConnect { url: String, connect_fut: ConnectFuture },
+    AwaitingRead { conn: Conn, read_fut: ReadFuture },
+    Done,
+}
+
+impl Future for FetchFuture {
+    type Output = usize;
+    fn poll(self: Pin<&mut Self>, cx: &mut Context) -> Poll<usize> {
+        loop {
+            match self {
+                Start { url } => {
+                    let fut = connect(&url);
+                    *self = AwaitingConnect { url, connect_fut: fut };
+                }
+                AwaitingConnect { connect_fut, .. } => match connect_fut.poll(cx) {
+                    Pending => return Pending,
+                    Ready(conn) => {
+                        let fut = conn.read();
+                        *self = AwaitingRead { conn, read_fut: fut };
+                    }
+                },
+                AwaitingRead { read_fut, .. } => match read_fut.poll(cx) {
+                    Pending => return Pending,
+                    Ready(body) => { *self = Done; return Ready(body.len()); }
+                },
+                Done => panic!("polled after completion"),
+            }
+        }
+    }
+}
+#+end_src
+
+Every =.await= is a state; each variant holds the locals still needed after that point. =poll=
+runs until the next inner =Pending=, records where it stopped by switching variant, returns.
+The =loop= is there because a transition that does not suspend just overwrites the state and
+goes around again.
+
+Three things fall out:
+- Size: enum is as big as its largest variant, and variants embed inner futures by value.
+- Pin: locals in one variant may borrow other locals in the same variant, so the struct can be
+  self-referential; moving it would dangle those pointers. Only reason =Pin= exists.
+- Laziness: constructing =Start= runs no code. Nothing happens until =poll=. Hence the
+  "unused future" warning.
+
+rustc does not special-case async. =async= blocks lower to a general coroutine (the same
+machinery as =gen= and =yield=). =resume= returns =Yielded(v)= or =Complete(v)=; async is the
+case where yield type is =()=, =Yielded(())= maps to =Pending=, =Complete(x)= to =Ready(x)=,
+and =.await= is a loop that polls the inner future and yields on =Pending=.
+
+** Q: So in my timer example I manually implemented a coroutine with one state?
+
+Two states, actually; =registered: bool= is the discriminant:
+- =registered == false=: never polled. Transition: hand the waker to the timer thread, flip
+  the flag, return =Pending=.
+- =registered == true=: suspended, waiting on the deadline. Transition: check the clock,
+  return =Pending= or =Ready=.
+Plus an implicit untracked "done": after =Ready= it keeps returning =Ready= if polled again. A
+generated future has an explicit =Done= variant and panics. Both are allowed; the =Future=
+contract leaves behavior after =Ready= unspecified.
+
+It looks like one state because a compiler-generated coroutine gets one variant per =.await=,
+and =Timer= awaits nothing; it only ever suspends at the top of =poll=, so a bool suffices. That
+is the shape of a /leaf/ future: bottom of the tree, talks to the reactor directly instead of
+awaiting something else. Tokio's =Sleep=, =TcpStream::read=, channel =recv= all look like this,
+hand-written with a small enum or a couple of flags. Everything above them is composed with
+=async= / =.await= and the compiler writes the states.
+
+The =async move= block spawned in =main= is the generated coroutine around it:
+
+#+begin_src rust
+enum SpawnedTask {
+    Start { i, counter, timer },
+    AwaitingTimer { counter, timer_fut: Timer },   // hand-written struct, inline
+    Done,
+}
+#+end_src
+
+Its =poll= runs the arithmetic, builds =Timer=, moves to =AwaitingTimer=, and from then on
+forwards to =Timer::poll=. So the object in the executor's =Box<dyn Future>= is a two-level
+state machine: outer generated, inner hand-written, embedded by value. =size_of= the task is
+about =size_of::<Timer>()= plus the captures plus the discriminant.
+
+=Timer= has no self-borrows, so it is =Unpin= and =self.get_mut()= is fine inside =poll=; the
+=Pin= in the signature is there because the outer generated coroutine might be self-referential
+and the trait has one signature for both.
+
+*** Rewriting Timer as an explicit state enum
+
+The honest shape, with payloads following what each state actually needs. The initial state
+needs =when= and =shared= (that is where it registers); after registration =shared= is not
+needed, the waker is already in the thread's queue, so =Registered= keeps only =when=:
+
+#+begin_src rust
+enum Timer {
+    Unregistered { when: Instant, shared: Arc<TimerThread> },
+    Registered { when: Instant },
+    Done,
+}
+
+impl Future for Timer {
+    type Output = ();
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<()> {
+        let this = self.get_mut(); // Timer is Unpin
+        loop {
+            match this {
+                Timer::Unregistered { when, shared } => {
+                    if Instant::now() >= *when { *this = Timer::Done; return Poll::Ready(()); }
+                    shared.add(*when, cx.waker().clone());
+                    *this = Timer::Registered { when: *when };
+                    return Poll::Pending;
+                }
+                Timer::Registered { when } => {
+                    if Instant::now() >= *when { *this = Timer::Done; return Poll::Ready(()); }
+                    return Poll::Pending;
+                }
+                Timer::Done => panic!("Timer polled after completion"),
+            }
+        }
+    }
+}
+#+end_src
+
+Notes:
+- The =loop= is redundant here since every arm returns, kept because it is the skeleton the
+  compiler emits.
+- =*this = ...= while =when= / =shared= are borrowed from =this= compiles only because =*when=
+  is copied first and =shared.add= is finished. To /move/ a non-=Copy= field into the next state
+  use =match std::mem::replace(this, Timer::Done) { .. }= and write the new state back. The
+  compiler does the same internally, which is one source of the "future twice as big"
+  duplication.
+- Real difference from the struct version: the 100k tasks no longer each hold an
+  =Arc<TimerThread>= for their whole life; it is released at registration. The enum is honest
+  about what each state needs.
+- Construction site becomes =Timer::Unregistered { when, shared }=; a =Timer::new(when, shared)=
+  keeps the variants private, as real leaf futures do (caller sees =new= and =poll= only).
+
+** Q: In thread-per-core we keep one future on one thread, so we drop Send + Sync. Why does =poll= still take =Pin<&mut Self>=? Pinning seems useless now.
+
+Because Pin and Send/Sync solve two unrelated problems. Dropping threads removes one of them,
+not the other.
+
+*Send/Sync are about which thread may touch a value.* Thread-per-core never moves a task
+between threads, so the =Send= bound on spawned futures can go. That is exactly what glommio,
+monoio and =tokio::task::LocalSet= do.
+
+*Pin is about whether a value may change its address in memory.* An =async fn= compiles into a
+state machine (see the coroutine answers above). If a reference is held across an =.await=, it
+is stored inside the state machine and points at another field of the same struct:
+
+#+begin_src rust
+async fn f() {
+    let buf = [0u8; 1024];
+    let slice = &buf[..];   // slice points into buf
+    read(slice).await;      // both buf and slice live inside the future's state
+}
+#+end_src
+
+After the first poll this future contains a pointer to itself. Move the struct, even by one
+byte on the same thread, and that pointer dangles. Moves happen all the time inside a single
+thread:
+
+- pushing the future into a =Vec= that later reallocates
+- returning it from a function
+- =mem::swap= / =mem::replace= on a slot in a task table
+- a =HashMap= of tasks rehashing
+
+=Pin<&mut Self>= in =poll= is the promise that once polled, the future is never moved again.
+A single-threaded executor needs that promise exactly as much as a work-stealing one. The
+borrow checker cannot see self-referential borrows through raw state-machine fields, so Pin is
+the only thing between you and use-after-move.
+
+*Why not just heap-allocate every task and skip Pin?* A single-threaded runtime could =Box=
+every future and never move the box, and that would be sound in practice. But Pin is how the
+type system expresses the guarantee, so the trait signature keeps it. In return you get the
+other direction: =pin!= on the stack lets you poll a future with zero allocation, which is
+precisely what thread-per-core designs chasing latency want. Without Pin in the signature every
+future would have to be boxed to be sound.
+
+Summary: thread-per-core lets you drop =Send=. =Pin= stays because the self-referential state
+machine problem exists on one thread too.
