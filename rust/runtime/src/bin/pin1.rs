@@ -18,7 +18,7 @@ struct Join<Fut: Future, const N: usize> {
     /// One waker per child, created on first poll (it needs the parent waker).
     wakers: [Option<Waker>; N],
     /// Tracks which child futures asked to be polled again.
-    ready: Arc<[AtomicBool; N]>,
+    ready: Arc<[AtomicBool; N]>, // <- This array is shared among ChildWakers
 }
 
 /// A waker associated with a specific child future.
@@ -53,6 +53,7 @@ impl <Fut: Future, const N: usize> Future for Join<Fut, N> {
             if this.outputs[i].is_some() {
                 continue;
             }
+            // We still iterate over all indexes, but now we can skip calling `poll` on unready futures
             if !this.ready[i].swap(false, Ordering::AcqRel) {
                 all_done = false;
                 continue;
